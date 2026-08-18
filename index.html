@@ -190,7 +190,7 @@ async function sendToESP32(name) {
 
     // สร้าง Image Object เพื่อบังคับให้เบราว์เซอร์ส่ง GET Request ไปที่บอร์ดทันทีแบบข้ามข้อจำกัด CORS
     const img = new Image();
-    const targetUrl = `http://192.168.4.1/detect?name=${encodeURIComponent(name)}`;
+    const targetUrl = `http://10.120.188.60/detect?name=${encodeURIComponent(name)}`;
     
     img.onload = function() {
         document.getElementById("esp-status").textContent = "Connected";
