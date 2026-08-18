@@ -188,17 +188,19 @@ async function sendToESP32(name) {
     if (Date.now() - lastSentTime < 1500) return;
     lastSentTime = Date.now();
 
-    try {
-        await fetch(`http://192.168.4.1/detect?name=${encodeURIComponent(name)}`, {
-            method: 'GET',
-            mode: 'no-cors'
-        });
-        document.getElementById("esp-status").textContent = "Connected";
-        document.getElementById("esp-status").style.color = "#2563eb";
-    } catch(e) {
-        document.getElementById("esp-status").textContent = "Failed";
-        document.getElementById("esp-status").style.color = "#ef4444";
+    const url = `http://192.168.4.1/detect?name=${encodeURIComponent(name)}`;
+    
+    // ใช้ sendBeacon เพื่อทะลุการบล็อกของเบราว์เซอร์
+    if (navigator.sendBeacon) {
+        navigator.sendBeacon(url);
+    } else {
+        // Fallback กรณีจำเป็น
+        fetch(url, { method: 'GET', mode: 'no-cors' }).catch(() => {});
     }
+
+    // อัปเดตสถานะบนหน้าจอเว็บ
+    document.getElementById("esp-status").textContent = "Sent";
+    document.getElementById("esp-status").style.color = "#2563eb";
 }
 
 async function testConnection() {
