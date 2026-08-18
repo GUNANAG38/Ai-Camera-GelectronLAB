@@ -31,7 +31,7 @@
 html, body {
     margin: 0;
     padding: 0;
-    width: 100%;
+    width: 100vw;
     height: 100vh;
     height: 100dvh;
     overflow: hidden; /* ล็อกหน้าจอไม่ให้เลื่อนเด็ดขาด */
@@ -47,7 +47,7 @@ html, body {
     width: 100%;
     max-width: 480px;
     height: 100%;
-    max-height: 850px;
+    max-height: 100vh;
     padding: 8px;
     display: flex;
     flex-direction: column;
@@ -65,106 +65,81 @@ html, body {
     flex-direction: column;
 }
 
+/* ขยายช่องกล้องให้ใหญ่ขึ้นเต็มพื้นที่ที่เหลือ */
 .video-box {
     width: 100%;
-    height: 32vh;
+    flex: 1;
+    min-height: 42vh;
     background: #000;
     border-radius: 8px;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 4px;
+    margin-top: 6px;
+    margin-bottom: 6px;
 }
 video { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
 
-.controls { margin-top: 6px; display: flex; gap: 6px; }
-.bottom-controls { margin-top: 6px; display: flex; gap: 6px; }
+.controls { display: flex; gap: 6px; margin-bottom: 4px; }
+.bottom-controls { display: flex; gap: 6px; }
 
 button {
-    padding: 8px 12px;
+    padding: 10px 12px;
     border-radius: 8px;
     border: none;
     font-weight: 600;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     cursor: pointer;
 }
 
 .btn-start { background: var(--accent); color: white; flex: 1; }
 .btn-stop { background: #ef4444; color: white; flex: 1; }
-.btn-secondary { background: var(--border); color: var(--text-main); flex: 1; font-size: 0.75rem; }
+.btn-secondary { background: var(--border); color: var(--text-main); flex: 1; font-size: 0.8rem; }
 
-.result-val { font-size: 1.1rem; font-weight: 800; color: var(--accent); margin: 2px 0; }
-
-/* ปุ่มจำลองซ่อน/แสดงแถบ URL ด้านบน (Fullscreen Mode) */
-.url-toggle-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background: var(--card-bg);
-    border-bottom: 1px solid var(--border);
-    padding: 4px 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 0.75rem;
-    z-index: 1000;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-.url-toggle-bar button {
-    background: var(--accent);
-    color: white;
-    padding: 4px 8px;
-    font-size: 0.7rem;
-    border-radius: 4px;
-}
+.result-val { font-size: 1.25rem; font-weight: 800; color: var(--accent); margin: 2px 0; }
 </style>
 </head>
 <body data-theme="light">
 
-<!-- แถบจำลองเปิด/ปิดซ่อนพื้นที่ URL ด้านบน -->
-<div class="url-toggle-bar" id="top-bar">
-    <span>💡 แนะนำ: กดปุ่มซ่อนแถบเพื่อขยายเต็มจอ</span>
-    <button onclick="toggleUrlBar()">ซ่อนแถบนี้</button>
-</div>
-
-<div class="app-container" id="main-app" style="margin-top: 28px;">
-    <!-- ส่วนตั้งค่า Model ID แบบเดิม -->
+<div class="app-container">
+    <!-- ส่วนตั้งค่า Model ID -->
     <section class="card">
-        <div style="font-size: 0.7rem; font-weight: 600; margin-bottom: 2px; color: var(--text-muted);">Teachable Model ID</div>
+        <div style="font-size: 0.75rem; font-weight: 600; margin-bottom: 2px; color: var(--text-muted);">Teachable Model ID</div>
         <div style="display: flex; gap: 6px;">
-            <input type="text" id="model-input" placeholder="เช่น my-model-xxxx" style="flex:1; padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-main); font-size: 0.8rem;">
-            <button onclick="saveModelId()" style="background: var(--accent); color: white; border-radius: 6px; padding: 6px 10px; font-size: 0.8rem;">บันทึก</button>
+            <input type="text" id="model-input" placeholder="เช่น my-model-xxxx" style="flex:1; padding: 6px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-main); font-size: 0.85rem;">
+            <button onclick="saveModelId()" style="background: var(--accent); color: white; border-radius: 6px; padding: 6px 12px; font-size: 0.85rem;">บันทึก</button>
         </div>
     </section>
 
-    <!-- ส่วนแสดงกล้องและการควบคุม -->
-    <section class="card" style="flex: 1; justify-content: center;">
+    <!-- ส่วนแสดงกล้องและการควบคุม (ขยายใหญ่ขึ้น) -->
+    <section class="card" style="flex: 1; justify-content: space-between;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-weight: 700; font-size: 0.95rem;">AI Camera WiFi</span>
-            <span style="font-size: 0.7rem; color: var(--text-muted);">MiniMicroKit_PT-L</span>
+            <span style="font-weight: 700; font-size: 1.1rem;">AI Camera</span>
+            <span style="font-size: 0.8rem; font-weight: 600; color: var(--accent);">MiniMicroKit_PT-L</span>
         </div>
+        
         <div class="video-box">
             <video id="video" autoplay muted playsinline></video>
         </div>
         
-        <div class="controls">
-            <button class="btn-start" id="start-btn">Start AI</button>
-            <button class="btn-stop" id="stop-btn">Stop</button>
-        </div>
-        
-        <div class="bottom-controls">
-            <button class="btn-secondary" onclick="testConnection()">Test WiFi</button>
-            <button class="btn-secondary" onclick="toggleTheme()">Switch Theme</button>
+        <div>
+            <div class="controls">
+                <button class="btn-start" id="start-btn">Start AI</button>
+                <button class="btn-stop" id="stop-btn">Stop</button>
+            </div>
+            <div class="bottom-controls">
+                <button class="btn-secondary" onclick="testConnection()">Test WiFi</button>
+                <button class="btn-secondary" onclick="toggleTheme()">Switch Theme</button>
+            </div>
         </div>
     </section>
 
     <!-- ส่วนแสดงผลลัพธ์ -->
     <section class="card">
-        <div style="color: var(--text-muted); font-size: 0.7rem; font-weight: 600;">AI Analysis Data</div>
+        <div style="color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">AI Analysis Data</div>
         <div class="result-val" id="name">--</div>
-        <div style="font-size: 0.72rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+        <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between;">
             <span>Board Status: <b id="esp-status">Disconnected</b></span>
             <span id="conf-text">0.0%</span>
         </div>
@@ -172,19 +147,6 @@ button {
 </div>
 
 <script>
-// ฟังก์ชันซ่อน/แสดงแถบด้านบนเพื่อให้ได้พื้นที่เต็มจอ
-function toggleUrlBar() {
-    const topBar = document.getElementById("top-bar");
-    const mainApp = document.getElementById("main-app");
-    if (topBar.style.display === "none") {
-        topBar.style.display = "flex";
-        mainApp.style.marginTop = "28px";
-    } else {
-        topBar.style.display = "none";
-        mainApp.style.marginTop = "0px";
-    }
-}
-
 // จัดการธีม (มืด / สว่าง)
 function toggleTheme() {
     const body = document.body;
@@ -256,7 +218,7 @@ document.getElementById("start-btn").onclick = async () => {
         model = await tmImage.load(u + "model.json", u + "metadata.json");
         
         const stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: "user", width: { ideal: 160 }, height: { ideal: 160 } }
+            video: { facingMode: "user", width: { ideal: 224 }, height: { ideal: 224 } }
         });
         document.getElementById("video").srcObject = stream;
         
