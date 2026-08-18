@@ -224,13 +224,24 @@ $("start").onclick = async () => {
         alert("ไม่สามารถเปิดกล้องได้ หรือลิงก์ Model ID ไม่ถูกต้อง"); 
     }
 };
-// ลบโค้ด async function loop() ทั้งหมด แล้ววางทับด้วยอันใหม่นี้:
 let lastRunTime = 0;
 const TARGET_FPS = 10; // กำหนดเป้าหมายให้ AI รัน 10 ครั้งต่อวินาที
 const MIN_FRAME_TIME = 1000 / TARGET_FPS; // คำนวณระยะห่างระหว่างเฟรม (ms)
 
 async function loop() {
     if (!running) return;
+
+    // --- ระบบข้ามเฟรม (Frame Skipping) เพื่อความลื่นไหล ---
+    const now = performance.now();
+    const elapsed = now - lastRunTime;
+
+    if (elapsed < MIN_FRAME_TIME) {
+        requestAnimationFrame(loop);
+        return;
+    }
+    lastRunTime = now;
+    // --------------------------------------------------
+
     const prediction = await model.predict($("video"), false);
     let best = prediction.sort((a, b) => b.probability - a.probability)[0];
     
@@ -242,10 +253,6 @@ async function loop() {
         $("fill").style.width = pct + "%";
         await sendToESP32(best.className);
     }
+    
     requestAnimationFrame(loop);
 }
-
-$("stop").onclick = () => { running = false; window.location.reload(); };
-</script>
-</body>
-</html>
