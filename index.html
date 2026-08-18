@@ -34,7 +34,7 @@ html, body {
     width: 100%;
     height: 100vh;
     height: 100dvh;
-    overflow: hidden;
+    overflow-y: auto;
     background-color: var(--bg-color);
     color: var(--text-main);
     font-family: 'Inter', -apple-system, sans-serif;
@@ -46,12 +46,9 @@ html, body {
 .app-container {
     width: 100%;
     max-width: 480px;
-    height: 100%;
-    max-height: 900px;
     padding: 12px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     gap: 10px;
 }
 
@@ -69,11 +66,10 @@ html, body {
 .main-title { font-size: 1.15rem; font-weight: 700; color: var(--text-main); }
 .sub-title { font-size: 0.75rem; color: var(--text-muted); display: block; margin-top: 1px; }
 
-.camera-section { flex: 1; display: flex; flex-direction: column; justify-content: center; min-height: 0; }
+.camera-section { display: flex; flex-direction: column; justify-content: center; }
 .video-box {
     width: 100%;
-    flex: 1;
-    max-height: 40vh;
+    height: 32vh;
     background: #000;
     border-radius: 10px;
     overflow: hidden;
@@ -112,6 +108,16 @@ button {
 <body>
 
 <div class="app-container">
+    <!-- ส่วนตั้งค่า Model ID สำหรับนักเรียน -->
+    <section class="card">
+        <div style="font-size: 0.75rem; font-weight: 600; margin-bottom: 4px; color: var(--text-muted);">ตั้งค่า Teachable Model ID</div>
+        <div style="display: flex; gap: 6px;">
+            <input type="text" id="model-input" placeholder="เช่น my-model-xxxx" style="flex:1; padding: 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text-main); font-size: 0.8rem;">
+            <button onclick="saveModelId()" style="padding: 8px 12px; background: var(--accent); color: white; border: none; border-radius: 6px; font-size: 0.8rem; font-weight: 600;">บันทึก</button>
+        </div>
+    </section>
+
+    <!-- ส่วนแสดงกล้องและการควบคุม -->
     <section class="card camera-section">
         <div class="title-container">
             <span class="main-title">AI Camera WiFi</span>
@@ -132,6 +138,7 @@ button {
         </div>
     </section>
 
+    <!-- ส่วนแสดงผลลัพธ์ -->
     <section class="card result-section">
         <div class="label">Current Identity</div>
         <div class="result-val" id="name">--</div>
@@ -149,21 +156,39 @@ function toggleTheme() {
     body.dataset.theme = body.dataset.theme === 'dark' ? 'light' : 'dark';
 }
 
-const MODEL_URL = "https://teachablemachine.withgoogle.com/models/GodEyCDiX/"; 
-let model, running = false;
-let lastSentTime = 0; // ป้องกันการส่งข้อมูลถี่เกินไป (Throttle)
+// จัดการเรื่อง Model ID ของนักเรียนแต่ละคน
+let savedId = localStorage.getItem("saved_model_id") || "";
+let MODEL_URL = savedId ? `https://teachablemachine.withgoogle.com/models/${savedId}/` : "";
 
+window.onload = () => {
+    if (savedId) {
+        document.getElementById("model-input").value = savedId;
+    }
+};
+
+function saveModelId() {
+    const val = document.getElementById("model-input").value.trim();
+    if (!val) {
+        alert("กรุณากรอก Model ID ให้ถูกต้อง");
+        return;
+    }
+    localStorage.setItem("saved_model_id", val);
+    alert("บันทึก Model ID เรียบร้อยแล้ว!");
+    location.reload();
+}
+
+let model, running = false;
+let lastSentTime = 0; 
 const $ = id => document.getElementById(id);
 
 async function sendToESP32(name) {
-    // ส่งข้อมูลไม่ให้ถี่กว่าทุกๆ 1.5 秒 เพื่อให้บอร์ดประมวลผลทัน
     if (Date.now() - lastSentTime < 1500) return;
     lastSentTime = Date.now();
 
     try {
-        const response = await fetch(`http://192.168.4.1/detect?name=${encodeURIComponent(name)}`, {
+        await fetch(`http://192.168.4.1/detect?name=${encodeURIComponent(name)}`, {
             method: 'GET',
-            mode: 'no-cors' // ป้องกันปัญหา CORS เบื้องต้นเมื่อคุยกับ ESP32 Local IP
+            mode: 'no-cors'
         });
         $("esp-status").textContent = "Connected";
         $("esp-status").style.color = "var(--accent)";
@@ -179,6 +204,10 @@ async function testConnection() {
 }
 
 $("start").onclick = async () => {
+    if (!savedId) {
+        alert("กรุณากรอกและบันทึก Model ID ก่อนกด Start AI");
+        return;
+    }
     try {
         const u = MODEL_URL.endsWith("/") ? MODEL_URL : MODEL_URL + "/";
         model = await tmImage.load(u + "model.json", u + "metadata.json");
@@ -186,7 +215,9 @@ $("start").onclick = async () => {
         $("video").srcObject = stream;
         running = true;
         loop();
-    } catch(e) { alert("ไม่สามารถเปิดกล้องได้"); }
+    } catch(e) { 
+        alert("ไม่สามารถเปิดกล้องได้ หรือลิงก์ Model ID ไม่ถูกต้อง"); 
+    }
 };
 
 async function loop() {
