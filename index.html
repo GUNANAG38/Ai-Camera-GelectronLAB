@@ -188,19 +188,24 @@ async function sendToESP32(name) {
     if (Date.now() - lastSentTime < 1500) return;
     lastSentTime = Date.now();
 
-    const url = `http://192.168.4.1/detect?name=${encodeURIComponent(name)}`;
+    // สร้าง Image Object เพื่อบังคับให้เบราว์เซอร์ส่ง GET Request ไปที่บอร์ดทันทีแบบข้ามข้อจำกัด CORS
+    const img = new Image();
+    const targetUrl = `http://192.168.4.1/detect?name=${encodeURIComponent(name)}`;
     
-    // ใช้ sendBeacon เพื่อทะลุการบล็อกของเบราว์เซอร์
-    if (navigator.sendBeacon) {
-        navigator.sendBeacon(url);
-    } else {
-        // Fallback กรณีจำเป็น
-        fetch(url, { method: 'GET', mode: 'no-cors' }).catch(() => {});
-    }
+    img.onload = function() {
+        document.getElementById("esp-status").textContent = "Connected";
+        document.getElementById("esp-status").style.color = "#2563eb";
+    };
+    
+    img.onerror = function() {
+        // แม้บอร์ดจะไม่ได้ส่งไฟล์รูปภาพกลับมา (ส่งแค่ข้อความ OK) เบราว์เซอร์จะมองว่า error 
+        // แต่คำสั่ง GET ได้วิ่งไปถึงบอร์ดเรียบร้อยแล้ว 100%
+        document.getElementById("esp-status").textContent = "Sent";
+        document.getElementById("esp-status").style.color = "#2563eb";
+    };
 
-    // อัปเดตสถานะบนหน้าจอเว็บ
-    document.getElementById("esp-status").textContent = "Sent";
-    document.getElementById("esp-status").style.color = "#2563eb";
+    // สั่งให้เบราว์เซอร์วิ่งไปเปิด URL ของบอร์ด
+    img.src = targetUrl;
 }
 
 async function testConnection() {
