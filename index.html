@@ -231,6 +231,20 @@ const MIN_FRAME_TIME = 1000 / TARGET_FPS; // คำนวณระยะห่�
 
 async function loop() {
     if (!running) return;
+
+    // --- ส่วนใหม่: ระบบข้ามเฟรม (Frame Skipping) ---
+    const now = performance.now();
+    const elapsed = now - lastRunTime;
+
+    if (elapsed < MIN_FRAME_TIME) {
+        // ถ้าน้อยกว่าเวลาที่กำหนด ให้ข้ามรอบนี้ไปก่อน รอรอบถัดไป
+        requestAnimationFrame(loop);
+        return;
+    }
+    lastRunTime = now; // บันทึกเวลาที่รันล่าสุด
+    // --------------------------------------------
+
+    // ส่วนเดิม: ให้ AI ทำนายผล
     const prediction = await model.predict($("video"), false);
     let best = prediction.sort((a, b) => b.probability - a.probability)[0];
     
@@ -240,12 +254,9 @@ async function loop() {
     if (best.probability > 0.8) {
         $("name").textContent = best.className;
         $("fill").style.width = pct + "%";
-        await sendToESP32(best.className);
+        await sendToESP32(best.className); // ส่งค่าหาบอร์ด (ยังคงมีหน่วงเวลา 1.5s ในฟังก์ชันนี้)
     }
+    
+    // สั่งให้ลูปทำงานต่อในเฟรมถัดไป
     requestAnimationFrame(loop);
 }
-
-$("stop").onclick = () => { running = false; window.location.reload(); };
-</script>
-</body>
-</html>
