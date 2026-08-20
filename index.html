@@ -34,7 +34,7 @@ html, body {
     width: 100vw;
     height: 100vh;
     height: 100dvh;
-    overflow: hidden; /* ล็อกหน้าจอไม่ให้เลื่อนเด็ดขาด */
+    overflow: hidden;
     background-color: var(--bg-color);
     color: var(--text-main);
     font-family: sans-serif;
@@ -65,7 +65,6 @@ html, body {
     flex-direction: column;
 }
 
-/* ขยายช่องกล้องให้ใหญ่ขึ้นเต็มพื้นที่ที่เหลือ */
 .video-box {
     width: 100%;
     flex: 1;
@@ -112,7 +111,7 @@ button {
         </div>
     </section>
 
-    <!-- ส่วนแสดงกล้องและการควบคุม (ขยายใหญ่ขึ้น) -->
+    <!-- ส่วนแสดงกล้องและการควบคุม -->
     <section class="card" style="flex: 1; justify-content: space-between;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <span style="font-weight: 700; font-size: 1.1rem;">AI Camera</span>
@@ -147,7 +146,6 @@ button {
 </div>
 
 <script>
-// จัดการธีม (มืด / สว่าง)
 function toggleTheme() {
     const body = document.body;
     const currentTheme = body.dataset.theme === 'dark' ? 'light' : 'dark';
@@ -155,7 +153,6 @@ function toggleTheme() {
     localStorage.setItem("theme", currentTheme);
 }
 
-// โหลดค่าตั้งค่าเดิมตอนเปิดเว็บ
 window.onload = () => {
     const savedTheme = localStorage.getItem("theme") || "light";
     document.body.dataset.theme = savedTheme;
@@ -185,12 +182,21 @@ let running = false;
 let lastSentTime = 0;
 
 async function sendToESP32(name) {
-    if (Date.now() - lastSentTime < 1500) return;
+    if (Date.now() - lastSentTime < 1000) return;
     lastSentTime = Date.now();
 
-    // สร้าง Image Object เพื่อบังคับให้เบราว์เซอร์ส่ง GET Request ไปที่บอร์ดทันทีแบบข้ามข้อจำกัด CORS
+    // ทำความสะอาดและแปลงชื่อคลาสให้ตรงกับที่บอร์ด ESP32 รอรับเสมอ
+    let cleanName = name.trim().toLowerCase();
+    
+    if (cleanName.includes("mask") && !cleanName.includes("not")) {
+        cleanName = "face mask";
+    } else {
+        cleanName = "Not face mask";
+    }
+
+    const targetUrl = `http://10.120.188.60/detect?name=${encodeURIComponent(cleanName)}`;
+    
     const img = new Image();
-    const targetUrl = `http://10.120.188.60/detect?name=${encodeURIComponent(name)}`;
     
     img.onload = function() {
         document.getElementById("esp-status").textContent = "Connected";
@@ -198,19 +204,17 @@ async function sendToESP32(name) {
     };
     
     img.onerror = function() {
-        // แม้บอร์ดจะไม่ได้ส่งไฟล์รูปภาพกลับมา (ส่งแค่ข้อความ OK) เบราว์เซอร์จะมองว่า error 
-        // แต่คำสั่ง GET ได้วิ่งไปถึงบอร์ดเรียบร้อยแล้ว 100%
-        document.getElementById("esp-status").textContent = "Sent";
+        document.getElementById("esp-status").textContent = "Sent: " + cleanName;
         document.getElementById("esp-status").style.color = "#2563eb";
     };
 
-    // สั่งให้เบราว์เซอร์วิ่งไปเปิด URL ของบอร์ด
     img.src = targetUrl;
+    console.log("Sending to ESP32: " + targetUrl);
 }
 
 async function testConnection() {
-    await sendToESP32("MaskOn");
-    alert("ส่งสัญญาณทดสอบไปที่บอร์ดแล้ว!");
+    await sendToESP32("face mask");
+    alert("ส่งสัญญาณทดสอบ Face Mask ไปที่บอร์ดแล้ว!");
 }
 
 document.getElementById("start-btn").onclick = async () => {
@@ -245,7 +249,7 @@ async function loop() {
         let pct = (best.probability * 100).toFixed(1);
         document.getElementById("conf-text").textContent = pct + "%";
         
-        if (best.probability > 0.8) {
+        if (best.probability > 0.75) {
             document.getElementById("name").textContent = best.className;
             await sendToESP32(best.className);
         }
