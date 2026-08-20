@@ -185,7 +185,6 @@ async function sendToESP32(name) {
     if (Date.now() - lastSentTime < 1000) return;
     lastSentTime = Date.now();
 
-    // ทำความสะอาดและแปลงชื่อคลาสให้ตรงกับที่บอร์ด ESP32 รอรับเสมอ
     let cleanName = name.trim().toLowerCase();
     
     if (cleanName.includes("mask") && !cleanName.includes("not")) {
@@ -194,27 +193,25 @@ async function sendToESP32(name) {
         cleanName = "Not face mask";
     }
 
-    const targetUrl = `http://10.120.188.60/detect?name=${encodeURIComponent(cleanName)}`;
+    // IP ของบอร์ด ESP32 ที่เชื่อมต่อฮอตสปอร์ต
+    const espUrl = `http://10.120.188.60/detect?name=${encodeURIComponent(cleanName)}`;
     
-    const img = new Image();
-    
-    img.onload = function() {
-        document.getElementById("esp-status").textContent = "Connected";
-        document.getElementById("esp-status").style.color = "#2563eb";
-    };
-    
-    img.onerror = function() {
+    // ใช้ CORS Proxy เพื่อให้ GitHub Pages (HTTPS) ส่งข้ามไปหาบอร์ด (HTTP) ได้
+    const targetUrl = "https://corsproxy.io/?" + encodeURIComponent(espUrl);
+
+    try {
+        await fetch(targetUrl);
         document.getElementById("esp-status").textContent = "Sent: " + cleanName;
         document.getElementById("esp-status").style.color = "#2563eb";
-    };
-
-    img.src = targetUrl;
-    console.log("Sending to ESP32: " + targetUrl);
+    } catch (error) {
+        document.getElementById("esp-status").textContent = "Failed";
+        document.getElementById("esp-status").style.color = "#ef4444";
+    }
 }
 
 async function testConnection() {
     await sendToESP32("face mask");
-    alert("ส่งสัญญาณทดสอบ Face Mask ไปที่บอร์ดแล้ว!");
+    alert("ส่งสัญญาณทดสอบ Face Mask ผ่าน Proxy ไปที่บอร์ดแล้ว!");
 }
 
 document.getElementById("start-btn").onclick = async () => {
