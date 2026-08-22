@@ -134,9 +134,9 @@ function saveModelId() {
     alert("บันทึก Model ID เรียบร้อยแล้ว: " + val);
 }
 
-// --- ตั้งค่าระบบ MQTT ---
-const mqttHost = "test.mosquitto.org";
-const mqttPort = 8080; // พอร์ต WebSocket ของ mosquitto คือ 8080
+// --- ตั้งค่าระบบ MQTT ฝั่งเว็บ ---
+const mqttHost = "broker.emqx.io";
+const mqttPort = 8084; // พอร์ต Secure WebSocket ของ EMQX
 const mqttTopic = "gelectronlab/ai_camera/status";
 
 let mqttClient = new Paho.MQTT.Client(mqttHost, Number(mqttPort), "WebClient-" + parseInt(Math.random() * 10000));
@@ -158,7 +158,7 @@ function connectMQTT() {
                 document.getElementById("esp-status").textContent = "Failed";
                 document.getElementById("esp-status").style.color = "#ef4444";
             },
-            useSSL: false
+            useSSL: true // เปลี่ยนเป็ฯ true สำหรับพอร์ต 8084 ของ EMQX
         });
     } catch(e) {
         console.error("MQTT Error: ", e);
