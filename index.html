@@ -135,8 +135,8 @@ function saveModelId() {
 }
 
 // --- ตั้งค่าระบบ MQTT ---
-const mqttHost = "broker.hivemq.com";
-const mqttPort = 8000;
+const mqttHost = "test.mosquitto.org";
+const mqttPort = 8080; // พอร์ต WebSocket ของ mosquitto คือ 8080
 const mqttTopic = "gelectronlab/ai_camera/status";
 
 let mqttClient = new Paho.MQTT.Client(mqttHost, Number(mqttPort), "WebClient-" + parseInt(Math.random() * 10000));
