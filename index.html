@@ -55,14 +55,14 @@ video { width: 100%; height: 100%; object-fit: cover; }
 video.front-cam { transform: scaleX(-1); }
 video.back-cam { transform: scaleX(1); }
 
-/* ปุ่มสลับกล้องแบบไอคอนลูกศรวน สีขาว พื้นหลังใส */
+/* ปุ่มสลับกล้องไอคอนลูกศรหมุน (ปรับให้โปร่งและคมชัดขึ้น) */
 .btn-float-switch {
     position: absolute;
     bottom: 12px;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(0, 0, 0, 0.4);
-    color: #ffffff; /* ตัวไอคอนสีขาว */
+    color: #ffffff;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     width: 44px;
@@ -80,8 +80,8 @@ video.back-cam { transform: scaleX(1); }
     background: rgba(0, 0, 0, 0.7);
 }
 .btn-float-switch svg {
-    width: 24px;
-    height: 24px;
+    width: 22px;
+    height: 22px;
     fill: currentColor;
 }
 
@@ -120,10 +120,10 @@ button {
         
         <div class="video-box">
             <video id="video" class="front-cam" autoplay muted playsinline></video>
-            <!-- ปุ่มสลับกล้องไอคอนลูกศรวน (ตามแบบที่ต้องการ) -->
+            <!-- ปุ่มสลับกล้องไอคอนลูกศรวน (ปรับสัดส่วนความโปร่งใหม่ให้คมชัด) -->
             <button class="btn-float-switch" onclick="switchCamera()" title="สลับกล้อง">
-                <svg viewBox="0 0 512 512">
-                    <path d="M142.9 142.9c62.2-62.2 163-62.2 225.2 0 49.3 49.3 58 122.9 26.2 181.2l-47.5-47.5c15.3-33.3 8.3-74.1-19.1-101.5-35.3-35.3-92.7-35.3-128 0-30.8 30.8-34.9 78.4-12.3 113.8l-47.5 47.5c-34.8-54-28-124.9 23-173.5zm226.2 226.2c-62.2 62.2-163 62.2-225.2 0-49.3-49.3-58-122.9-26.2-181.2l47.5 47.5c-15.3 33.3-8.3 74.1 19.1 101.5 35.3 35.3 92.7 35.3 128 0 30.8-30.8 34.9-78.4 12.3-113.8l47.5-47.5c34.8 54 28 124.9-23 173.5z"/>
+                <svg viewBox="0 0 24 24">
+                    <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
                 </svg>
             </button>
         </div>
