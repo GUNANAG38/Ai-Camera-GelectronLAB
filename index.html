@@ -48,12 +48,42 @@ html, body {
 .video-box {
     width: 100%; flex: 1; min-height: 42vh; background: #000; border-radius: 8px;
     overflow: hidden; display: flex; justify-content: center; align-items: center;
+    position: relative; /* สำคัญเพื่อให้ปุ่มลอยอยู่ข้างในได้ */
     margin-top: 6px; margin-bottom: 6px;
 }
-/* ถ้าใช้กล้องหน้าให้กลับด้าน (Mirror) แต่ถ้าใช้กล้องหลังให้อยู่ในมุมปกติ */
 video { width: 100%; height: 100%; object-fit: cover; }
 video.front-cam { transform: scaleX(-1); }
 video.back-cam { transform: scaleX(1); }
+
+/* สไตล์ปุ่มสลับกล้องแบบลอยมุมล่างกลางจอ (สไตล์สมาร์ตโฟน) */
+.btn-float-switch {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+    transition: background 0.2s, transform 0.2s;
+    z-index: 10;
+}
+.btn-float-switch:active {
+    transform: translateX(-50%) scale(0.9);
+    background: rgba(0, 0, 0, 0.8);
+}
+.btn-float-switch svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+}
 
 .controls { display: flex; gap: 6px; margin-bottom: 4px; }
 .bottom-controls { display: flex; gap: 6px; }
@@ -90,12 +120,18 @@ button {
         
         <div class="video-box">
             <video id="video" class="front-cam" autoplay muted playsinline></video>
+            <!-- ปุ่มสลับกล้องแบบไอคอนลอยอยู่ด้านล่างตรงกลางจอ -->
+            <button class="btn-float-switch" onclick="switchCamera()" title="สลับกล้อง">
+                <svg viewBox="0 0 24 24">
+                    <path d="M20 4h-3.17L15 2H9L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm5 11.5c0 2.76-2.24 5-5 5s-5-2.24-5-5 2.24-5 5-5 5 2.24 5 5zm-3.5 0c0-1.93-1.57-3.5-3.5-3.5-.67 0-1.29.19-1.82.51l1.03 1.03c.24-.09.5-.14.79-.14 1.1 0 2 .9 2 2 0 .29-.05.55-.14.79l1.03 1.03c.32-.53.51-1.15.51-1.82zM12 9c-1.66 0-3 1.34-3 3 0 .34.06.67.16.98L7.4 14.7C7.14 14.16 7 13.6 7 13c0-2.76 2.24-5 5-5v1zm-2 9c1.66 0 3-1.34 3-3 0-.34-.06-.67-.16-.98l1.76-1.72c.26.54.4 1.1.4 1.7 0 2.76-2.24 5-5 5v-1z"/>
+                </svg>
+            </button>
         </div>
         
         <div>
+            <!-- กลับมาใช้ปุ่ม Start และ Stop แบบเดิมเป๊ะๆ -->
             <div class="controls">
                 <button class="btn-start" id="start-btn">Start AI</button>
-                <button class="btn-secondary" id="switch-btn" onclick="switchCamera()">สลับกล้อง</button>
                 <button class="btn-stop" id="stop-btn">Stop</button>
             </div>
             <div class="bottom-controls">
@@ -182,7 +218,7 @@ function toggleTheme() {
 let model = null;
 let running = false;
 let lastSentTime = 0;
-let currentFacingMode = "user"; // เริ่มต้นที่กล้องหน้า ('user' = หน้า, 'environment' = หลัง)
+let currentFacingMode = "user"; // เริ่มต้นที่กล้องหน้า
 
 async function sendToESP32(name) {
     if (Date.now() - lastSentTime < 1000) return;
@@ -209,7 +245,6 @@ async function testConnection() {
     alert("ส่งสัญญาณทดสอบ MQTT แล้ว!");
 }
 
-// ฟังก์ชันเปิดกล้อง (รองรับการสลับหน้า/หลัง)
 async function startCamera(facing) {
     if (window.currentStream) {
         window.currentStream.getTracks().forEach(track => track.stop());
@@ -217,7 +252,6 @@ async function startCamera(facing) {
 
     const videoElement = document.getElementById("video");
     
-    // จัดการเรื่องการกลับด้านภาพ (กระจก) ถ้าเป็นกล้องหน้าให้กลับซ้ายขวา กล้องหลังให้แสดงผลปกติ
     if (facing === "user") {
         videoElement.className = "front-cam";
     } else {
@@ -232,7 +266,6 @@ async function startCamera(facing) {
     videoElement.srcObject = stream;
 }
 
-// ปุ่มสลับกล้อง
 async function switchCamera() {
     currentFacingMode = (currentFacingMode === "user") ? "environment" : "user";
     if (running) {
