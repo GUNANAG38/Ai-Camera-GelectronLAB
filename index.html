@@ -114,8 +114,8 @@ button {
     <!-- ส่วนแสดงกล้องและการควบคุม -->
     <section class="card" style="flex: 1; justify-content: space-between;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-weight: 700; font-size: 1.1rem;">AI Camera (MQTT)</span>
-            <span style="font-size: 0.8rem; font-weight: 600; color: var(--accent);">MiniMicroKit_PT-L</span>
+            <span style="font-weight: 700; font-size: 1.1rem;">AI Camera</span>
+            <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">Mini MicroKit PT-L V1.0</span>
         </div>
         
         <div class="video-box">
@@ -134,7 +134,7 @@ button {
                 <button class="btn-stop" id="stop-btn">Stop</button>
             </div>
             <div class="bottom-controls">
-                <button class="btn-secondary" onclick="testConnection()">Test MQTT</button>
+                <button class="btn-secondary" onclick="testConnection()">Test</button>
                 <button class="btn-secondary" onclick="toggleTheme()">Switch Theme</button>
             </div>
         </div>
@@ -145,7 +145,7 @@ button {
         <div style="color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">AI Analysis Data</div>
         <div class="result-val" id="name">--</div>
         <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between;">
-            <span>MQTT Status: <b id="esp-status" style="color: #ef4444;">Connecting...</b></span>
+            <span>Status: <b id="esp-status" style="color: #ef4444;">Connecting...</b></span>
             <span id="conf-text">0.0%</span>
         </div>
     </section>
@@ -234,7 +234,7 @@ async function sendToESP32(name) {
         let message = new Paho.MQTT.Message(cleanName);
         message.destinationName = mqttTopic;
         mqttClient.send(message);
-        document.getElementById("esp-status").textContent = "Sent: " + cleanName;
+        document.getElementById("esp-status").textContent = "Sent " + cleanName;
         document.getElementById("esp-status").style.color = "#16a34a";
     }
 }
