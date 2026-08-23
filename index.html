@@ -304,8 +304,8 @@ async function loop() {
         let pct = (best.probability * 100).toFixed(1);
         document.getElementById("conf-text").textContent = pct + "%";
         
-        // ถ้ามีความมั่นใจเกิน 75% ส่งชื่อคลาสปกติ
-        if (best.probability > 0.75) {
+        // ถ้ามีความมั่นใจเกิน 85% ส่งชื่อคลาสปกติ
+        if (best.probability > 0.85) {
             document.getElementById("name").textContent = best.className;
             await sendToESP32(best.className);
         } else {
