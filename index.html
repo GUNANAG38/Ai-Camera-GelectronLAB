@@ -299,18 +299,19 @@ async function loop() {
     if (!running) return;
     try {
         const prediction = await model.predict(document.getElementById("video"), false);
-        // เรียงลำดับผลลัพธ์จากความมั่นใจ (probability) มากที่สุดไปน้อยที่สุด
         let best = prediction.sort((a, b) => b.probability - a.probability)[0];
         
         let pct = (best.probability * 100).toFixed(1);
         document.getElementById("conf-text").textContent = pct + "%";
         
-        // ถ้ามีความมั่นใจเกิน 75% (0.75) จะแสดงผลและส่งค่าชื่อคลาสนั้นออกไป
+        // ถ้ามีความมั่นใจเกิน 75% ส่งชื่อคลาสปกติ
         if (best.probability > 0.75) {
             document.getElementById("name").textContent = best.className;
             await sendToESP32(best.className);
         } else {
+            // ถ้าต่ำกว่า 75% ให้แสดงผลและส่งคำว่า "Unknown" ไปบอกบอร์ด
             document.getElementById("name").textContent = "Uncertain...";
+            await sendToESP32("Unknown"); 
         }
     } catch (err) {
         console.error(err);
