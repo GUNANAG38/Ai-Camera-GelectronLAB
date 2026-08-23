@@ -214,6 +214,7 @@ const mqttHost = "broker.emqx.io";
 const mqttPort = 8084; 
 
 let mqttClient = null;
+let isConnecting = false; // Flag ป้องกันการสั่งต่อซ้ำซ้อน
 
 function getDynamicTopic() {
     let groupId = localStorage.getItem("saved_group_id") || "1";
@@ -221,35 +222,60 @@ function getDynamicTopic() {
 }
 
 function initMQTT() {
-    if (mqttClient && mqttClient.isConnected()) {
-        mqttClient.disconnect();
+    // ถ้ากำลังต่ออยู่แล้ว ให้ข้ามไป ไม่ต้องสั่งต่อซ้ำ
+    if (isConnecting) return;
+    isConnecting = true;
+
+    // ถ้ามี Connection เก่า ให้สั่ง disconnect ก่อน
+    if (mqttClient) {
+        try {
+            mqttClient.onConnectionLost = null; // ปลด Handler เก่าออกก่อน
+            if (mqttClient.isConnected()) {
+                mqttClient.disconnect();
+            }
+        } catch(e) { console.log(e); }
     }
 
-    let clientId = "WebClient-" + Math.floor(Math.random() * 100000);
-    mqttClient = new Paho.MQTT.Client(mqttHost, Number(mqttPort), clientId);
+    // สร้าง Client ID ที่ไม่ซ้ำใครอย่างแน่นอน (ใช้วันเวลาเป็นมิลลิวินาที + เลขสุ่ม + เลขกลุ่ม)
+    let groupId = localStorage.getItem("saved_group_id") || "1";
+    let uniqueClientId = "WebClient-G" + groupId + "-" + Date.now() + "-" + Math.floor(Math.random() * 10000);
+    
+    mqttClient = new Paho.MQTT.Client(mqttHost, Number(mqttPort), uniqueClientId);
 
     mqttClient.onConnectionLost = function (responseObject) {
+        isConnecting = false;
         document.getElementById("esp-status").textContent = "Disconnected";
         document.getElementById("esp-status").style.color = "#ef4444";
-        setTimeout(initMQTT, 4000);
+        
+        // ถ้าเป็นการหลุดโดยไม่ตั้งใจ ให้รอ 5 วินาทีแล้วค่อยลองต่อใหม่
+        if (responseObject.errorCode !== 0) {
+            console.log("MQTT Lost: " + responseObject.errorMessage);
+            setTimeout(initMQTT, 5000);
+        }
     };
 
     try {
         mqttClient.connect({
             onSuccess: function() {
+                isConnecting = false;
                 let currentTopic = getDynamicTopic();
-                document.getElementById("esp-status").textContent = "Connected (Group " + localStorage.getItem("saved_group_id") + ")";
+                document.getElementById("esp-status").textContent = "Connected (Group " + groupId + ")";
                 document.getElementById("esp-status").style.color = "#2563eb";
-                console.log("Connected to MQTT Topic: " + currentTopic);
+                console.log("Connected Successfully as: " + uniqueClientId);
             },
             onFailure: function(message) {
+                isConnecting = false;
                 document.getElementById("esp-status").textContent = "Failed";
                 document.getElementById("esp-status").style.color = "#ef4444";
+                console.log("Connect Failed: " + message.errorMessage);
+                setTimeout(initMQTT, 5000);
             },
             useSSL: true,
-            timeout: 5
+            timeout: 5,
+            keepAliveInterval: 30 // ส่ง Ping ทุก 30 วินาทีรักษาสาย
         });
     } catch(e) {
+        isConnecting = false;
         console.error("MQTT Exception: ", e);
     }
 }
