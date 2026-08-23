@@ -55,17 +55,17 @@ video { width: 100%; height: 100%; object-fit: cover; }
 video.front-cam { transform: scaleX(-1); }
 video.back-cam { transform: scaleX(1); }
 
+/* จุดที่ 1: ย้ายปุ่มสลับกล้องไปไว้มุมขวาบน */
 .btn-float-switch {
     position: absolute;
-    bottom: 12px;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 12px;
+    right: 12px;
     background: rgba(0, 0, 0, 0.4);
     color: #ffffff;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
-    width: 44px;
-    height: 44px;
+    width: 42px;
+    height: 42px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -75,12 +75,12 @@ video.back-cam { transform: scaleX(1); }
     z-index: 10;
 }
 .btn-float-switch:active {
-    transform: translateX(-50%) scale(0.9);
+    transform: scale(0.9);
     background: rgba(0, 0, 0, 0.7);
 }
 .btn-float-switch svg {
-    width: 22px;
-    height: 22px;
+    width: 20px;
+    height: 20px;
     fill: currentColor;
 }
 
@@ -96,6 +96,20 @@ button {
 .btn-secondary { background: var(--border); color: var(--text-main); flex: 1; font-size: 0.8rem; }
 
 .result-val { font-size: 1.25rem; font-weight: 800; color: var(--accent); margin: 2px 0; word-break: break-all; }
+
+/* จุดที่ 2: ปรับแต่งสไตล์ส่วนแสดงผลลัพธ์และความแม่นยำ */
+.result-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: 2px;
+}
+#conf-text {
+    font-size: 1.6rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.5px;
+}
 </style>
 </head>
 <body data-theme="light">
@@ -119,6 +133,7 @@ button {
         
         <div class="video-box">
             <video id="video" class="front-cam" autoplay muted playsinline></video>
+            <!-- ปุ่มสลับกล้องมุมขวาบน -->
             <button class="btn-float-switch" onclick="switchCamera()" title="สลับกล้อง">
                 <svg viewBox="0 0 24 24">
                     <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
@@ -142,9 +157,10 @@ button {
     <section class="card">
         <div style="color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">ผลการวิเคราะห์ข้อมูล</div>
         <div class="result-val" id="name">--</div>
-        <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between;">
-            <span>สถานะ : <b id="esp-status" style="color: #ef4444;">Connecting...</b></span>
-            <span id="conf-text">0.0%</span>
+        <div class="result-footer">
+            <span style="font-size: 0.75rem; color: var(--text-muted);">สถานะ : <b id="esp-status" style="color: #ef4444;">Connecting...</b></span>
+            <!-- ตัวเลขความมั่นใจขนาดใหญ่ ขวาล่าง -->
+            <span id="conf-text" style="color: var(--text-muted);">0.0%</span>
         </div>
     </section>
 </div>
@@ -221,7 +237,6 @@ async function sendToESP32(className) {
     if (Date.now() - lastSentTime < 1000) return;
     lastSentTime = Date.now();
 
-    // ส่งชื่อ Class ที่นักเรียนตั้งตรงๆ ไปผ่าน MQTT ทันทีโดยไม่จำกัดชื่อ
     if (mqttClient && mqttClient.isConnected()) {
         let message = new Paho.MQTT.Message(className);
         message.destinationName = mqttTopic;
@@ -301,15 +316,25 @@ async function loop() {
         const prediction = await model.predict(document.getElementById("video"), false);
         let best = prediction.sort((a, b) => b.probability - a.probability)[0];
         
-        let pct = (best.probability * 100).toFixed(1);
-        document.getElementById("conf-text").textContent = pct + "%";
+        let pctVal = best.probability * 100;
+        let pctStr = pctVal.toFixed(1) + "%";
+        
+        let confElem = document.getElementById("conf-text");
+        confElem.textContent = pctStr;
+
+        // เปลี่ยนสีตัวเลขความมั่นใจอัตโนมัติ (> 90% เขียว, <= 90% แดง)
+        if (pctVal > 90) {
+            confElem.style.color = "#16a34a"; // สีเขียว
+        } else {
+            confElem.style.color = "#ef4444"; // สีแดง
+        }
         
         // ถ้ามีความมั่นใจเกิน 90% ส่งชื่อคลาสปกติ
         if (best.probability > 0.90) {
             document.getElementById("name").textContent = best.className;
             await sendToESP32(best.className);
         } else {
-            // ถ้าต่ำกว่า 75% ให้แสดงผลและส่งคำว่า "Unknown" ไปบอกบอร์ด
+            // ถ้าต่ำกว่า 90% ให้แสดงผลและส่งคำว่า "Unknown" ไปบอกบอร์ด
             document.getElementById("name").textContent = "Uncertain...";
             await sendToESP32("Unknown"); 
         }
