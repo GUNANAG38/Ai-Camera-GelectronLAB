@@ -238,7 +238,7 @@ function initMQTT() {
         mqttClient.connect({
             onSuccess: function() {
                 let currentTopic = getDynamicTopic();
-                document.getElementById("esp-status").textContent = "Connected (G." + localStorage.getItem("saved_group_id") + ")";
+                document.getElementById("esp-status").textContent = "Connected (Group " + localStorage.getItem("saved_group_id") + ")";
                 document.getElementById("esp-status").style.color = "#2563eb";
                 console.log("Connected to MQTT Topic: " + currentTopic);
             },
