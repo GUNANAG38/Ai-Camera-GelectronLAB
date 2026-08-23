@@ -143,7 +143,7 @@ button {
         <div style="color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">ผลการวิเคราะห์ข้อมูล</div>
         <div class="result-val" id="name">--</div>
         <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between;">
-            <span>สถานะ: <b id="esp-status" style="color: #ef4444;">Connecting...</b></span>
+            <span>สถานะ : <b id="esp-status" style="color: #ef4444;">Connecting...</b></span>
             <span id="conf-text">0.0%</span>
         </div>
     </section>
@@ -226,7 +226,7 @@ async function sendToESP32(className) {
         let message = new Paho.MQTT.Message(className);
         message.destinationName = mqttTopic;
         mqttClient.send(message);
-        document.getElementById("esp-status").textContent = "Sent: " + className;
+        document.getElementById("esp-status").textContent = "Sent " + className;
         document.getElementById("esp-status").style.color = "#16a34a";
     }
 }
