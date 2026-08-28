@@ -37,19 +37,19 @@ html, body {
 
 .app-container {
     width: 100%; max-width: 480px; height: 100%; max-height: 100vh;
-    padding: 8px; display: flex; flex-direction: column; gap: 6px; justify-content: space-between;
+    padding: 6px; display: flex; flex-direction: column; gap: 4px; justify-content: space-between;
 }
 
 .card {
-    background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px;
-    padding: 8px 12px; box-shadow: var(--shadow); display: flex; flex-direction: column;
+    background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px;
+    padding: 6px 10px; box-shadow: var(--shadow); display: flex; flex-direction: column;
 }
 
 .video-box {
-    width: 100%; flex: 1; min-height: 32vh; background: #000; border-radius: 8px;
+    width: 100%; flex: 0.8; min-height: 24vh; background: #000; border-radius: 6px;
     overflow: hidden; display: flex; justify-content: center; align-items: center;
     position: relative;
-    margin-top: 4px; margin-bottom: 4px;
+    margin-top: 2px; margin-bottom: 2px;
 }
 video { width: 100%; height: 100%; object-fit: cover; }
 video.front-cam { transform: scaleX(-1); }
@@ -57,14 +57,14 @@ video.back-cam { transform: scaleX(1); }
 
 .btn-float-switch {
     position: absolute;
-    top: 12px;
-    right: 12px;
+    top: 8px;
+    right: 8px;
     background: rgba(0, 0, 0, 0.4);
     color: #ffffff;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
-    width: 42px;
-    height: 42px;
+    width: 36px;
+    height: 36px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -78,32 +78,32 @@ video.back-cam { transform: scaleX(1); }
     background: rgba(0, 0, 0, 0.7);
 }
 .btn-float-switch svg {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     fill: currentColor;
 }
 
-.controls { display: flex; gap: 6px; margin-bottom: 4px; }
-.bottom-controls { display: flex; gap: 6px; }
+.controls { display: flex; gap: 4px; margin-bottom: 2px; }
+.bottom-controls { display: flex; gap: 4px; }
 
 button {
-    padding: 10px 12px; border-radius: 8px; border: none; font-weight: 600; font-size: 0.85rem; cursor: pointer;
+    padding: 8px 10px; border-radius: 6px; border: none; font-weight: 600; font-size: 0.8rem; cursor: pointer;
 }
 
 .btn-start { background: var(--accent); color: white; flex: 1; }
 .btn-stop { background: #ef4444; color: white; flex: 1; }
-.btn-secondary { background: var(--border); color: var(--text-main); flex: 1; font-size: 0.8rem; }
+.btn-secondary { background: var(--border); color: var(--text-main); flex: 1; font-size: 0.75rem; }
 
-.result-val { font-size: 1.1rem; font-weight: 800; color: var(--accent); margin: 2px 0; word-break: break-all; }
+.result-val { font-size: 1rem; font-weight: 800; color: var(--accent); margin: 1px 0; word-break: break-all; }
 
 .result-footer {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-top: 2px;
+    margin-top: 1px;
 }
 #conf-text {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     font-weight: 900;
     line-height: 1;
     letter-spacing: -0.5px;
@@ -114,31 +114,31 @@ button {
 
 <div class="app-container">
     <!-- ส่วนตั้งค่า Model ID, School ID และ Name ID -->
-    <section class="card" style="gap: 5px;">
+    <section class="card" style="gap: 4px;">
         <div>
-            <div style="font-size: 0.65rem; font-weight: 600; margin-bottom: 1px; color: var(--text-muted);">Teachable Model ID</div>
-            <input type="text" id="model-input" placeholder="เช่น my-model-xxxx" style="width: 100%; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-main); font-size: 0.8rem;">
+            <div style="font-size: 0.6rem; font-weight: 600; margin-bottom: 1px; color: var(--text-muted);">Teachable Model ID</div>
+            <input type="text" id="model-input" placeholder="เช่น my-model-xxxx" style="width: 100%; padding: 3px 6px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-main); font-size: 0.75rem;">
         </div>
         
-        <div style="display: flex; gap: 6px;">
+        <div style="display: flex; gap: 4px;">
             <div style="flex: 1;">
-                <div style="font-size: 0.65rem; font-weight: 600; margin-bottom: 1px; color: var(--text-muted);">School ID</div>
-                <input type="text" id="school-input" placeholder="เช่น pt-school" style="width: 100%; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-main); font-size: 0.8rem;">
+                <div style="font-size: 0.6rem; font-weight: 600; margin-bottom: 1px; color: var(--text-muted);">School ID</div>
+                <input type="text" id="school-input" placeholder="เช่น PTL" style="width: 100%; padding: 3px 6px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-main); font-size: 0.75rem;">
             </div>
             <div style="flex: 1;">
-                <div style="font-size: 0.65rem; font-weight: 600; margin-bottom: 1px; color: var(--text-muted);">Name ID</div>
-                <input type="text" id="name-input" placeholder="เช่น group1" style="width: 100%; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-main); font-size: 0.8rem;">
+                <div style="font-size: 0.6rem; font-weight: 600; margin-bottom: 1px; color: var(--text-muted);">Name ID</div>
+                <input type="text" id="name-input" placeholder="เช่น group1" style="width: 100%; padding: 3px 6px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-main); font-size: 0.75rem;">
             </div>
         </div>
 
-        <button onclick="saveSettings()" style="background: var(--accent); color: white; border-radius: 6px; padding: 6px 12px; font-size: 0.8rem; width: 100%; margin-top: 2px;">SAVE</button>
+        <button onclick="saveSettings()" style="background: var(--accent); color: white; border-radius: 4px; padding: 5px 10px; font-size: 0.75rem; width: 100%; margin-top: 1px;">SAVE</button>
     </section>
 
     <!-- ส่วนแสดงกล้องและการควบคุม -->
     <section class="card" style="flex: 1; justify-content: space-between;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-weight: 700; font-size: 0.9rem;">AI Camera | GelectronLAB</span>
-            <span id="current-group-label" style="font-size: 0.7rem; font-weight: 700; color: var(--accent);">Topic : --</span>
+            <span style="font-weight: 700; font-size: 0.85rem;">AI Camera | GelectronLAB</span>
+            <span id="current-group-label" style="font-size: 0.65rem; font-weight: 700; color: var(--accent);">Topic : --</span>
         </div>
         
         <div class="video-box">
@@ -164,10 +164,10 @@ button {
 
     <!-- ส่วนแสดงผลลัพธ์ -->
     <section class="card">
-        <div style="color: var(--text-muted); font-size: 0.7rem; font-weight: 600;">ผลการวิเคราะห์ข้อมูล</div>
+        <div style="color: var(--text-muted); font-size: 0.65rem; font-weight: 600;">ผลการวิเคราะห์ข้อมูล</div>
         <div class="result-val" id="name">--</div>
         <div class="result-footer">
-            <span style="font-size: 0.7rem; color: var(--text-muted);">สถานะ : <b id="esp-status" style="color: #ef4444;">Connecting...</b></span>
+            <span style="font-size: 0.65rem; color: var(--text-muted);">สถานะ : <b id="esp-status" style="color: #ef4444;">Connecting...</b></span>
             <span id="conf-text" style="color: var(--text-muted);">0.0%</span>
         </div>
     </section>
@@ -181,7 +181,7 @@ window.addEventListener('DOMContentLoaded', () => {
     let savedId = localStorage.getItem("saved_model_id") || "";
     if (savedId) document.getElementById("model-input").value = savedId;
 
-    let savedSchool = localStorage.getItem("saved_school_id") || "pt-school";
+    let savedSchool = localStorage.getItem("saved_school_id") || "PTL";
     document.getElementById("school-input").value = savedSchool;
 
     let savedNameId = localStorage.getItem("saved_name_id") || "group1";
@@ -192,7 +192,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function saveSettings() {
     const modelVal = document.getElementById("model-input").value.trim();
-    const schoolVal = document.getElementById("school-input").value.trim() || "pt-school";
+    const schoolVal = document.getElementById("school-input").value.trim() || "PTL";
     const nameVal = document.getElementById("name-input").value.trim() || "group1";
     
     if (!modelVal) {
@@ -214,7 +214,6 @@ function updateTopicDisplay(schoolId, nameId) {
     document.getElementById("current-group-label").textContent = "Topic : " + schoolId + "/" + nameId;
 }
 
-// --- ตั้งค่าระบบ MQTT แบบ Namespace ---
 const mqttHost = "broker.emqx.io";
 const mqttPort = 8084; 
 
@@ -222,7 +221,7 @@ let mqttClient = null;
 let isConnecting = false;
 
 function getDynamicTopic() {
-    let schoolId = localStorage.getItem("saved_school_id") || "pt-school";
+    let schoolId = localStorage.getItem("saved_school_id") || "PTL";
     let nameId = localStorage.getItem("saved_name_id") || "group1";
     return "gelectronlab/" + schoolId + "/" + nameId + "/status";
 }
@@ -240,7 +239,7 @@ function initMQTT() {
         } catch(e) { console.log(e); }
     }
 
-    let schoolId = localStorage.getItem("saved_school_id") || "pt-school";
+    let schoolId = localStorage.getItem("saved_school_id") || "PTL";
     let nameId = localStorage.getItem("saved_name_id") || "group1";
     let uniqueClientId = "WebClient-" + schoolId + "-" + nameId + "-" + Date.now() + "-" + Math.floor(Math.random() * 10000);
     
