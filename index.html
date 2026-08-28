@@ -46,7 +46,7 @@ html, body {
 }
 
 .video-box {
-    width: 100%; flex: 1; min-height: 38vh; background: #000; border-radius: 8px;
+    width: 100%; flex: 1; min-height: 32vh; background: #000; border-radius: 8px;
     overflow: hidden; display: flex; justify-content: center; align-items: center;
     position: relative;
     margin-top: 4px; margin-bottom: 4px;
@@ -94,7 +94,7 @@ button {
 .btn-stop { background: #ef4444; color: white; flex: 1; }
 .btn-secondary { background: var(--border); color: var(--text-main); flex: 1; font-size: 0.8rem; }
 
-.result-val { font-size: 1.2rem; font-weight: 800; color: var(--accent); margin: 2px 0; word-break: break-all; }
+.result-val { font-size: 1.1rem; font-weight: 800; color: var(--accent); margin: 2px 0; word-break: break-all; }
 
 .result-footer {
     display: flex;
@@ -103,7 +103,7 @@ button {
     margin-top: 2px;
 }
 #conf-text {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     font-weight: 900;
     line-height: 1;
     letter-spacing: -0.5px;
@@ -113,28 +113,32 @@ button {
 <body data-theme="light">
 
 <div class="app-container">
-    <!-- ส่วนตั้งค่า Model ID และ Group ID -->
-    <section class="card" style="gap: 6px;">
+    <!-- ส่วนตั้งค่า Model ID, School ID และ Name ID -->
+    <section class="card" style="gap: 5px;">
         <div>
-            <div style="font-size: 0.7rem; font-weight: 600; margin-bottom: 2px; color: var(--text-muted);">Teachable Model ID</div>
-            <div style="display: flex; gap: 6px;">
-                <input type="text" id="model-input" placeholder="เช่น my-model-xxxx" style="flex:1; padding: 5px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-main); font-size: 0.85rem;">
-            </div>
+            <div style="font-size: 0.65rem; font-weight: 600; margin-bottom: 1px; color: var(--text-muted);">Teachable Model ID</div>
+            <input type="text" id="model-input" placeholder="เช่น my-model-xxxx" style="width: 100%; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-main); font-size: 0.8rem;">
         </div>
-        <div style="display: flex; gap: 6px; align-items: center;">
+        
+        <div style="display: flex; gap: 6px;">
             <div style="flex: 1;">
-                <div style="font-size: 0.7rem; font-weight: 600; margin-bottom: 2px; color: var(--text-muted);">Group ID (เลขกลุ่ม เช่น 1-20)</div>
-                <input type="number" id="group-input" placeholder="1" min="1" max="50" style="width: 100%; padding: 5px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-main); font-size: 0.85rem;">
+                <div style="font-size: 0.65rem; font-weight: 600; margin-bottom: 1px; color: var(--text-muted);">School ID (ชื่อโรงเรียน)</div>
+                <input type="text" id="school-input" placeholder="เช่น pt-school" style="width: 100%; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-main); font-size: 0.8rem;">
             </div>
-            <button onclick="saveSettings()" style="background: var(--accent); color: white; border-radius: 6px; padding: 7px 14px; font-size: 0.85rem; margin-top: 14px;">บันทึกค่า</button>
+            <div style="flex: 1;">
+                <div style="font-size: 0.65rem; font-weight: 600; margin-bottom: 1px; color: var(--text-muted);">Name ID (ชื่อกลุ่ม/ชื่อเล่น)</div>
+                <input type="text" id="name-input" placeholder="เช่น group1" style="width: 100%; padding: 4px 8px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-main); font-size: 0.8rem;">
+            </div>
         </div>
+
+        <button onclick="saveSettings()" style="background: var(--accent); color: white; border-radius: 6px; padding: 6px 12px; font-size: 0.8rem; width: 100%; margin-top: 2px;">บันทึกค่าการตั้งค่า</button>
     </section>
 
     <!-- ส่วนแสดงกล้องและการควบคุม -->
     <section class="card" style="flex: 1; justify-content: space-between;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-weight: 700; font-size: 1rem;">AI Camera | GelectronLAB</span>
-            <span id="current-group-label" style="font-size: 0.75rem; font-weight: 700; color: var(--accent);">Group : --</span>
+            <span style="font-weight: 700; font-size: 0.9rem;">AI Camera | GelectronLAB</span>
+            <span id="current-group-label" style="font-size: 0.7rem; font-weight: 700; color: var(--accent);">Topic : --</span>
         </div>
         
         <div class="video-box">
@@ -160,10 +164,10 @@ button {
 
     <!-- ส่วนแสดงผลลัพธ์ -->
     <section class="card">
-        <div style="color: var(--text-muted); font-size: 0.75rem; font-weight: 600;">ผลการวิเคราะห์ข้อมูล</div>
+        <div style="color: var(--text-muted); font-size: 0.7rem; font-weight: 600;">ผลการวิเคราะห์ข้อมูล</div>
         <div class="result-val" id="name">--</div>
         <div class="result-footer">
-            <span style="font-size: 0.75rem; color: var(--text-muted);">สถานะ : <b id="esp-status" style="color: #ef4444;">Connecting...</b></span>
+            <span style="font-size: 0.7rem; color: var(--text-muted);">สถานะ : <b id="esp-status" style="color: #ef4444;">Connecting...</b></span>
             <span id="conf-text" style="color: var(--text-muted);">0.0%</span>
         </div>
     </section>
@@ -177,68 +181,68 @@ window.addEventListener('DOMContentLoaded', () => {
     let savedId = localStorage.getItem("saved_model_id") || "";
     if (savedId) document.getElementById("model-input").value = savedId;
 
-    let savedGroup = localStorage.getItem("saved_group_id") || "1";
-    document.getElementById("group-input").value = savedGroup;
-    updateGroupTopicDisplay(savedGroup);
+    let savedSchool = localStorage.getItem("saved_school_id") || "pt-school";
+    document.getElementById("school-input").value = savedSchool;
+
+    let savedNameId = localStorage.getItem("saved_name_id") || "group1";
+    document.getElementById("name-input").value = savedNameId;
+
+    updateTopicDisplay(savedSchool, savedNameId);
 });
 
 function saveSettings() {
     const modelVal = document.getElementById("model-input").value.trim();
-    const groupVal = document.getElementById("group-input").value.trim();
+    const schoolVal = document.getElementById("school-input").value.trim() || "pt-school";
+    const nameVal = document.getElementById("name-input").value.trim() || "group1";
     
     if (!modelVal) {
         alert("กรุณากรอก Model ID ให้ถูกต้อง");
         return;
     }
-    if (!groupVal) {
-        alert("กรุณากรอก Group ID (เลขกลุ่ม)");
-        return;
-    }
 
     localStorage.setItem("saved_model_id", modelVal);
-    localStorage.setItem("saved_group_id", groupVal);
+    localStorage.setItem("saved_school_id", schoolVal);
+    localStorage.setItem("saved_name_id", nameVal);
     
-    updateGroupTopicDisplay(groupVal);
+    updateTopicDisplay(schoolVal, nameVal);
     alert("บันทึกค่าเรียบร้อย! กำลังเชื่อมต่อ MQTT ใหม่...");
     
-    // รีเซ็ตการเชื่อมต่อ MQTT ไปยัง Topic ใหม่ทันที
     initMQTT();
 }
 
-function updateGroupTopicDisplay(groupId) {
-    document.getElementById("current-group-label").textContent = "Group : " + groupId;
+function updateTopicDisplay(schoolId, nameId) {
+    document.getElementById("current-group-label").textContent = "Topic : " + schoolId + "/" + nameId;
 }
 
-// --- ตั้งค่าระบบ MQTT แบบ Dynamic ตาม Group ID ---
+// --- ตั้งค่าระบบ MQTT แบบ Namespace ---
 const mqttHost = "broker.emqx.io";
 const mqttPort = 8084; 
 
 let mqttClient = null;
-let isConnecting = false; // Flag ป้องกันการสั่งต่อซ้ำซ้อน
+let isConnecting = false;
 
 function getDynamicTopic() {
-    let groupId = localStorage.getItem("saved_group_id") || "1";
-    return "gelectronlab/group/" + groupId + "/status";
+    let schoolId = localStorage.getItem("saved_school_id") || "pt-school";
+    let nameId = localStorage.getItem("saved_name_id") || "group1";
+    return "gelectronlab/" + schoolId + "/" + nameId + "/status";
 }
 
 function initMQTT() {
-    // ถ้ากำลังต่ออยู่แล้ว ให้ข้ามไป ไม่ต้องสั่งต่อซ้ำ
     if (isConnecting) return;
     isConnecting = true;
 
-    // ถ้ามี Connection เก่า ให้สั่ง disconnect ก่อน
     if (mqttClient) {
         try {
-            mqttClient.onConnectionLost = null; // ปลด Handler เก่าออกก่อน
+            mqttClient.onConnectionLost = null;
             if (mqttClient.isConnected()) {
                 mqttClient.disconnect();
             }
         } catch(e) { console.log(e); }
     }
 
-    // สร้าง Client ID ที่ไม่ซ้ำใครอย่างแน่นอน (ใช้วันเวลาเป็นมิลลิวินาที + เลขสุ่ม + เลขกลุ่ม)
-    let groupId = localStorage.getItem("saved_group_id") || "1";
-    let uniqueClientId = "WebClient-G" + groupId + "-" + Date.now() + "-" + Math.floor(Math.random() * 10000);
+    let schoolId = localStorage.getItem("saved_school_id") || "pt-school";
+    let nameId = localStorage.getItem("saved_name_id") || "group1";
+    let uniqueClientId = "WebClient-" + schoolId + "-" + nameId + "-" + Date.now() + "-" + Math.floor(Math.random() * 10000);
     
     mqttClient = new Paho.MQTT.Client(mqttHost, Number(mqttPort), uniqueClientId);
 
@@ -247,7 +251,6 @@ function initMQTT() {
         document.getElementById("esp-status").textContent = "Disconnected";
         document.getElementById("esp-status").style.color = "#ef4444";
         
-        // ถ้าเป็นการหลุดโดยไม่ตั้งใจ ให้รอ 5 วินาทีแล้วค่อยลองต่อใหม่
         if (responseObject.errorCode !== 0) {
             console.log("MQTT Lost: " + responseObject.errorMessage);
             setTimeout(initMQTT, 5000);
@@ -258,8 +261,7 @@ function initMQTT() {
         mqttClient.connect({
             onSuccess: function() {
                 isConnecting = false;
-                let currentTopic = getDynamicTopic();
-                document.getElementById("esp-status").textContent = "Connected (Group " + groupId + ")";
+                document.getElementById("esp-status").textContent = "Connected (" + nameId + ")";
                 document.getElementById("esp-status").style.color = "#2563eb";
                 console.log("Connected Successfully as: " + uniqueClientId);
             },
@@ -272,7 +274,7 @@ function initMQTT() {
             },
             useSSL: true,
             timeout: 5,
-            keepAliveInterval: 30 // ส่ง Ping ทุก 30 วินาทีรักษาสาย
+            keepAliveInterval: 30
         });
     } catch(e) {
         isConnecting = false;
@@ -280,7 +282,6 @@ function initMQTT() {
     }
 }
 
-// เริ่มต้นเชื่อมต่อ MQTT ครั้งแรก
 initMQTT();
 
 function toggleTheme() {
@@ -305,15 +306,15 @@ async function sendToESP32(className) {
         message.destinationName = topic;
         mqttClient.send(message);
         
-        let groupId = localStorage.getItem("saved_group_id") || "1";
-        document.getElementById("esp-status").textContent = "Sent (Group " + groupId + ")";
+        let nameId = localStorage.getItem("saved_name_id") || "group1";
+        document.getElementById("esp-status").textContent = "Sent (" + nameId + ")";
         document.getElementById("esp-status").style.color = "#16a34a";
     }
 }
 
 async function testConnection() {
     await sendToESP32("Test_Class");
-    alert("ส่งสัญญาณทดสอบไปยัง Topic ของกลุ่มเรียบร้อย!");
+    alert("ส่งสัญญาณทดสอบไปยัง Topic Namespace เรียบร้อย!");
 }
 
 async function startCamera(facing) {
@@ -386,9 +387,9 @@ async function loop() {
         confElem.textContent = pctStr;
 
         if (pctVal > 90) {
-            confElem.style.color = "#16a34a"; // สีเขียว
+            confElem.style.color = "#16a34a";
         } else {
-            confElem.style.color = "#ef4444"; // สีแดง
+            confElem.style.color = "#ef4444";
         }
         
         if (best.probability > 0.90) {
