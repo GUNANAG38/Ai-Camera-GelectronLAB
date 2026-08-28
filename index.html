@@ -33,6 +33,7 @@ html, body {
     margin: 0; padding: 0; width: 100vw; height: 100vh; height: 100dvh;
     overflow: hidden; background-color: var(--bg-color); color: var(--text-main);
     font-family: sans-serif; display: flex; justify-content: center; align-items: center;
+    position: fixed; /* ล็อกหน้าจอไม่ให้ขยับหรือยืดหดตอนเปิดกล้องบนมือถือ */
 }
 
 .app-container {
@@ -122,7 +123,7 @@ button {
         
         <div style="display: flex; gap: 4px;">
             <div style="flex: 1;">
-                <div style="font-size: 0.6rem; font-weight: 600; margin-bottom: 1px; color: var(--text-muted);">School ID</div>
+                <div style="font-size: 0.6rem; font-weight: 600; margin-bottom: 1px; color: var(--text-muted);">School ID)</div>
                 <input type="text" id="school-input" placeholder="เช่น PTL" style="width: 100%; padding: 3px 6px; border-radius: 4px; border: 1px solid var(--border); background: var(--bg-color); color: var(--text-main); font-size: 0.75rem;">
             </div>
             <div style="flex: 1;">
@@ -131,7 +132,7 @@ button {
             </div>
         </div>
 
-        <button onclick="saveSettings()" style="background: var(--accent); color: white; border-radius: 4px; padding: 5px 10px; font-size: 0.75rem; width: 100%; margin-top: 1px;">SAVE</button>
+        <button onclick="saveSettings()" style="background: var(--accent); color: white; border-radius: 4px; padding: 5px 10px; font-size: 0.75rem; width: 100%; margin-top: 1px;">บันทึกค่าการตั้งค่า</button>
     </section>
 
     <!-- ส่วนแสดงกล้องและการควบคุม -->
