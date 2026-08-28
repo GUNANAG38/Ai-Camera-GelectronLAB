@@ -181,7 +181,7 @@ window.addEventListener('DOMContentLoaded', () => {
     let savedId = localStorage.getItem("saved_model_id") || "";
     if (savedId) document.getElementById("model-input").value = savedId;
 
-    let savedSchool = localStorage.getItem("saved_school_id") || "PTL";
+    let savedSchool = localStorage.getItem("saved_school_id") || "PTL-School";
     document.getElementById("school-input").value = savedSchool;
 
     let savedNameId = localStorage.getItem("saved_name_id") || "group1";
@@ -192,7 +192,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function saveSettings() {
     const modelVal = document.getElementById("model-input").value.trim();
-    const schoolVal = document.getElementById("school-input").value.trim() || "PTL";
+    const schoolVal = document.getElementById("school-input").value.trim() || "PTL-School";
     const nameVal = document.getElementById("name-input").value.trim() || "group1";
     
     if (!modelVal) {
@@ -205,7 +205,7 @@ function saveSettings() {
     localStorage.setItem("saved_name_id", nameVal);
     
     updateTopicDisplay(schoolVal, nameVal);
-    alert("บันทึกค่าเรียบร้อย! กำลังเชื่อมต่อ MQTT ใหม่...");
+    alert("บันทึกค่าเรียบร้อย! กำลังเชื่อมต่อ ระบบใหม่...");
     
     initMQTT();
 }
@@ -221,7 +221,7 @@ let mqttClient = null;
 let isConnecting = false;
 
 function getDynamicTopic() {
-    let schoolId = localStorage.getItem("saved_school_id") || "PTL";
+    let schoolId = localStorage.getItem("saved_school_id") || "PTL-School";
     let nameId = localStorage.getItem("saved_name_id") || "group1";
     return "gelectronlab/" + schoolId + "/" + nameId + "/status";
 }
@@ -239,7 +239,7 @@ function initMQTT() {
         } catch(e) { console.log(e); }
     }
 
-    let schoolId = localStorage.getItem("saved_school_id") || "PTL";
+    let schoolId = localStorage.getItem("saved_school_id") || "PTL-School";
     let nameId = localStorage.getItem("saved_name_id") || "group1";
     let uniqueClientId = "WebClient-" + schoolId + "-" + nameId + "-" + Date.now() + "-" + Math.floor(Math.random() * 10000);
     
@@ -260,7 +260,7 @@ function initMQTT() {
         mqttClient.connect({
             onSuccess: function() {
                 isConnecting = false;
-                document.getElementById("esp-status").textContent = "Connected (" + nameId + ")";
+                document.getElementById("esp-status").textContent = "Connected " + nameId + "";
                 document.getElementById("esp-status").style.color = "#2563eb";
                 console.log("Connected Successfully as: " + uniqueClientId);
             },
@@ -306,7 +306,7 @@ async function sendToESP32(className) {
         mqttClient.send(message);
         
         let nameId = localStorage.getItem("saved_name_id") || "group1";
-        document.getElementById("esp-status").textContent = "Sent (" + nameId + ")";
+        document.getElementById("esp-status").textContent = "Sent " + nameId + "";
         document.getElementById("esp-status").style.color = "#16a34a";
     }
 }
