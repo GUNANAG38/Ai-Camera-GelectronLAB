@@ -14,9 +14,10 @@
   --bg-gradient:linear-gradient(145deg,#ffffff 0%,#f8fff9 38%,#d4f3da 100%);
   --card:rgba(255,255,255,.96); --text:#111827; --muted:#667085;
   --green:#21a957; --green-strong:#159447; --border:#dce7e0;
-  --button:#ffffff; --button-border:#d4e5da; --button-text:#111111;
+  --button:#f1f5f9; --button-border:#cbd5e1; --button-text:#0f172a;
   --shadow:0 10px 26px rgba(31,73,45,.075); --video-border:#d8e6dd;
   --status-bg:rgba(255,255,255,.9);
+  --topic-color: #000000;
 }
 
 [data-theme='dark'] {
@@ -34,6 +35,7 @@
   --shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
   --video-border: #475569;
   --status-bg: rgba(30, 41, 59, 0.9);
+  --topic-color: #ffffff;
 }
 
 * { box-sizing: border-box; }
@@ -91,7 +93,7 @@ button {
 
 .btn-start { background: var(--green) !important; color: white !important; border-color: var(--green-strong) !important; flex: 1; font-size: 0.9rem; }
 .btn-stop { background: #ef4444 !important; color: white !important; border-color: #dc2626 !important; flex: 1; font-size: 0.9rem; }
-.btn-secondary { flex: 1; font-size: 0.8rem; }
+.btn-secondary { flex: 1; font-size: 0.8rem; background: var(--button); color: var(--button-text); border-color: var(--button-border); }
 
 .result-val { font-size: 1.2rem; font-weight: 800; color: var(--green-strong); margin: 2px 0; word-break: break-all; }
 
@@ -137,7 +139,7 @@ input {
     <section class="card" style="flex: 1; justify-content: space-between;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <span style="font-weight: 700; font-size: 0.85rem;">AI Camera</span>
-            <span id="current-group-label" style="font-size: 0.7rem; font-weight: 700; color: var(--green-strong);">Topic : --</span>
+            <span id="current-group-label" style="font-size: 0.7rem; font-weight: 700; color: var(--topic-color);">Topic : --</span>
         </div>
         
         <div class="video-box">
