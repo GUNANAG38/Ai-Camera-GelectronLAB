@@ -47,21 +47,21 @@ html, body {
 
 .app-container {
   width: 100%; max-width: 480px; height: 100%; max-height: 100vh; max-height: 100dvh;
-  padding: 6px 8px; display: flex; flex-direction: column; gap: 4px; justify-content: space-between;
+  padding: 4px 6px; display: flex; flex-direction: column; gap: 3px; justify-content: space-between;
 }
 
 .card {
   background: var(--card); border: 1px solid var(--border); border-radius: 9px;
-  padding: 6px 10px; box-shadow: var(--shadow); display: flex; flex-direction: column;
+  padding: 4px 8px; box-shadow: var(--shadow); display: flex; flex-direction: column;
 }
 
 .video-box {
   width: 100%; 
-  flex-grow: 1; /* ขยายเติมพื้นที่ว่างพอดีโดยไม่ดันขอบล่าง */
+  flex-grow: 1; 
   background: #000; border-radius: 7px;
   overflow: hidden; display: flex; justify-content: center; align-items: center;
   position: relative; border: 1px solid var(--video-border);
-  margin-top: 2px; margin-bottom: 2px;
+  margin-top: 1px; margin-bottom: 2px;
 }
 video { width: 100%; height: 100%; object-fit: cover; }
 video.front-cam { transform: scaleX(-1); }
@@ -97,7 +97,7 @@ button {
 .btn-stop { flex: 1; font-size: 0.9rem; background: var(--button) !important; color: var(--button-text) !important; border-color: var(--button-border) !important; }
 .btn-secondary { flex: 1; font-size: 0.8rem; background: var(--button); color: var(--button-text); border-color: var(--button-border); }
 
-.result-val { font-size: 1.2rem; font-weight: 800; color: var(--green-strong); margin: 2px 0; word-break: break-all; }
+.result-val { font-size: 1.2rem; font-weight: 800; color: var(--green-strong); margin: 0; word-break: break-all; }
 
 #conf-text {
   font-size: 1.5rem;
@@ -115,15 +115,15 @@ input {
 <body data-theme="light">
 
 <div class="app-container">
-    <!-- ส่วนหัว -->
-    <div style="display: flex; flex-direction: column; padding: 2px 4px;">
+    <!-- ส่วนหัว (ลด Padding ลงนิดเดียว) -->
+    <div style="display: flex; flex-direction: column; padding: 0 4px;">
         <div style="font-size: 1.35rem; font-weight: 900; color: var(--green-strong); letter-spacing: -0.3px; line-height: 1.1;">AI Camera</div>
         <div style="font-size: 0.75rem; color: var(--muted); font-weight: 600;">AI Vision with Teachable Machine</div>
     </div>
 
     <!-- ผลการวิเคราะห์ข้อมูล -->
-    <div style="display: flex; gap: 6px; width: 100%;">
-        <section class="card" style="flex: 0 0 68%; padding: 6px 10px;">
+    <div style="display: flex; gap: 5px; width: 100%;">
+        <section class="card" style="flex: 0 0 68%; padding: 4px 8px;">
             <div style="color: var(--muted); font-size: 0.65rem; font-weight: 600;">ผลการวิเคราะห์ข้อมูล</div>
             <div class="result-val" id="name">--</div>
             <div>
@@ -131,14 +131,14 @@ input {
             </div>
         </section>
 
-        <section class="card" style="flex: 0 0 calc(32% - 6px); justify-content: center; align-items: center; text-align: center; padding: 4px;">
+        <section class="card" style="flex: 0 0 calc(32% - 5px); justify-content: center; align-items: center; text-align: center; padding: 2px;">
             <div style="color: var(--muted); font-size: 0.65rem; font-weight: 600; margin-bottom: 2px;">ความแม่นยำ</div>
             <span id="conf-text" style="color: var(--muted);">0.0%</span>
         </section>
     </div>
 
     <!-- ส่วนแสดงกล้อง -->
-    <section class="card" style="flex: 1; justify-content: space-between; padding: 6px 10px;">
+    <section class="card" style="flex: 1; justify-content: space-between; padding: 4px 8px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
             <span style="font-weight: 700; font-size: 0.8rem;">AI Camera</span>
             <span id="current-group-label" style="font-size: 0.65rem; font-weight: 700; color: var(--topic-color);">Topic : --</span>
@@ -166,19 +166,19 @@ input {
     </section>
 
     <!-- ส่วนตั้งค่า -->
-    <section class="card" style="gap: 4px; padding: 6px 10px;">
+    <section class="card" style="gap: 3px; padding: 4px 8px;">
         <div>
-            <div style="font-size: 0.65rem; font-weight: 600; margin-bottom: 2px; color: var(--muted);">Teachable Model ID</div>
+            <div style="font-size: 0.65rem; font-weight: 600; margin-bottom: 1px; color: var(--muted);">Teachable Model ID</div>
             <input type="text" id="model-input" placeholder="เช่น Voxb2VGd2" style="width: 100%; padding: 4px 6px; border-radius: 4px; font-size: 0.75rem;">
         </div>
         
-        <div style="display: flex; gap: 6px;">
+        <div style="display: flex; gap: 5px;">
             <div style="flex: 1;">
-                <div style="font-size: 0.65rem; font-weight: 600; margin-bottom: 2px; color: var(--muted);">School ID</div>
+                <div style="font-size: 0.65rem; font-weight: 600; margin-bottom: 1px; color: var(--muted);">School ID</div>
                 <input type="text" id="school-input" placeholder="PTL-School" style="width: 100%; padding: 4px 6px; border-radius: 4px; font-size: 0.75rem;">
             </div>
             <div style="flex: 1;">
-                <div style="font-size: 0.65rem; font-weight: 600; margin-bottom: 2px; color: var(--muted);">Name ID</div>
+                <div style="font-size: 0.65rem; font-weight: 600; margin-bottom: 1px; color: var(--muted);">Name ID</div>
                 <input type="text" id="name-input" placeholder="group1" style="width: 100%; padding: 4px 6px; border-radius: 4px; font-size: 0.75rem;">
             </div>
         </div>
