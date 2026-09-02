@@ -15,7 +15,7 @@
   --card:rgba(255,255,255,.96); --text:#111827; --muted:#667085;
   --green:#21a957; --green-strong:#159447; --border:#dce7e0;
   --button:#f1f5f9; --button-border:#cbd5e1; --button-text:#0f172a;
-  --shadow:0 10px 26px rgba(31,73,45,.075); --video-border:#d8e6dd;
+  --shadow:0 6px 20px rgba(31,73,45,.06); --video-border:#d8e6dd;
   --status-bg:rgba(255,255,255,.9);
   --topic-color: #000000;
 }
@@ -32,7 +32,7 @@
   --button: #1e293b;
   --button-border: #475569;
   --button-text: #f8fafc;
-  --shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
+  --shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
   --video-border: #475569;
   --status-bg: rgba(30, 41, 59, 0.9);
   --topic-color: #ffffff;
@@ -47,19 +47,20 @@ html, body {
 
 .app-container {
   width: 100%; max-width: 480px; height: 100%; max-height: 100vh; max-height: 100dvh;
-  padding: 6px 8px; display: flex; flex-direction: column; gap: 4px; justify-content: space-between;
+  padding: 4px 8px; display: flex; flex-direction: column; gap: 3px; justify-content: space-between;
 }
 
 .card {
-  background: var(--card); border: 1px solid var(--border); border-radius: 10px;
-  padding: 8px 12px; box-shadow: var(--shadow); display: flex; flex-direction: column;
+  background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+  padding: 6px 10px; box-shadow: var(--shadow); display: flex; flex-direction: column;
 }
 
 .video-box {
   width: 100%; 
-  height: 150px; /* ล็อคความสูงกล้องให้พอดี ไม่ดันจอเพิ่ม */
-  min-height: 120px; 
-  background: #000; border-radius: 8px;
+  flex-grow: 1; /* ขยายขนาดกล้องให้เต็มพื้นที่ว่างอย่างพอดี */
+  min-height: 160px; /* ขยายขนาดขั้นต่ำให้ใหญ่ขึ้นกว่าเดิม */
+  max-height: 240px; /* จำกัดความสูงสูงสุดไม่ให้ล้นหน้าจอ */
+  background: #000; border-radius: 6px;
   overflow: hidden; display: flex; justify-content: center; align-items: center;
   position: relative; border: 1px solid var(--video-border);
   margin-top: 2px; margin-bottom: 2px;
@@ -76,8 +77,8 @@ video.back-cam { transform: scaleX(1); }
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -85,18 +86,18 @@ video.back-cam { transform: scaleX(1); }
   backdrop-filter: blur(4px);
   z-index: 10;
 }
-.btn-float-switch svg { width: 16px; height: 16px; fill: currentColor; }
+.btn-float-switch svg { width: 15px; height: 15px; fill: currentColor; }
 
-.controls { display: flex; gap: 6px; margin-bottom: 3px; }
+.controls { display: flex; gap: 6px; margin-bottom: 2px; }
 .bottom-controls { display: flex; gap: 6px; }
 
 button {
-  padding: 6px 10px; border-radius: 6px; border: 1px solid var(--button-border); background: var(--button); color: var(--button-text); font-weight: 600; font-size: 0.85rem; cursor: pointer;
+  padding: 5px 10px; border-radius: 6px; border: 1px solid var(--button-border); background: var(--button); color: var(--button-text); font-weight: 600; font-size: 0.8rem; cursor: pointer;
 }
 
-.btn-start { flex: 1; font-size: 0.9rem; background: var(--button) !important; color: var(--button-text) !important; border-color: var(--button-border) !important; }
-.btn-stop { flex: 1; font-size: 0.9rem; background: var(--button) !important; color: var(--button-text) !important; border-color: var(--button-border) !important; }
-.btn-secondary { flex: 1; font-size: 0.8rem; background: var(--button); color: var(--button-text); border-color: var(--button-border); }
+.btn-start { flex: 1; font-size: 0.85rem; background: var(--button) !important; color: var(--button-text) !important; border-color: var(--button-border) !important; }
+.btn-stop { flex: 1; font-size: 0.85rem; background: var(--button) !important; color: var(--button-text) !important; border-color: var(--button-border) !important; }
+.btn-secondary { flex: 1; font-size: 0.75rem; background: var(--button); color: var(--button-text); border-color: var(--button-border); }
 
 .result-val { font-size: 1.1rem; font-weight: 800; color: var(--green-strong); margin: 2px 0; word-break: break-all; }
 
@@ -116,33 +117,30 @@ input {
 <body data-theme="light">
 
 <div class="app-container">
-    <!-- ส่วนหัว -->
     <div style="display: flex; flex-direction: column; padding: 2px 4px;">
         <div style="font-size: 1.3rem; font-weight: 900; color: var(--green-strong); letter-spacing: -0.3px; line-height: 1.1;">AI Camera</div>
-        <div style="font-size: 0.75rem; color: var(--muted); font-weight: 600;">AI Vision with Teachable Machine</div>
+        <div style="font-size: 0.7rem; color: var(--muted); font-weight: 600;">AI Vision with Teachable Machine</div>
     </div>
 
-    <!-- ผลการวิเคราะห์ข้อมูล -->
     <div style="display: flex; gap: 6px; width: 100%;">
-        <section class="card" style="flex: 0 0 68%; padding: 6px 10px;">
-            <div style="color: var(--muted); font-size: 0.7rem; font-weight: 600;">ผลการวิเคราะห์ข้อมูล</div>
+        <section class="card" style="flex: 0 0 68%; padding: 5px 10px;">
+            <div style="color: var(--muted); font-size: 0.65rem; font-weight: 600;">ผลการวิเคราะห์ข้อมูล</div>
             <div class="result-val" id="name">--</div>
             <div>
-                <span style="font-size: 0.65rem; color: var(--muted);">สถานะ : <b id="esp-status" style="color: #ef4444;">Connecting...</b></span>
+                <span style="font-size: 0.6rem; color: var(--muted);">สถานะ : <b id="esp-status" style="color: #ef4444;">Connecting...</b></span>
             </div>
         </section>
 
-        <section class="card" style="flex: 0 0 calc(32% - 6px); justify-content: center; align-items: center; text-align: center; padding: 4px;">
-            <div style="color: var(--muted); font-size: 0.65rem; font-weight: 600; margin-bottom: 2px;">ความแม่นยำ</div>
+        <section class="card" style="flex: 0 0 calc(32% - 6px); justify-content: center; align-items: center; text-align: center; padding: 2px;">
+            <div style="color: var(--muted); font-size: 0.6rem; font-weight: 600; margin-bottom: 2px;">ความแม่นยำ</div>
             <span id="conf-text" style="color: var(--muted);">0.0%</span>
         </section>
     </div>
 
-    <!-- ส่วนแสดงกล้อง -->
     <section class="card" style="flex: 1; justify-content: space-between; padding: 6px 10px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-weight: 700; font-size: 0.8rem;">AI Camera</span>
-            <span id="current-group-label" style="font-size: 0.65rem; font-weight: 700; color: var(--topic-color);">Topic : --</span>
+            <span style="font-weight: 700; font-size: 0.75rem;">AI Camera</span>
+            <span id="current-group-label" style="font-size: 0.6rem; font-weight: 700; color: var(--topic-color);">Topic : --</span>
         </div>
         
         <div class="video-box">
@@ -166,8 +164,7 @@ input {
         </div>
     </section>
 
-    <!-- ส่วนตั้งค่า -->
-    <section class="card" style="gap: 3px; padding: 6px 10px;">
+    <section class="card" style="gap: 3px; padding: 5px 10px;">
         <div>
             <div style="font-size: 0.6rem; font-weight: 600; margin-bottom: 1px; color: var(--muted);">Teachable Model ID</div>
             <input type="text" id="model-input" placeholder="เช่น Voxb2VGd2" style="width: 100%; padding: 3px 6px; border-radius: 4px; font-size: 0.75rem;">
@@ -247,185 +244,4 @@ function initMQTT() {
 
     if (mqttClient) {
         try {
-            mqttClient.onConnectionLost = null;
-            if (mqttClient.isConnected()) {
-                mqttClient.disconnect();
-            }
-        } catch(e) { console.log(e); }
-    }
-
-    let schoolId = localStorage.getItem("saved_school_id") || "PTL-School";
-    let nameId = localStorage.getItem("saved_name_id") || "group1";
-    let uniqueClientId = "WebClient-" + schoolId + "-" + nameId + "-" + Date.now() + "-" + Math.floor(Math.random() * 10000);
-    
-    mqttClient = new Paho.MQTT.Client(mqttHost, Number(mqttPort), uniqueClientId);
-
-    mqttClient.onConnectionLost = function (responseObject) {
-        isConnecting = false;
-        document.getElementById("esp-status").textContent = "Disconnected";
-        document.getElementById("esp-status").style.color = "#ef4444";
-        
-        if (responseObject.errorCode !== 0) {
-            console.log("MQTT Lost: " + responseObject.errorMessage);
-            setTimeout(initMQTT, 5000);
-        }
-    };
-
-    try {
-        mqttClient.connect({
-            onSuccess: function() {
-                isConnecting = false;
-                document.getElementById("esp-status").textContent = "Connected " + nameId + "";
-                document.getElementById("esp-status").style.color = "var(--green-strong)";
-                console.log("Connected Successfully as: " + uniqueClientId);
-            },
-            onFailure: function(message) {
-                isConnecting = false;
-                document.getElementById("esp-status").textContent = "Failed";
-                document.getElementById("esp-status").style.color = "#ef4444";
-                console.log("Connect Failed: " + message.errorMessage);
-                setTimeout(initMQTT, 5000);
-            },
-            useSSL: true,
-            timeout: 5,
-            keepAliveInterval: 30
-        });
-    } catch(e) {
-        isConnecting = false;
-        console.error("MQTT Exception: ", e);
-    }
-}
-
-initMQTT();
-
-function toggleTheme() {
-    const body = document.body;
-    const currentTheme = body.dataset.theme === 'dark' ? 'light' : 'dark';
-    body.dataset.theme = currentTheme;
-    localStorage.setItem("theme", currentTheme);
-}
-
-let model = null;
-let running = false;
-let lastSentTime = 0;
-let currentFacingMode = "user";
-
-async function sendToESP32(className) {
-    if (Date.now() - lastSentTime < 1000) return;
-    lastSentTime = Date.now();
-
-    if (mqttClient && mqttClient.isConnected()) {
-        let topic = getDynamicTopic();
-        let message = new Paho.MQTT.Message(className);
-        message.destinationName = topic;
-        mqttClient.send(message);
-        
-        let nameId = localStorage.getItem("saved_name_id") || "group1";
-        document.getElementById("esp-status").textContent = "Sent " + nameId + "";
-        document.getElementById("esp-status").style.color = "var(--green-strong)";
-    }
-}
-
-async function testConnection() {
-    await sendToESP32("Test_Class");
-    alert("ส่งสัญญาณทดสอบไปยัง Mini MicroKit PT-L เรียบร้อย!");
-}
-
-async function startCamera(facing) {
-    if (window.currentStream) {
-        window.currentStream.getTracks().forEach(track => track.stop());
-    }
-
-    const videoElement = document.getElementById("video");
-    if (facing === "user") {
-        videoElement.className = "front-cam";
-    } else {
-        videoElement.className = "back-cam";
-    }
-
-    const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: facing, width: { ideal: 224 }, height: { ideal: 224 } }
-    });
-    
-    window.currentStream = stream;
-    videoElement.srcObject = stream;
-}
-
-async function switchCamera() {
-    currentFacingMode = (currentFacingMode === "user") ? "environment" : "user";
-    if (running) {
-        try {
-            await startCamera(currentFacingMode);
-        } catch(e) {
-            alert("ไม่สามารถสลับกล้องได้: " + e.message);
-        }
-    } else {
-        alert(currentFacingMode === "user" ? "ตั้งค่าเป็น: กล้องหน้า" : "ตั้งค่าเป็น: กล้องหลัง");
-    }
-}
-
-document.getElementById("start-btn").onclick = async () => {
-    let savedId = localStorage.getItem("saved_model_id") || document.getElementById("model-input").value.trim();
-    if (!savedId) {
-        alert("กรุณากรอกและกดบันทึก Model ID ก่อนกด Start AI");
-        return;
-    }
-    
-    try {
-        document.getElementById("start-btn").textContent = "Loading...";
-        const MODEL_URL = `https://teachablemachine.withgoogle.com/models/${savedId}/`;
-        const u = MODEL_URL.endsWith("/") ? MODEL_URL : MODEL_URL + "/";
-        
-        model = await tmImage.load(u + "model.json", u + "metadata.json");
-        await startCamera(currentFacingMode);
-        
-        running = true;
-        document.getElementById("start-btn").textContent = "Running...";
-        loop();
-    } catch(e) {
-        alert("ไม่สามารถเปิดกล้องหรือโหลดโมเดลได้: " + e.message);
-        document.getElementById("start-btn").textContent = "Start AI";
-    }
-};
-
-async function loop() {
-    if (!running) return;
-    try {
-        const prediction = await model.predict(document.getElementById("video"), false);
-        let best = prediction.sort((a, b) => b.probability - a.probability)[0];
-        
-        let pctVal = best.probability * 100;
-        let pctStr = pctVal.toFixed(1) + "%";
-        
-        let confElem = document.getElementById("conf-text");
-        confElem.textContent = pctStr;
-
-        if (pctVal > 90) {
-            confElem.style.color = "var(--green-strong)";
-        } else {
-            confElem.style.color = "#ef4444";
-        }
-        
-        if (best.probability > 0.90) {
-            document.getElementById("name").textContent = best.className;
-            await sendToESP32(best.className);
-        } else {
-            document.getElementById("name").textContent = "Uncertain...";
-            await sendToESP32("Unknown"); 
-        }
-    } catch (err) {
-        console.error(err);
-    }
-    if (running) {
-        requestAnimationFrame(loop);
-    }
-}
-
-document.getElementById("stop-btn").onclick = () => {
-    running = false;
-    location.reload();
-};
-</script>
-
-</body>
-</html>
+            mqttClient.on
