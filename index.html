@@ -91,8 +91,8 @@ button {
   padding: 8px 10px; border-radius: 6px; border: 1px solid var(--button-border); background: var(--button); color: var(--button-text); font-weight: 600; font-size: 0.85rem; cursor: pointer;
 }
 
-.btn-start { background: var(--green) !important; color: white !important; border-color: var(--green-strong) !important; flex: 1; font-size: 0.9rem; }
-.btn-stop { background: #ef4444 !important; color: white !important; border-color: #dc2626 !important; flex: 1; font-size: 0.9rem; }
+.btn-start { flex: 1; font-size: 0.9rem; background: var(--button) !important; color: var(--button-text) !important; border-color: var(--button-border) !important; }
+.btn-stop { flex: 1; font-size: 0.9rem; background: var(--button) !important; color: var(--button-text) !important; border-color: var(--button-border) !important; }
 .btn-secondary { flex: 1; font-size: 0.8rem; background: var(--button); color: var(--button-text); border-color: var(--button-border); }
 
 .result-val { font-size: 1.2rem; font-weight: 800; color: var(--green-strong); margin: 2px 0; word-break: break-all; }
@@ -182,7 +182,7 @@ input {
             </div>
         </div>
 
-        <button onclick="saveSettings()" style="background: var(--green); color: white; border-radius: 4px; padding: 6px; font-size: 0.8rem; width: 100%; border-color: var(--green-strong); margin-top: 2px;">SAVE</button>
+        <button onclick="saveSettings()" style="background: var(--button); color: var(--button-text); border-radius: 4px; padding: 6px; font-size: 0.8rem; width: 100%; border: 1px solid var(--button-border); font-weight: 600; margin-top: 2px;">SAVE</button>
     </section>
 </div>
 
