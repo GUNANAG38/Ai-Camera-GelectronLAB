@@ -15,8 +15,7 @@
   --card:rgba(255,255,255,.96); --text:#111827; --muted:#667085;
   --green:#21a957; --green-strong:#159447; --border:#dce7e0;
   --button:#f1f5f9; --button-border:#cbd5e1; --button-text:#0f172a;
-  --shadow:0 10px 26px rgba(31,73,45,.075); --video-border:#d8e6dd;
-  --status-bg:rgba(255,255,255,.9);
+  --shadow:0 8px 20px rgba(31,73,45,.06); --video-border:#d8e6dd;
   --topic-color: #000000;
 }
 
@@ -32,9 +31,8 @@
   --button: #1e293b;
   --button-border: #475569;
   --button-text: #f8fafc;
-  --shadow: 0 10px 26px rgba(0, 0, 0, 0.4);
+  --shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   --video-border: #475569;
-  --status-bg: rgba(30, 41, 59, 0.9);
   --topic-color: #ffffff;
 }
 
@@ -47,19 +45,19 @@ html, body {
 
 .app-container {
   width: 100%; max-width: 480px; height: 100%; max-height: 100vh; max-height: 100dvh;
-  padding: 4px 6px; display: flex; flex-direction: column; gap: 3px; justify-content: space-between;
+  padding: 4px 8px; display: flex; flex-direction: column; gap: 4px; justify-content: space-between;
 }
 
 .card {
   background: var(--card); border: 1px solid var(--border); border-radius: 8px;
-  padding: 5px 8px; box-shadow: var(--shadow); display: flex; flex-direction: column;
+  padding: 6px 10px; box-shadow: var(--shadow); display: flex; flex-direction: column;
 }
 
 .video-box {
-  width: 100%; height: 105px; min-height: 80px; background: #000; border-radius: 6px;
+  width: 100%; height: 90px; min-height: 70px; background: #000; border-radius: 6px;
   overflow: hidden; display: flex; justify-content: center; align-items: center;
   position: relative; border: 1px solid var(--video-border);
-  margin-top: 1px; margin-bottom: 1px;
+  margin-top: 2px; margin-bottom: 2px;
 }
 video { width: 100%; height: 100%; object-fit: cover; }
 video.front-cam { transform: scaleX(-1); }
@@ -73,8 +71,8 @@ video.back-cam { transform: scaleX(1); }
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -82,23 +80,23 @@ video.back-cam { transform: scaleX(1); }
   backdrop-filter: blur(4px);
   z-index: 10;
 }
-.btn-float-switch svg { width: 14px; height: 14px; fill: currentColor; }
+.btn-float-switch svg { width: 13px; height: 13px; fill: currentColor; }
 
-.controls { display: flex; gap: 4px; margin-bottom: 2px; }
+.controls { display: flex; gap: 4px; margin-bottom: 3px; }
 .bottom-controls { display: flex; gap: 4px; }
 
 button {
-  padding: 6px 8px; border-radius: 6px; border: 1px solid var(--button-border); background: var(--button); color: var(--button-text); font-weight: 600; font-size: 0.75rem; cursor: pointer;
+  padding: 5px 8px; border-radius: 6px; border: 1px solid var(--button-border); background: var(--button); color: var(--button-text); font-weight: 600; font-size: 0.75rem; cursor: pointer;
 }
 
-.btn-start { flex: 1; font-size: 0.8rem; background: var(--button) !important; color: var(--button-text) !important; border-color: var(--button-border) !important; }
-.btn-stop { flex: 1; font-size: 0.8rem; background: var(--button) !important; color: var(--button-text) !important; border-color: var(--button-border) !important; }
-.btn-secondary { flex: 1; font-size: 0.7rem; background: var(--button); color: var(--button-text); border-color: var(--button-border); }
+.btn-start { flex: 1; font-size: 0.75rem; }
+.btn-stop { flex: 1; font-size: 0.75rem; }
+.btn-secondary { flex: 1; font-size: 0.7rem; }
 
-.result-val { font-size: 1rem; font-weight: 800; color: var(--green-strong); margin: 1px 0; word-break: break-all; }
+.result-val { font-size: 0.95rem; font-weight: 800; color: var(--green-strong); margin: 1px 0; word-break: break-all; }
 
 #conf-text {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   font-weight: 900;
   line-height: 1;
 }
@@ -113,30 +111,33 @@ input {
 <body data-theme="light">
 
 <div class="app-container">
-    <div style="display: flex; flex-direction: column; padding: 1px 2px;">
-        <div style="font-size: 1.3rem; font-weight: 900; color: var(--green-strong); letter-spacing: -0.3px; line-height: 1.1;">AI Camera</div>
-        <div style="font-size: 0.65rem; color: var(--muted); font-weight: 600;">AI Vision with Teachable Machine</div>
+    <!-- ส่วนหัว -->
+    <div style="display: flex; flex-direction: column; padding: 0 2px;">
+        <div style="font-size: 1.2rem; font-weight: 900; color: var(--green-strong); letter-spacing: -0.3px; line-height: 1.1;">AI Camera</div>
+        <div style="font-size: 0.6rem; color: var(--muted); font-weight: 600;">AI Vision with Teachable Machine</div>
     </div>
 
+    <!-- ผลการวิเคราะห์ข้อมูล -->
     <div style="display: flex; gap: 4px; width: 100%;">
         <section class="card" style="flex: 0 0 68%; padding: 4px 8px;">
-            <div style="color: var(--muted); font-size: 0.6rem; font-weight: 600;">ผลการวิเคราะห์ข้อมูล</div>
+            <div style="color: var(--muted); font-size: 0.55rem; font-weight: 600;">ผลการวิเคราะห์ข้อมูล</div>
             <div class="result-val" id="name">--</div>
             <div>
-                <span style="font-size: 0.6rem; color: var(--muted);">สถานะ : <b id="esp-status" style="color: #ef4444;">Connecting...</b></span>
+                <span style="font-size: 0.55rem; color: var(--muted);">สถานะ : <b id="esp-status" style="color: #ef4444;">Connecting...</b></span>
             </div>
         </section>
 
-        <section class="card" style="flex: 0 0 calc(32% - 4px); justify-content: center; align-items: center; text-align: center; padding: 3px;">
-            <div style="color: var(--muted); font-size: 0.6rem; font-weight: 600; margin-bottom: 1px;">ความแม่นยำ</div>
+        <section class="card" style="flex: 0 0 calc(32% - 4px); justify-content: center; align-items: center; text-align: center; padding: 2px;">
+            <div style="color: var(--muted); font-size: 0.55rem; font-weight: 600; margin-bottom: 1px;">ความแม่นยำ</div>
             <span id="conf-text" style="color: var(--muted);">0.0%</span>
         </section>
     </div>
 
+    <!-- ส่วนแสดงกล้อง (ลดขนาดความสูงลงอีกให้พอดีจอ) -->
     <section class="card" style="justify-content: space-between; padding: 4px 8px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-            <span style="font-weight: 700; font-size: 0.75rem;">AI Camera</span>
-            <span id="current-group-label" style="font-size: 0.6rem; font-weight: 700; color: var(--topic-color);">Topic : --</span>
+            <span style="font-weight: 700; font-size: 0.7rem;">AI Camera</span>
+            <span id="current-group-label" style="font-size: 0.55rem; font-weight: 700; color: var(--topic-color);">Topic : --</span>
         </div>
         
         <div class="video-box">
@@ -160,7 +161,8 @@ input {
         </div>
     </section>
 
-    <section class="card" style="gap: 3px; padding: 5px 8px;">
+    <!-- ส่วนตั้งค่า (ลบบรรทัดหัวข้อออกเรียบร้อย) -->
+    <section class="card" style="gap: 3px; padding: 6px 8px;">
         <div>
             <div style="font-size: 0.55rem; font-weight: 600; margin-bottom: 1px; color: var(--muted);">Teachable Model ID</div>
             <input type="text" id="model-input" placeholder="เช่น Voxb2VGd2" style="width: 100%; padding: 3px 6px; border-radius: 4px; font-size: 0.7rem;">
