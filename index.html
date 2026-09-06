@@ -162,7 +162,7 @@ button{
 }
 
 .test-top{
-  color:var(--text);
+  color:var(--button-text);
   font-size:clamp(.72rem,1.7vw,.88rem);
   font-weight:700;
   letter-spacing:.1px;
@@ -513,7 +513,7 @@ input:focus{
         <div class="status-content">
           <b class="status-text" id="esp-status">Connecting...</b>
 
-          <svg class="sent-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <svg class="sent-icon" id="status-arrow-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="color: var(--green-strong);">
             <path d="M21.7 3.3a1 1 0 0 0-1.03-.24l-18 7a1 1 0 0 0 .06 1.88l7.24 2.41 2.4 7.24a1 1 0 0 0 .94.68h.03a1 1 0 0 0 .93-.73l7.7-17.1a1 1 0 0 0-.27-1.14ZM10.8 13.2 5.7 11.5l11.73-4.56-6.63 6.26Zm1.45 1.45 5.85-5.52-4.34 9.64-1.51-4.12Z"/>
           </svg>
         </div>
@@ -700,7 +700,8 @@ function initMQTT() {
     isConnecting = false;
 
     document.getElementById("esp-status").textContent = "Disconnected";
-    document.getElementById("esp-status").style.color = "#dc2626";
+    document.getElementById("esp-status").style.color = "var(--danger)";
+    document.getElementById("status-arrow-icon").style.color = "var(--danger)";
 
     if (responseObject.errorCode !== 0) {
       console.log("MQTT Lost: " + responseObject.errorMessage);
@@ -714,13 +715,15 @@ function initMQTT() {
         isConnecting = false;
         document.getElementById("esp-status").textContent = "Connected " + nameId;
         document.getElementById("esp-status").style.color = "var(--green-strong)";
+        document.getElementById("status-arrow-icon").style.color = "var(--green-strong)";
         console.log("Connected Successfully as: " + uniqueClientId);
       },
 
       onFailure: function(message) {
         isConnecting = false;
         document.getElementById("esp-status").textContent = "Failed";
-        document.getElementById("esp-status").style.color = "#dc2626";
+        document.getElementById("esp-status").style.color = "var(--danger)";
+        document.getElementById("status-arrow-icon").style.color = "var(--danger)";
         console.log("Connect Failed: " + message.errorMessage);
         setTimeout(initMQTT, 5000);
       },
@@ -845,6 +848,7 @@ async function sendToESP32(className) {
     let nameId = localStorage.getItem("saved_name_id") || "group1";
     document.getElementById("esp-status").textContent = "Sent " + nameId;
     document.getElementById("esp-status").style.color = "var(--green-strong)";
+    document.getElementById("status-arrow-icon").style.color = "var(--green-strong)";
   }
 }
 
