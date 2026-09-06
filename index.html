@@ -1,3 +1,4 @@
+```html
 <!doctype html>
 <html lang="th">
 <head>
@@ -147,15 +148,22 @@ button{
   flex:0 0 auto;
 }
 
-.theme-top svg{width:55%;height:55%}
+.theme-top svg{
+  width:55%;
+  height:55%;
+}
 
-/* ปุ่ม Test และ Theme แบบกะทัดรัดขึ้น */
+/* ปุ่ม Test และ Theme แบบกะทัดรัด */
 .theme-top{
   width:clamp(44px,6.5vw,58px);
   height:clamp(44px,6.5vw,58px);
   border-radius:15px;
 }
-.theme-top svg{width:52%;height:52%}
+
+.theme-top svg{
+  width:52%;
+  height:52%;
+}
 
 .header-actions{
   display:flex;
@@ -169,12 +177,26 @@ button{
   font-weight:700;
   letter-spacing:.1px;
 }
-.theme-switch{position:relative}
-.theme-switch svg{display:block}
-.theme-icon-sun{display:none !important}
-[data-theme="dark"] .theme-icon-moon{display:none !important}
-[data-theme="dark"] .theme-icon-sun{display:block !important}
 
+.theme-switch{
+  position:relative;
+}
+
+.theme-switch svg{
+  display:block;
+}
+
+.theme-icon-sun{
+  display:none !important;
+}
+
+[data-theme="dark"] .theme-icon-moon{
+  display:none !important;
+}
+
+[data-theme="dark"] .theme-icon-sun{
+  display:block !important;
+}
 
 .summary{
   display:grid;
@@ -306,8 +328,13 @@ video{
   display:block;
 }
 
-video.front-cam{transform:scaleX(-1)}
-video.back-cam{transform:scaleX(1)}
+video.front-cam{
+  transform:scaleX(-1);
+}
+
+video.back-cam{
+  transform:scaleX(1);
+}
 
 .live-badge{
   position:absolute;
@@ -361,7 +388,11 @@ video.back-cam{transform:scaleX(1)}
   border-color:#27313c;
 }
 
-.btn-float-switch svg{width:48%;height:48%;fill:currentColor}
+.btn-float-switch svg{
+  width:48%;
+  height:48%;
+  fill:currentColor;
+}
 
 .controls-grid{
   display:grid;
@@ -426,8 +457,13 @@ input:focus{
   box-shadow:0 0 0 3px rgba(33,169,87,.10);
 }
 
-.model-wrap{position:relative}
-.model-wrap input{padding-right:48px}
+.model-wrap{
+  position:relative;
+}
+
+.model-wrap input{
+  padding-right:48px;
+}
 
 .copy-btn{
   position:absolute;
@@ -442,7 +478,13 @@ input:focus{
   place-items:center;
 }
 
-.copy-btn svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8}
+.copy-btn svg{
+  width:21px;
+  height:21px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.8;
+}
 
 .two-fields{
   display:grid;
@@ -450,22 +492,25 @@ input:focus{
   gap:clamp(7px,1.1vw,12px);
 }
 
+/* SAVE — ลดขนาดลงอีก */
 .save-btn{
   width:100%;
-  height:clamp(39px,5.5vh,54px);
-  border-radius:clamp(9px,1.2vw,12px);
+  height:clamp(30px,4vh,40px);
+  border-radius:clamp(8px,1.1vw,11px);
   background:var(--save-bg);
   color:var(--save-text);
   border:1px solid var(--save-border);
-  font-size:clamp(.9rem,2vw,1.1rem);
+  font-size:clamp(.78rem,1.7vw,.92rem);
   font-weight:650;
   display:flex;
   align-items:center;
   justify-content:center;
-  gap:10px;
+  gap:0;
 }
 
-.save-btn svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.8}
+.save-btn svg{
+  display:none;
+}
 
 .footer-status{
   height:clamp(40px,5.5vh,55px);
@@ -490,7 +535,9 @@ input:focus{
   min-width:0;
 }
 
-.footer-item:last-child{justify-content:flex-end}
+.footer-item:last-child{
+  justify-content:flex-end;
+}
 
 .footer-divider{
   width:1px;
@@ -517,41 +564,122 @@ input:focus{
   padding-bottom:1px;
 }
 
-/* V8 — ปรับเฉพาะขนาด Running / Stop / SAVE และเอาไอคอน SAVE ออก */
-.control-btn{min-height:clamp(40px,5.5vh,60px);font-size:clamp(.80rem,1.9vw,1.05rem);gap:clamp(7px,1.2vw,12px)}
-.control-btn svg{width:clamp(18px,3vw,25px);height:clamp(18px,3vw,25px)}
-.save-btn{height:clamp(35px,4.8vh,48px);font-size:clamp(.84rem,1.8vw,1rem);gap:0}
-.save-btn svg{display:none}
+/* V8 — ปรับเฉพาะขนาด Running / Stop */
+.control-btn{
+  min-height:clamp(40px,5.5vh,60px);
+  font-size:clamp(.80rem,1.9vw,1.05rem);
+  gap:clamp(7px,1.2vw,12px);
+}
 
-  /* V9 — Footer ลอยด้านล่าง ไม่กระทบ Layout หลัก */
-  .mini-footer{position:fixed;left:50%;bottom:max(3px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:20;font-size:clamp(9px,1.6vw,12px);font-weight:500;letter-spacing:.3px;color:var(--muted);white-space:nowrap;opacity:.72;pointer-events:none;line-height:1;}
+.control-btn svg{
+  width:clamp(18px,3vw,25px);
+  height:clamp(18px,3vw,25px);
+}
+
+/* V9 — Footer ลอยด้านล่าง ไม่กระทบ Layout หลัก */
+.mini-footer{
+  position:fixed;
+  left:50%;
+  bottom:max(3px,env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  z-index:20;
+  font-size:clamp(9px,1.6vw,12px);
+  font-weight:500;
+  letter-spacing:.3px;
+  color:var(--muted);
+  white-space:nowrap;
+  opacity:.72;
+  pointer-events:none;
+  line-height:1;
+}
 
 /* รักษา layout เดิมไว้บนโทรศัพท์: ทุกอย่างยังอยู่หน้าเดียว */
 @media (max-height:700px){
-  .app-container{gap:5px}
-  .brand-title{font-size:clamp(1.65rem,5vw,2.2rem)}
-  .brand-subtitle{margin-top:3px}
-  .summary-card{min-height:68px;padding:9px 12px}
-  .camera-card{gap:5px;padding:8px}
-  .settings-card{padding:8px 10px;gap:5px}
-  .settings-title{display:none}
-  .footer-caption{display:none}
-  .footer-status{height:36px}
-  .control-btn{min-height:38px}
-  input{height:34px}
-  .save-btn{height:35px}
+
+  .app-container{
+    gap:5px;
+  }
+
+  .brand-title{
+    font-size:clamp(1.65rem,5vw,2.2rem);
+  }
+
+  .brand-subtitle{
+    margin-top:3px;
+  }
+
+  .summary-card{
+    min-height:68px;
+    padding:9px 12px;
+  }
+
+  .camera-card{
+    gap:5px;
+    padding:8px;
+  }
+
+  .settings-card{
+    padding:8px 10px;
+    gap:5px;
+  }
+
+  .settings-title{
+    display:none;
+  }
+
+  .footer-caption{
+    display:none;
+  }
+
+  .footer-status{
+    height:36px;
+  }
+
+  .control-btn{
+    min-height:38px;
+  }
+
+  input{
+    height:34px;
+  }
+
+  .save-btn{
+    height:30px;
+  }
 }
 
 @media (max-width:360px){
-  .app-container{padding-left:7px;padding-right:7px}
-  .summary{gap:5px}
-  .result-val{font-size:1.05rem}
-  .status-row{font-size:.62rem}
-  .control-btn{font-size:.75rem;gap:6px}
-  .topic{max-width:50%;font-size:.61rem}
+
+  .app-container{
+    padding-left:7px;
+    padding-right:7px;
+  }
+
+  .summary{
+    gap:5px;
+  }
+
+  .result-val{
+    font-size:1.05rem;
+  }
+
+  .status-row{
+    font-size:.62rem;
+  }
+
+  .control-btn{
+    font-size:.75rem;
+    gap:6px;
+  }
+
+  .topic{
+    max-width:50%;
+    font-size:.61rem;
+  }
 }
 
 @media (min-width:700px){
+
   .app-container{
     padding-left:clamp(20px,4vw,48px);
     padding-right:clamp(20px,4vw,48px);
@@ -565,283 +693,728 @@ input:focus{
 <div class="app-container">
 
   <header class="header">
+
     <div>
       <div class="brand-title">AI Camera</div>
       <div class="brand-subtitle">AI Vision with Teachable Machine</div>
     </div>
 
     <div class="header-actions">
-      <button class="theme-top test-top" onclick="testConnection()" title="ทดสอบการเชื่อมต่อ" aria-label="ทดสอบการเชื่อมต่อ">
+
+      <button
+        class="theme-top test-top"
+        onclick="testConnection()"
+        title="ทดสอบการเชื่อมต่อ"
+        aria-label="ทดสอบการเชื่อมต่อ">
         <span>Test</span>
       </button>
-      <button class="theme-top theme-switch" onclick="toggleTheme()" title="เปลี่ยนธีม" aria-label="เปลี่ยนธีม">
-        <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+
+      <button
+        class="theme-top theme-switch"
+        onclick="toggleTheme()"
+        title="เปลี่ยนธีม"
+        aria-label="เปลี่ยนธีม">
+
+        <svg
+          class="theme-icon-moon"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7">
           <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.7 6.7 0 0 0 9.8 9.8Z"/>
         </svg>
-        <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65">
+
+        <svg
+          class="theme-icon-sun"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.65">
           <circle cx="12" cy="12" r="3.5"/>
           <path d="M12 2.5v2M12 19.5v2M4.58 4.58l1.42 1.42M18 18l1.42 1.42M2.5 12h2M19.5 12h2M4.58 19.42L6 18M18 6l1.42-1.42"/>
         </svg>
+
       </button>
+
     </div>
   </header>
+
 
   <section class="summary">
 
     <div class="card summary-card">
-      <div class="card-label">ผลการวิเคราะห์ข้อมูล</div>
-      <div class="result-val" id="name">--</div>
+
+      <div class="card-label">
+        ผลการวิเคราะห์ข้อมูล
+      </div>
+
+      <div class="result-val" id="name">
+        --
+      </div>
 
       <div class="status-row">
-        <span>สถานะ:</span>
-        <b class="status-text" id="esp-status">Connecting...</b>
 
-        <svg class="sent-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <span>สถานะ:</span>
+
+        <b class="status-text" id="esp-status">
+          Connecting...
+        </b>
+
+        <svg
+          class="sent-icon"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          aria-hidden="true">
+
           <path d="M21.7 3.3a1 1 0 0 0-1.03-.24l-18 7a1 1 0 0 0 .06 1.88l7.24 2.41 2.4 7.24a1 1 0 0 0 .94.68h.03a1 1 0 0 0 .93-.73l7.7-17.1a1 1 0 0 0-.27-1.14ZM10.8 13.2 5.7 11.5l11.73-4.56-6.63 6.26Zm1.45 1.45 5.85-5.52-4.34 9.64-1.51-4.12Z"/>
+
         </svg>
+
       </div>
     </div>
 
-    <div class="card summary-card conf-card">
-      <div class="card-label">ความแม่นยำ</div>
-      <div class="conf-value" id="conf-text">0.0%</div>
 
-      <svg class="conf-chart" id="confidence-chart" viewBox="0 0 240 38" preserveAspectRatio="none" aria-hidden="true">
+    <div class="card summary-card conf-card">
+
+      <div class="card-label">
+        ความแม่นยำ
+      </div>
+
+      <div class="conf-value" id="conf-text">
+        0.0%
+      </div>
+
+      <svg
+        class="conf-chart"
+        id="confidence-chart"
+        viewBox="0 0 240 38"
+        preserveAspectRatio="none"
+        aria-hidden="true">
+
         <defs>
-          <linearGradient id="chartFill" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0" stop-color="#35c76b" stop-opacity=".22"/>
-            <stop offset="1" stop-color="#35c76b" stop-opacity="0"/>
+
+          <linearGradient
+            id="chartFill"
+            x1="0"
+            x2="0"
+            y1="0"
+            y2="1">
+
+            <stop
+              offset="0"
+              stop-color="#35c76b"
+              stop-opacity=".22"/>
+
+            <stop
+              offset="1"
+              stop-color="#35c76b"
+              stop-opacity="0"/>
+
           </linearGradient>
+
         </defs>
-        <path id="chart-area" d="" fill="url(#chartFill)"/>
-        <path id="chart-line" d="" fill="none" stroke="#35c76b" stroke-width="2.2"
-              stroke-linecap="round" stroke-linejoin="round"/>
-        <circle id="chart-dot" cx="240" cy="19" r="4.2" fill="#35c76b"/>
+
+        <path
+          id="chart-area"
+          d=""
+          fill="url(#chartFill)"/>
+
+        <path
+          id="chart-line"
+          d=""
+          fill="none"
+          stroke="#35c76b"
+          stroke-width="2.2"
+          stroke-linecap="round"
+          stroke-linejoin="round"/>
+
+        <circle
+          id="chart-dot"
+          cx="240"
+          cy="19"
+          r="4.2"
+          fill="#35c76b"/>
+
       </svg>
+
     </div>
 
   </section>
+
 
   <section class="card camera-card">
 
     <div class="camera-heading">
-      <span class="camera-title">Camera</span>
-      <span class="topic" id="current-group-label">Topic : --</span>
+
+      <span class="camera-title">
+        Camera
+      </span>
+
+      <span
+        class="topic"
+        id="current-group-label">
+        Topic : --
+      </span>
+
     </div>
+
 
     <div class="video-box">
-      <video id="video" class="front-cam" autoplay muted playsinline></video>
+
+      <video
+        id="video"
+        class="front-cam"
+        autoplay
+        muted
+        playsinline>
+      </video>
 
       <div class="live-badge">
+
         <span class="live-dot"></span>
         LIVE
+
       </div>
 
-      <button class="btn-float-switch" onclick="switchCamera()" title="สลับกล้อง" aria-label="สลับกล้อง">
+
+      <button
+        class="btn-float-switch"
+        onclick="switchCamera()"
+        title="สลับกล้อง"
+        aria-label="สลับกล้อง">
+
         <svg viewBox="0 0 24 24">
+
           <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
+
         </svg>
+
       </button>
+
     </div>
 
+
     <div class="controls-grid">
-      <button class="control-btn" id="start-btn">
-        <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        <span>Running...</span>
+
+      <button
+        class="control-btn"
+        id="start-btn">
+
+        <svg viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+
+        <span>
+          Running...
+        </span>
+
       </button>
 
-      <button class="control-btn" id="stop-btn">
-        <svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/></svg>
-        <span>Stop</span>
+
+      <button
+        class="control-btn"
+        id="stop-btn">
+
+        <svg viewBox="0 0 24 24">
+
+          <rect
+            x="6"
+            y="6"
+            width="12"
+            height="12"
+            rx="1.5"/>
+
+        </svg>
+
+        <span>
+          Stop
+        </span>
+
       </button>
+
     </div>
 
   </section>
 
+
   <section class="card settings-card">
 
-    <div class="settings-title">การตั้งค่าโมเดลและการเชื่อมต่อ</div>
+    <div class="settings-title">
+      การตั้งค่าโมเดลและการเชื่อมต่อ
+    </div>
+
 
     <div>
-      <div class="field-label">Teachable Model ID</div>
-      <div class="model-wrap">
-        <input type="text" id="model-input" placeholder="เช่น Voxb2VGd2">
-        <button class="copy-btn" onclick="copyModelId()" title="คัดลอก Model ID" aria-label="คัดลอก Model ID">
-          <svg viewBox="0 0 24 24">
-            <rect x="8" y="8" width="11" height="11" rx="2"/>
-            <path d="M5 16H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1"/>
-          </svg>
-        </button>
+
+      <div class="field-label">
+        Teachable Model ID
       </div>
+
+      <div class="model-wrap">
+
+        <input
+          type="text"
+          id="model-input"
+          placeholder="เช่น Voxb2VGd2">
+
+        <button
+          class="copy-btn"
+          onclick="copyModelId()"
+          title="คัดลอก Model ID"
+          aria-label="คัดลอก Model ID">
+
+          <svg viewBox="0 0 24 24">
+
+            <rect
+              x="8"
+              y="8"
+              width="11"
+              height="11"
+              rx="2"/>
+
+            <path
+              d="M5 16H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1"/>
+
+          </svg>
+
+        </button>
+
+      </div>
+
     </div>
+
 
     <div class="two-fields">
-      <div>
-        <div class="field-label">School ID</div>
-        <input type="text" id="school-input" placeholder="PTL-School">
-      </div>
 
       <div>
-        <div class="field-label">Name ID</div>
-        <input type="text" id="name-input" placeholder="group1">
+
+        <div class="field-label">
+          School ID
+        </div>
+
+        <input
+          type="text"
+          id="school-input"
+          placeholder="PTL-School">
+
       </div>
+
+
+      <div>
+
+        <div class="field-label">
+          Name ID
+        </div>
+
+        <input
+          type="text"
+          id="name-input"
+          placeholder="group1">
+
+      </div>
+
     </div>
 
-    <button class="save-btn" onclick="saveSettings()">
+
+    <button
+      class="save-btn"
+      onclick="saveSettings()">
+
       <svg viewBox="0 0 24 24">
         <path d="M5 3h11l3 3v15H5z"/>
         <path d="M8 3v6h8V3M8 21v-7h8v7"/>
       </svg>
-      <span>SAVE</span>
+
+      <span>
+        SAVE
+      </span>
+
     </button>
 
   </section>
 
-  <!-- System Ready / Connected footer removed as requested -->
-
 </div>
 
-<div class="mini-footer">Mini MicroKit PT-L V1.0 | AI Vision</div>
+
+<div class="mini-footer">
+  Mini MicroKit PT-L V1.0 | AI Vision
+</div>
+
 
 <script>
+
 window.addEventListener('DOMContentLoaded', () => {
-  const savedTheme = localStorage.getItem("theme") || "light";
+
+  const savedTheme =
+    localStorage.getItem("theme") || "light";
+
   document.body.dataset.theme = savedTheme;
 
-  let savedId = localStorage.getItem("saved_model_id") || "";
-  if (savedId) document.getElementById("model-input").value = savedId;
 
-  let savedSchool = localStorage.getItem("saved_school_id") || "PTL-School";
-  document.getElementById("school-input").value = savedSchool;
+  let savedId =
+    localStorage.getItem("saved_model_id") || "";
 
-  let savedNameId = localStorage.getItem("saved_name_id") || "group1";
-  document.getElementById("name-input").value = savedNameId;
-
-  updateTopicDisplay(savedSchool, savedNameId);
-});
-
-function saveSettings() {
-  const modelVal = document.getElementById("model-input").value.trim();
-  const schoolVal = document.getElementById("school-input").value.trim() || "PTL-School";
-  const nameVal = document.getElementById("name-input").value.trim() || "group1";
-
-  if (!modelVal) {
-    alert("กรุณากรอก Model ID ให้ถูกต้อง");
-    return;
+  if (savedId) {
+    document.getElementById("model-input").value = savedId;
   }
 
-  localStorage.setItem("saved_model_id", modelVal);
-  localStorage.setItem("saved_school_id", schoolVal);
-  localStorage.setItem("saved_name_id", nameVal);
 
-  updateTopicDisplay(schoolVal, nameVal);
-  alert("บันทึกค่าเรียบร้อย! กำลังเชื่อมต่อระบบใหม่...");
+  let savedSchool =
+    localStorage.getItem("saved_school_id") || "PTL-School";
+
+  document.getElementById("school-input").value =
+    savedSchool;
+
+
+  let savedNameId =
+    localStorage.getItem("saved_name_id") || "group1";
+
+  document.getElementById("name-input").value =
+    savedNameId;
+
+
+  updateTopicDisplay(
+    savedSchool,
+    savedNameId
+  );
+
+});
+
+
+function saveSettings() {
+
+  const modelVal =
+    document.getElementById("model-input")
+      .value.trim();
+
+  const schoolVal =
+    document.getElementById("school-input")
+      .value.trim() || "PTL-School";
+
+  const nameVal =
+    document.getElementById("name-input")
+      .value.trim() || "group1";
+
+
+  if (!modelVal) {
+
+    alert(
+      "กรุณากรอก Model ID ให้ถูกต้อง"
+    );
+
+    return;
+
+  }
+
+
+  localStorage.setItem(
+    "saved_model_id",
+    modelVal
+  );
+
+  localStorage.setItem(
+    "saved_school_id",
+    schoolVal
+  );
+
+  localStorage.setItem(
+    "saved_name_id",
+    nameVal
+  );
+
+
+  updateTopicDisplay(
+    schoolVal,
+    nameVal
+  );
+
+
+  alert(
+    "บันทึกค่าเรียบร้อย! กำลังเชื่อมต่อระบบใหม่..."
+  );
+
 
   initMQTT();
+
 }
+
 
 function copyModelId(){
-  const input = document.getElementById("model-input");
+
+  const input =
+    document.getElementById("model-input");
+
   if(!input.value) return;
 
+
   navigator.clipboard?.writeText(input.value)
-    .then(() => alert("คัดลอก Model ID แล้ว"))
+
+    .then(() =>
+      alert("คัดลอก Model ID แล้ว")
+    )
+
     .catch(() => {
+
       input.select();
+
       document.execCommand("copy");
+
       alert("คัดลอก Model ID แล้ว");
+
     });
+
 }
 
-function updateTopicDisplay(schoolId, nameId) {
-  document.getElementById("current-group-label").textContent =
-    "Topic : " + schoolId + "/" + nameId;
+
+function updateTopicDisplay(
+  schoolId,
+  nameId
+) {
+
+  document.getElementById(
+    "current-group-label"
+  ).textContent =
+    "Topic : " +
+    schoolId +
+    "/" +
+    nameId;
+
 }
 
-const mqttHost = "broker.emqx.io";
-const mqttPort = 8084;
+
+const mqttHost =
+  "broker.emqx.io";
+
+const mqttPort =
+  8084;
+
 
 let mqttClient = null;
 let isConnecting = false;
 
+
 function getDynamicTopic() {
-  let schoolId = localStorage.getItem("saved_school_id") || "PTL-School";
-  let nameId = localStorage.getItem("saved_name_id") || "group1";
-  return "gelectronlab/" + schoolId + "/" + nameId + "/status";
-}
 
-function initMQTT() {
-  if (isConnecting) return;
-  isConnecting = true;
+  let schoolId =
+    localStorage.getItem("saved_school_id")
+    || "PTL-School";
 
-  if (mqttClient) {
-    try {
-      mqttClient.onConnectionLost = null;
-      if (mqttClient.isConnected()) mqttClient.disconnect();
-    } catch(e) {
-      console.log(e);
-    }
-  }
+  let nameId =
+    localStorage.getItem("saved_name_id")
+    || "group1";
 
-  let schoolId = localStorage.getItem("saved_school_id") || "PTL-School";
-  let nameId = localStorage.getItem("saved_name_id") || "group1";
-  let uniqueClientId =
-    "WebClient-" + schoolId + "-" + nameId + "-" +
-    Date.now() + "-" + Math.floor(Math.random() * 10000);
 
-  mqttClient = new Paho.MQTT.Client(
-    mqttHost,
-    Number(mqttPort),
-    uniqueClientId
+  return (
+    "gelectronlab/" +
+    schoolId +
+    "/" +
+    nameId +
+    "/status"
   );
 
-  mqttClient.onConnectionLost = function(responseObject) {
-    isConnecting = false;
+}
 
-    document.getElementById("esp-status").textContent = "Disconnected";
-    document.getElementById("esp-status").style.color = "#ef4444";
 
-    if (responseObject.errorCode !== 0) {
-      console.log("MQTT Lost: " + responseObject.errorMessage);
-      setTimeout(initMQTT, 5000);
+function initMQTT() {
+
+  if (isConnecting) return;
+
+  isConnecting = true;
+
+
+  if (mqttClient) {
+
+    try {
+
+      mqttClient.onConnectionLost =
+        null;
+
+      if (mqttClient.isConnected()) {
+        mqttClient.disconnect();
+      }
+
+    } catch(e) {
+
+      console.log(e);
+
     }
-  };
+
+  }
+
+
+  let schoolId =
+    localStorage.getItem("saved_school_id")
+    || "PTL-School";
+
+  let nameId =
+    localStorage.getItem("saved_name_id")
+    || "group1";
+
+
+  let uniqueClientId =
+    "WebClient-" +
+    schoolId +
+    "-" +
+    nameId +
+    "-" +
+    Date.now() +
+    "-" +
+    Math.floor(
+      Math.random() * 10000
+    );
+
+
+  mqttClient =
+    new Paho.MQTT.Client(
+      mqttHost,
+      Number(mqttPort),
+      uniqueClientId
+    );
+
+
+  mqttClient.onConnectionLost =
+    function(responseObject) {
+
+      isConnecting = false;
+
+
+      document.getElementById(
+        "esp-status"
+      ).textContent =
+        "Disconnected";
+
+
+      document.getElementById(
+        "esp-status"
+      ).style.color =
+        "#ef4444";
+
+
+      if (
+        responseObject.errorCode !== 0
+      ) {
+
+        console.log(
+          "MQTT Lost: " +
+          responseObject.errorMessage
+        );
+
+        setTimeout(
+          initMQTT,
+          5000
+        );
+
+      }
+
+    };
+
 
   try {
+
     mqttClient.connect({
+
       onSuccess: function() {
+
         isConnecting = false;
-        document.getElementById("esp-status").textContent = "Connected " + nameId;
-        document.getElementById("esp-status").style.color = "var(--green-strong)";
-        console.log("Connected Successfully as: " + uniqueClientId);
+
+
+        document.getElementById(
+          "esp-status"
+        ).textContent =
+          "Connected " +
+          nameId;
+
+
+        document.getElementById(
+          "esp-status"
+        ).style.color =
+          "var(--green-strong)";
+
+
+        console.log(
+          "Connected Successfully as: " +
+          uniqueClientId
+        );
+
       },
 
+
       onFailure: function(message) {
+
         isConnecting = false;
-        document.getElementById("esp-status").textContent = "Failed";
-        document.getElementById("esp-status").style.color = "#ef4444";
-        console.log("Connect Failed: " + message.errorMessage);
-        setTimeout(initMQTT, 5000);
+
+
+        document.getElementById(
+          "esp-status"
+        ).textContent =
+          "Failed";
+
+
+        document.getElementById(
+          "esp-status"
+        ).style.color =
+          "#ef4444";
+
+
+        console.log(
+          "Connect Failed: " +
+          message.errorMessage
+        );
+
+
+        setTimeout(
+          initMQTT,
+          5000
+        );
+
       },
+
 
       useSSL: true,
       timeout: 5,
       keepAliveInterval: 30
+
     });
+
   } catch(e) {
+
     isConnecting = false;
-    console.error("MQTT Exception: ", e);
+
+    console.error(
+      "MQTT Exception: ",
+      e
+    );
+
   }
+
 }
+
 
 initMQTT();
 
+
 function toggleTheme() {
-  const body = document.body;
-  const currentTheme = body.dataset.theme === "dark" ? "light" : "dark";
-  body.dataset.theme = currentTheme;
-  localStorage.setItem("theme", currentTheme);
+
+  const body =
+    document.body;
+
+  const currentTheme =
+    body.dataset.theme === "dark"
+      ? "light"
+      : "dark";
+
+
+  body.dataset.theme =
+    currentTheme;
+
+
+  localStorage.setItem(
+    "theme",
+    currentTheme
+  );
+
 }
+
 
 let model = null;
 let running = false;
@@ -849,260 +1422,671 @@ let lastSentTime = 0;
 let currentFacingMode = "user";
 let predictionBusy = false;
 
+
 /* =========================================================
    REAL-TIME CONFIDENCE GRAPH — PERFORMANCE MODE
-   AI ยัง predict ต่อเนื่องตามเดิม แต่กราฟ redraw ทุก 150 ms
-   เพื่อลดภาระ CPU/GPU บนโทรศัพท์
+   AI predict ต่อเนื่องตามเดิม
+   กราฟ redraw ทุก 150 ms
    ========================================================= */
+
 const confidenceHistory = [];
+
 const GRAPH_POINTS = 30;
+
 const GRAPH_UPDATE_MS = 150;
 
+
 let latestConfidence = 0;
+
 let lastGraphRender = 0;
+
 let graphInitialized = false;
 
+
 function renderConfidenceGraph(value) {
-  const chartLine = document.getElementById("chart-line");
-  const chartArea = document.getElementById("chart-area");
-  const chartDot = document.getElementById("chart-dot");
 
-  if (!chartLine || !chartArea || !chartDot) return;
+  const chartLine =
+    document.getElementById(
+      "chart-line"
+    );
 
-  value = Math.max(0, Math.min(100, Number(value) || 0));
+  const chartArea =
+    document.getElementById(
+      "chart-area"
+    );
+
+  const chartDot =
+    document.getElementById(
+      "chart-dot"
+    );
+
+
+  if (
+    !chartLine ||
+    !chartArea ||
+    !chartDot
+  ) return;
+
+
+  value =
+    Math.max(
+      0,
+      Math.min(
+        100,
+        Number(value) || 0
+      )
+    );
+
 
   confidenceHistory.push(value);
 
-  if (confidenceHistory.length > GRAPH_POINTS) {
+
+  if (
+    confidenceHistory.length >
+    GRAPH_POINTS
+  ) {
+
     confidenceHistory.shift();
+
   }
 
-  const data = [...confidenceHistory];
 
-  while (data.length < GRAPH_POINTS) {
-    data.unshift(data.length ? data[0] : value);
+  const data =
+    [...confidenceHistory];
+
+
+  while (
+    data.length <
+    GRAPH_POINTS
+  ) {
+
+    data.unshift(
+      data.length
+        ? data[0]
+        : value
+    );
+
   }
+
 
   const width = 240;
+
   const height = 38;
+
   const topPadding = 3;
+
   const bottomPadding = 4;
-  const graphHeight = height - topPadding - bottomPadding;
-  const stepX = width / (GRAPH_POINTS - 1);
+
+  const graphHeight =
+    height -
+    topPadding -
+    bottomPadding;
+
+  const stepX =
+    width /
+    (GRAPH_POINTS - 1);
+
 
   let linePath = "";
-  let lastX = 0;
-  let lastY = height / 2;
 
-  for (let i = 0; i < GRAPH_POINTS; i++) {
-    const x = i * stepX;
-    const y = topPadding + ((100 - data[i]) / 100) * graphHeight;
+  let lastX = 0;
+
+  let lastY =
+    height / 2;
+
+
+  for (
+    let i = 0;
+    i < GRAPH_POINTS;
+    i++
+  ) {
+
+    const x =
+      i * stepX;
+
+    const y =
+      topPadding +
+      (
+        (100 - data[i]) /
+        100
+      ) *
+      graphHeight;
+
 
     if (i === 0) {
-      linePath = `M ${x.toFixed(2)} ${y.toFixed(2)}`;
+
+      linePath =
+        `M ${x.toFixed(2)} ${y.toFixed(2)}`;
+
     } else {
-      linePath += ` L ${x.toFixed(2)} ${y.toFixed(2)}`;
+
+      linePath +=
+        ` L ${x.toFixed(2)} ${y.toFixed(2)}`;
+
     }
 
-    if (i === GRAPH_POINTS - 1) {
+
+    if (
+      i ===
+      GRAPH_POINTS - 1
+    ) {
+
       lastX = x;
+
       lastY = y;
+
     }
+
   }
+
 
   const areaPath =
     linePath +
     ` L ${lastX.toFixed(2)} ${height}` +
     ` L 0 ${height} Z`;
 
-  chartLine.setAttribute("d", linePath);
-  chartArea.setAttribute("d", areaPath);
-  chartDot.setAttribute("cx", lastX.toFixed(2));
-  chartDot.setAttribute("cy", lastY.toFixed(2));
+
+  chartLine.setAttribute(
+    "d",
+    linePath
+  );
+
+  chartArea.setAttribute(
+    "d",
+    areaPath
+  );
+
+  chartDot.setAttribute(
+    "cx",
+    lastX.toFixed(2)
+  );
+
+  chartDot.setAttribute(
+    "cy",
+    lastY.toFixed(2)
+  );
+
 
   graphInitialized = true;
+
 }
+
 
 function updateConfidenceGraph(value) {
-  latestConfidence = Math.max(0, Math.min(100, Number(value) || 0));
 
-  const now = performance.now();
+  latestConfidence =
+    Math.max(
+      0,
+      Math.min(
+        100,
+        Number(value) || 0
+      )
+    );
 
-  // ไม่ redraw ทุก AI frame — จำกัดกราฟประมาณ 6–7 ครั้ง/วินาที
-  if (!graphInitialized || now - lastGraphRender >= GRAPH_UPDATE_MS) {
+
+  const now =
+    performance.now();
+
+
+  if (
+    !graphInitialized ||
+    now - lastGraphRender >=
+    GRAPH_UPDATE_MS
+  ) {
+
     lastGraphRender = now;
-    renderConfidenceGraph(latestConfidence);
+
+    renderConfidenceGraph(
+      latestConfidence
+    );
+
   }
+
 }
 
-// เริ่มต้นกราฟ
+
 renderConfidenceGraph(0);
 
-async function sendToESP32(className) {
-  if (Date.now() - lastSentTime < 1000) return;
-  lastSentTime = Date.now();
 
-  if (mqttClient && mqttClient.isConnected()) {
-    let topic = getDynamicTopic();
-    let message = new Paho.MQTT.Message(className);
-    message.destinationName = topic;
-    mqttClient.send(message);
+async function sendToESP32(
+  className
+) {
 
-    let nameId = localStorage.getItem("saved_name_id") || "group1";
-    document.getElementById("esp-status").textContent = "Sent " + nameId;
-    document.getElementById("esp-status").style.color = "var(--green-strong)";
+  if (
+    Date.now() -
+    lastSentTime <
+    1000
+  ) return;
+
+
+  lastSentTime =
+    Date.now();
+
+
+  if (
+    mqttClient &&
+    mqttClient.isConnected()
+  ) {
+
+    let topic =
+      getDynamicTopic();
+
+
+    let message =
+      new Paho.MQTT.Message(
+        className
+      );
+
+
+    message.destinationName =
+      topic;
+
+
+    mqttClient.send(
+      message
+    );
+
+
+    let nameId =
+      localStorage.getItem(
+        "saved_name_id"
+      ) || "group1";
+
+
+    document.getElementById(
+      "esp-status"
+    ).textContent =
+      "Sent " +
+      nameId;
+
+
+    document.getElementById(
+      "esp-status"
+    ).style.color =
+      "var(--green-strong)";
+
   }
+
 }
+
 
 async function testConnection() {
-  await sendToESP32("Test_Class");
-  alert("ส่งสัญญาณทดสอบไปยัง Mini MicroKit PT-L เรียบร้อย!");
+
+  await sendToESP32(
+    "Test_Class"
+  );
+
+
+  alert(
+    "ส่งสัญญาณทดสอบไปยัง Mini MicroKit PT-L เรียบร้อย!"
+  );
+
 }
 
-async function startCamera(facing) {
+
+async function startCamera(
+  facing
+) {
+
   if (window.currentStream) {
-    window.currentStream.getTracks().forEach(track => track.stop());
+
+    window.currentStream
+      .getTracks()
+      .forEach(
+        track =>
+          track.stop()
+      );
+
   }
 
-  const videoElement = document.getElementById("video");
+
+  const videoElement =
+    document.getElementById(
+      "video"
+    );
+
 
   if (facing === "user") {
-    videoElement.className = "front-cam";
+
+    videoElement.className =
+      "front-cam";
+
   } else {
-    videoElement.className = "back-cam";
+
+    videoElement.className =
+      "back-cam";
+
   }
 
-  const stream = await navigator.mediaDevices.getUserMedia({
-    video: {
-      facingMode: facing,
-      width: { ideal: 224 },
-      height: { ideal: 224 }
-    }
-  });
 
-  window.currentStream = stream;
-  videoElement.srcObject = stream;
+  const stream =
+    await navigator.mediaDevices
+      .getUserMedia({
+
+        video: {
+
+          facingMode: facing,
+
+          width: {
+            ideal: 224
+          },
+
+          height: {
+            ideal: 224
+          }
+
+        }
+
+      });
+
+
+  window.currentStream =
+    stream;
+
+
+  videoElement.srcObject =
+    stream;
+
 }
 
+
 async function switchCamera() {
+
   currentFacingMode =
-    (currentFacingMode === "user") ? "environment" : "user";
+    (
+      currentFacingMode === "user"
+    )
+      ? "environment"
+      : "user";
+
 
   if (running) {
+
     try {
-      await startCamera(currentFacingMode);
+
+      await startCamera(
+        currentFacingMode
+      );
+
     } catch(e) {
-      alert("ไม่สามารถสลับกล้องได้: " + e.message);
+
+      alert(
+        "ไม่สามารถสลับกล้องได้: " +
+        e.message
+      );
+
     }
+
   } else {
+
     alert(
       currentFacingMode === "user"
         ? "ตั้งค่าเป็น: กล้องหน้า"
         : "ตั้งค่าเป็น: กล้องหลัง"
     );
+
   }
+
 }
 
-document.getElementById("start-btn").onclick = async () => {
+
+document.getElementById(
+  "start-btn"
+).onclick = async () => {
+
   let savedId =
-    localStorage.getItem("saved_model_id") ||
-    document.getElementById("model-input").value.trim();
+    localStorage.getItem(
+      "saved_model_id"
+    ) ||
+    document.getElementById(
+      "model-input"
+    ).value.trim();
+
 
   if (!savedId) {
-    alert("กรุณากรอกและกดบันทึก Model ID ก่อนกด Start AI");
+
+    alert(
+      "กรุณากรอกและกดบันทึก Model ID ก่อนกด Start AI"
+    );
+
     return;
+
   }
 
+
   try {
-    document.getElementById("start-btn").querySelector("span").textContent = "Loading...";
+
+    document.getElementById(
+      "start-btn"
+    )
+    .querySelector("span")
+    .textContent =
+      "Loading...";
+
 
     const MODEL_URL =
       `https://teachablemachine.withgoogle.com/models/${savedId}/`;
-    const u =
-      MODEL_URL.endsWith("/") ? MODEL_URL : MODEL_URL + "/";
 
-    model = await tmImage.load(
-      u + "model.json",
-      u + "metadata.json"
+
+    const u =
+      MODEL_URL.endsWith("/")
+        ? MODEL_URL
+        : MODEL_URL + "/";
+
+
+    model =
+      await tmImage.load(
+        u + "model.json",
+        u + "metadata.json"
+      );
+
+
+    await startCamera(
+      currentFacingMode
     );
 
-    await startCamera(currentFacingMode);
 
     running = true;
-    document.getElementById("start-btn").querySelector("span").textContent = "Running...";
+
+
+    document.getElementById(
+      "start-btn"
+    )
+    .querySelector("span")
+    .textContent =
+      "Running...";
+
+
     loop();
 
+
   } catch(e) {
-    alert("ไม่สามารถเปิดกล้องหรือโหลดโมเดลได้: " + e.message);
-    document.getElementById("start-btn").querySelector("span").textContent = "Start AI";
+
+    alert(
+      "ไม่สามารถเปิดกล้องหรือโหลดโมเดลได้: " +
+      e.message
+    );
+
+
+    document.getElementById(
+      "start-btn"
+    )
+    .querySelector("span")
+    .textContent =
+      "Start AI";
+
   }
+
 };
 
+
 async function loop() {
-  if (!running || predictionBusy) return;
+
+  if (
+    !running ||
+    predictionBusy
+  ) return;
+
 
   predictionBusy = true;
 
-  try {
-    const prediction =
-      await model.predict(document.getElementById("video"), false);
 
-    let best =
-      prediction.reduce((highest, item) =>
-        item.probability > highest.probability ? item : highest
+  try {
+
+    const prediction =
+      await model.predict(
+        document.getElementById(
+          "video"
+        ),
+        false
       );
 
-    let pctVal = best.probability * 100;
-    let pctStr = pctVal.toFixed(1) + "%";
 
-    let confElem = document.getElementById("conf-text");
-    confElem.textContent = pctStr;
+    let best =
+      prediction.reduce(
+        (highest, item) =>
+          item.probability >
+          highest.probability
+            ? item
+            : highest
+      );
 
-    // ส่งค่าความแม่นยำให้กราฟ แต่กราฟจะ redraw ตามรอบ 150 ms
-    updateConfidenceGraph(pctVal);
+
+    let pctVal =
+      best.probability * 100;
+
+
+    let pctStr =
+      pctVal.toFixed(1) +
+      "%";
+
+
+    let confElem =
+      document.getElementById(
+        "conf-text"
+      );
+
+
+    confElem.textContent =
+      pctStr;
+
+
+    updateConfidenceGraph(
+      pctVal
+    );
+
 
     if (pctVal > 90) {
-      confElem.style.color = "var(--green-strong)";
+
+      confElem.style.color =
+        "var(--green-strong)";
+
     } else {
-      confElem.style.color = "var(--danger)";
+
+      confElem.style.color =
+        "var(--danger)";
+
     }
 
-    if (best.probability > 0.90) {
-      document.getElementById("name").textContent = best.className;
-      sendToESP32(best.className);
+
+    if (
+      best.probability >
+      0.90
+    ) {
+
+      document.getElementById(
+        "name"
+      ).textContent =
+        best.className;
+
+
+      sendToESP32(
+        best.className
+      );
+
     } else {
-      document.getElementById("name").textContent = "Uncertain...";
-      sendToESP32("Unknown");
+
+      document.getElementById(
+        "name"
+      ).textContent =
+        "Uncertain...";
+
+
+      sendToESP32(
+        "Unknown"
+      );
+
     }
+
 
   } catch(err) {
+
     console.error(err);
+
   } finally {
-    predictionBusy = false;
+
+    predictionBusy =
+      false;
+
   }
+
 
   if (running) {
-    requestAnimationFrame(loop);
+
+    requestAnimationFrame(
+      loop
+    );
+
   }
+
 }
 
-document.getElementById("stop-btn").onclick = () => {
+
+document.getElementById(
+  "stop-btn"
+).onclick = () => {
+
   running = false;
+
   predictionBusy = false;
-  confidenceHistory.length = 0;
+
+
+  confidenceHistory.length =
+    0;
+
+
   latestConfidence = 0;
+
   lastGraphRender = 0;
+
   graphInitialized = false;
+
+
   renderConfidenceGraph(0);
 
+
   if (window.currentStream) {
-    window.currentStream.getTracks().forEach(track => track.stop());
-    window.currentStream = null;
+
+    window.currentStream
+      .getTracks()
+      .forEach(
+        track =>
+          track.stop()
+      );
+
+
+    window.currentStream =
+      null;
+
   }
 
+
   location.reload();
+
 };
+
 </script>
 
 </body>
 </html>
+```
