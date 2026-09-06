@@ -562,20 +562,17 @@ input:focus{
       <div class="card-label">ความแม่นยำ</div>
       <div class="conf-value" id="conf-text">0.0%</div>
 
-      <svg class="conf-chart" viewBox="0 0 240 38" preserveAspectRatio="none" aria-hidden="true">
+      <svg class="conf-chart" id="confidence-chart" viewBox="0 0 240 38" preserveAspectRatio="none" aria-hidden="true">
         <defs>
           <linearGradient id="chartFill" x1="0" x2="0" y1="0" y2="1">
             <stop offset="0" stop-color="#35c76b" stop-opacity=".22"/>
             <stop offset="1" stop-color="#35c76b" stop-opacity="0"/>
           </linearGradient>
         </defs>
-        <path id="chart-area"
-          d="M0 32 L10 29 L20 31 L30 28 L40 31 L50 27 L60 30 L70 28 L80 10 L90 18 L100 14 L110 17 L120 12 L130 16 L140 9 L150 15 L160 11 L170 14 L180 8 L190 12 L200 5 L210 13 L220 7 L230 12 L240 4 L240 38 L0 38 Z"
-          fill="url(#chartFill)"/>
-        <path
-          d="M0 32 L10 29 L20 31 L30 28 L40 31 L50 27 L60 30 L70 28 L80 10 L90 18 L100 14 L110 17 L120 12 L130 16 L140 9 L150 15 L160 11 L170 14 L180 8 L190 12 L200 5 L210 13 L220 7 L230 12 L240 4"
-          fill="none" stroke="#35c76b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-        <circle cx="240" cy="4" r="4.2" fill="#35c76b"/>
+        <path id="chart-area" d="" fill="url(#chartFill)"/>
+        <path id="chart-line" d="" fill="none" stroke="#35c76b" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round"/>
+        <circle id="chart-dot" cx="240" cy="19" r="4.2" fill="#35c76b"/>
       </svg>
     </div>
 
@@ -842,6 +839,95 @@ let running = false;
 let lastSentTime = 0;
 let currentFacingMode = "user";
 
+/* =========================================================
+   REAL-TIME CONFIDENCE GRAPH
+   - ใช้ค่าความแม่นยำจริงจาก Teachable Machine
+   - เก็บ 30 ค่าล่าสุด
+   - เลื่อนจากขวาไปซ้ายตามเวลาจริง
+   ========================================================= */
+const confidenceHistory = [];
+const GRAPH_POINTS = 30;
+let lastGraphValue = 0;
+
+function updateConfidenceGraph(value) {
+  const chartLine = document.getElementById("chart-line");
+  const chartArea = document.getElementById("chart-area");
+  const chartDot = document.getElementById("chart-dot");
+
+  if (!chartLine || !chartArea || !chartDot) return;
+
+  // จำกัดค่าให้อยู่ระหว่าง 0–100
+  value = Math.max(0, Math.min(100, Number(value) || 0));
+  lastGraphValue = value;
+
+  confidenceHistory.push(value);
+
+  if (confidenceHistory.length > GRAPH_POINTS) {
+    confidenceHistory.shift();
+  }
+
+  // เติมค่าด้านซ้ายช่วงเริ่มต้น เพื่อให้กราฟเต็มพื้นที่ตั้งแต่แรก
+  const data = [...confidenceHistory];
+
+  while (data.length < GRAPH_POINTS) {
+    data.unshift(data.length ? data[0] : value);
+  }
+
+  const width = 240;
+  const height = 38;
+  const topPadding = 3;
+  const bottomPadding = 4;
+  const graphHeight = height - topPadding - bottomPadding;
+  const stepX = width / (GRAPH_POINTS - 1);
+
+  const points = data.map((v, i) => {
+    const x = i * stepX;
+    const y = topPadding + ((100 - v) / 100) * graphHeight;
+    return { x, y };
+  });
+
+  // ทำเส้นกราฟ
+  let linePath = "";
+
+  points.forEach((p, i) => {
+    if (i === 0) {
+      linePath += `M ${p.x.toFixed(2)} ${p.y.toFixed(2)}`;
+    } else {
+      linePath += ` L ${p.x.toFixed(2)} ${p.y.toFixed(2)}`;
+    }
+  });
+
+  // พื้นที่ใต้กราฟ
+  const last = points[points.length - 1];
+  const areaPath =
+    linePath +
+    ` L ${last.x.toFixed(2)} ${height}` +
+    ` L 0 ${height} Z`;
+
+  chartLine.setAttribute("d", linePath);
+  chartArea.setAttribute("d", areaPath);
+
+  // จุดค่าปัจจุบันด้านขวาสุด
+  chartDot.setAttribute("cx", last.x);
+  chartDot.setAttribute("cy", last.y);
+
+  // Animation เล็กน้อยเฉพาะจุดล่าสุด
+  chartDot.animate(
+    [
+      { r: 3.2, opacity: 0.75 },
+      { r: 4.8, opacity: 1 },
+      { r: 3.8, opacity: 0.9 }
+    ],
+    {
+      duration: 450,
+      easing: "ease-out"
+    }
+  );
+}
+
+// เริ่มต้นกราฟที่ 0%
+updateConfidenceGraph(0);
+
 async function sendToESP32(className) {
   if (Date.now() - lastSentTime < 1000) return;
   lastSentTime = Date.now();
@@ -957,6 +1043,9 @@ async function loop() {
 
     let confElem = document.getElementById("conf-text");
     confElem.textContent = pctStr;
+
+    // อัปเดตกราฟตามค่าความแม่นยำจริงแบบ Real-time
+    updateConfidenceGraph(pctVal);
 
     if (pctVal > 90) {
       confElem.style.color = "var(--green-strong)";
