@@ -99,16 +99,16 @@ button{
   max-width:900px;
   height:100%;
   padding:
-    max(10px,env(safe-area-inset-top))
+    max(6px,env(safe-area-inset-top))
     clamp(10px,2.8vw,28px)
-    max(8px,env(safe-area-inset-bottom));
+    max(18px,env(safe-area-inset-bottom));
   display:grid;
   grid-template-rows:
     auto
     auto
     minmax(0,1fr)
     auto;
-  gap:clamp(7px,1.2vh,14px);
+  gap:clamp(4px,0.8vh,10px);
 }
 
 .header{
@@ -352,10 +352,10 @@ video.back-cam{transform:scaleX(1)}
 }
 
 .settings-card{
-  padding:clamp(8px, 1.4vw, 16px);
+  padding:clamp(6px, 1vw, 12px);
   display:flex;
   flex-direction:column;
-  gap:clamp(5px, 0.9vh, 9px);
+  gap:clamp(3px, 0.6vh, 6px);
 }
 
 .settings-title{
