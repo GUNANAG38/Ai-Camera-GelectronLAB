@@ -148,22 +148,15 @@ button{
   flex:0 0 auto;
 }
 
-.theme-top svg{
-  width:55%;
-  height:55%;
-}
+.theme-top svg{width:55%;height:55%}
 
-/* ปุ่ม Test และ Theme แบบกะทัดรัด */
+/* ปุ่ม Test และ Theme แบบกะทัดรัดขึ้น */
 .theme-top{
   width:clamp(44px,6.5vw,58px);
   height:clamp(44px,6.5vw,58px);
   border-radius:15px;
 }
-
-.theme-top svg{
-  width:52%;
-  height:52%;
-}
+.theme-top svg{width:52%;height:52%}
 
 .header-actions{
   display:flex;
@@ -177,26 +170,12 @@ button{
   font-weight:700;
   letter-spacing:.1px;
 }
+.theme-switch{position:relative}
+.theme-switch svg{display:block}
+.theme-icon-sun{display:none !important}
+[data-theme="dark"] .theme-icon-moon{display:none !important}
+[data-theme="dark"] .theme-icon-sun{display:block !important}
 
-.theme-switch{
-  position:relative;
-}
-
-.theme-switch svg{
-  display:block;
-}
-
-.theme-icon-sun{
-  display:none !important;
-}
-
-[data-theme="dark"] .theme-icon-moon{
-  display:none !important;
-}
-
-[data-theme="dark"] .theme-icon-sun{
-  display:block !important;
-}
 
 .summary{
   display:grid;
@@ -328,13 +307,8 @@ video{
   display:block;
 }
 
-video.front-cam{
-  transform:scaleX(-1);
-}
-
-video.back-cam{
-  transform:scaleX(1);
-}
+video.front-cam{transform:scaleX(-1)}
+video.back-cam{transform:scaleX(1)}
 
 .live-badge{
   position:absolute;
@@ -388,11 +362,7 @@ video.back-cam{
   border-color:#27313c;
 }
 
-.btn-float-switch svg{
-  width:48%;
-  height:48%;
-  fill:currentColor;
-}
+.btn-float-switch svg{width:48%;height:48%;fill:currentColor}
 
 .controls-grid{
   display:grid;
@@ -457,13 +427,8 @@ input:focus{
   box-shadow:0 0 0 3px rgba(33,169,87,.10);
 }
 
-.model-wrap{
-  position:relative;
-}
-
-.model-wrap input{
-  padding-right:48px;
-}
+.model-wrap{position:relative}
+.model-wrap input{padding-right:48px}
 
 .copy-btn{
   position:absolute;
@@ -492,11 +457,11 @@ input:focus{
   gap:clamp(7px,1.1vw,12px);
 }
 
-/* SAVE — ลดขนาดลงอีก */
+/* SAVE — ลดขนาดลงจาก V8 โดยไม่กระทบส่วนอื่น */
 .save-btn{
   width:100%;
   height:clamp(30px,4vh,40px);
-  border-radius:clamp(8px,1.1vw,11px);
+  border-radius:clamp(9px,1.2vw,12px);
   background:var(--save-bg);
   color:var(--save-text);
   border:1px solid var(--save-border);
@@ -508,9 +473,7 @@ input:focus{
   gap:0;
 }
 
-.save-btn svg{
-  display:none;
-}
+.save-btn svg{display:none}
 
 .footer-status{
   height:clamp(40px,5.5vh,55px);
@@ -535,9 +498,7 @@ input:focus{
   min-width:0;
 }
 
-.footer-item:last-child{
-  justify-content:flex-end;
-}
+.footer-item:last-child{justify-content:flex-end}
 
 .footer-divider{
   width:1px;
@@ -564,16 +525,26 @@ input:focus{
   padding-bottom:1px;
 }
 
-/* V8 — ปรับเฉพาะขนาด Running / Stop */
+/* V8 — ปรับเฉพาะขนาด Running / Stop และ SAVE */
 .control-btn{
   min-height:clamp(40px,5.5vh,60px);
   font-size:clamp(.80rem,1.9vw,1.05rem);
-  gap:clamp(7px,1.2vw,12px);
+  gap:clamp(7px,1.2vw,12px)
 }
 
 .control-btn svg{
   width:clamp(18px,3vw,25px);
-  height:clamp(18px,3vw,25px);
+  height:clamp(18px,3vw,25px)
+}
+
+.save-btn{
+  height:clamp(30px,4vh,40px);
+  font-size:clamp(.78rem,1.7vw,.92rem);
+  gap:0
+}
+
+.save-btn svg{
+  display:none
 }
 
 /* V9 — Footer ลอยด้านล่าง ไม่กระทบ Layout หลัก */
@@ -595,91 +566,32 @@ input:focus{
 
 /* รักษา layout เดิมไว้บนโทรศัพท์: ทุกอย่างยังอยู่หน้าเดียว */
 @media (max-height:700px){
+  .app-container{gap:5px}
+  .brand-title{font-size:clamp(1.65rem,5vw,2.2rem)}
+  .brand-subtitle{margin-top:3px}
+  .summary-card{min-height:68px;padding:9px 12px}
+  .camera-card{gap:5px;padding:8px}
+  .settings-card{padding:8px 10px;gap:5px}
+  .settings-title{display:none}
+  .footer-caption{display:none}
+  .footer-status{height:36px}
+  .control-btn{min-height:38px}
+  input{height:34px}
 
-  .app-container{
-    gap:5px;
-  }
-
-  .brand-title{
-    font-size:clamp(1.65rem,5vw,2.2rem);
-  }
-
-  .brand-subtitle{
-    margin-top:3px;
-  }
-
-  .summary-card{
-    min-height:68px;
-    padding:9px 12px;
-  }
-
-  .camera-card{
-    gap:5px;
-    padding:8px;
-  }
-
-  .settings-card{
-    padding:8px 10px;
-    gap:5px;
-  }
-
-  .settings-title{
-    display:none;
-  }
-
-  .footer-caption{
-    display:none;
-  }
-
-  .footer-status{
-    height:36px;
-  }
-
-  .control-btn{
-    min-height:38px;
-  }
-
-  input{
-    height:34px;
-  }
-
-  .save-btn{
-    height:30px;
-  }
+  /* SAVE เล็กลงเฉพาะจอเตี้ย */
+  .save-btn{height:30px}
 }
 
 @media (max-width:360px){
-
-  .app-container{
-    padding-left:7px;
-    padding-right:7px;
-  }
-
-  .summary{
-    gap:5px;
-  }
-
-  .result-val{
-    font-size:1.05rem;
-  }
-
-  .status-row{
-    font-size:.62rem;
-  }
-
-  .control-btn{
-    font-size:.75rem;
-    gap:6px;
-  }
-
-  .topic{
-    max-width:50%;
-    font-size:.61rem;
-  }
+  .app-container{padding-left:7px;padding-right:7px}
+  .summary{gap:5px}
+  .result-val{font-size:1.05rem}
+  .status-row{font-size:.62rem}
+  .control-btn{font-size:.75rem;gap:6px}
+  .topic{max-width:50%;font-size:.61rem}
 }
 
 @media (min-width:700px){
-
   .app-container{
     padding-left:clamp(20px,4vw,48px);
     padding-right:clamp(20px,4vw,48px);
@@ -693,353 +605,165 @@ input:focus{
 <div class="app-container">
 
   <header class="header">
-
     <div>
       <div class="brand-title">AI Camera</div>
       <div class="brand-subtitle">AI Vision with Teachable Machine</div>
     </div>
 
     <div class="header-actions">
-
-      <button
-        class="theme-top test-top"
-        onclick="testConnection()"
-        title="ทดสอบการเชื่อมต่อ"
-        aria-label="ทดสอบการเชื่อมต่อ">
+      <button class="theme-top test-top" onclick="testConnection()" title="ทดสอบการเชื่อมต่อ" aria-label="ทดสอบการเชื่อมต่อ">
         <span>Test</span>
       </button>
 
-      <button
-        class="theme-top theme-switch"
-        onclick="toggleTheme()"
-        title="เปลี่ยนธีม"
-        aria-label="เปลี่ยนธีม">
-
-        <svg
-          class="theme-icon-moon"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.7">
+      <button class="theme-top theme-switch" onclick="toggleTheme()" title="เปลี่ยนธีม" aria-label="เปลี่ยนธีม">
+        <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
           <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.7 6.7 0 0 0 9.8 9.8Z"/>
         </svg>
 
-        <svg
-          class="theme-icon-sun"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.65">
+        <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65">
           <circle cx="12" cy="12" r="3.5"/>
           <path d="M12 2.5v2M12 19.5v2M4.58 4.58l1.42 1.42M18 18l1.42 1.42M2.5 12h2M19.5 12h2M4.58 19.42L6 18M18 6l1.42-1.42"/>
         </svg>
-
       </button>
-
     </div>
   </header>
-
 
   <section class="summary">
 
     <div class="card summary-card">
-
-      <div class="card-label">
-        ผลการวิเคราะห์ข้อมูล
-      </div>
-
-      <div class="result-val" id="name">
-        --
-      </div>
+      <div class="card-label">ผลการวิเคราะห์ข้อมูล</div>
+      <div class="result-val" id="name">--</div>
 
       <div class="status-row">
-
         <span>สถานะ:</span>
+        <b class="status-text" id="esp-status">Connecting...</b>
 
-        <b class="status-text" id="esp-status">
-          Connecting...
-        </b>
-
-        <svg
-          class="sent-icon"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          aria-hidden="true">
-
+        <svg class="sent-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M21.7 3.3a1 1 0 0 0-1.03-.24l-18 7a1 1 0 0 0 .06 1.88l7.24 2.41 2.4 7.24a1 1 0 0 0 .94.68h.03a1 1 0 0 0 .93-.73l7.7-17.1a1 1 0 0 0-.27-1.14ZM10.8 13.2 5.7 11.5l11.73-4.56-6.63 6.26Zm1.45 1.45 5.85-5.52-4.34 9.64-1.51-4.12Z"/>
-
         </svg>
-
       </div>
     </div>
 
-
     <div class="card summary-card conf-card">
+      <div class="card-label">ความแม่นยำ</div>
+      <div class="conf-value" id="conf-text">0.0%</div>
 
-      <div class="card-label">
-        ความแม่นยำ
-      </div>
-
-      <div class="conf-value" id="conf-text">
-        0.0%
-      </div>
-
-      <svg
-        class="conf-chart"
-        id="confidence-chart"
-        viewBox="0 0 240 38"
-        preserveAspectRatio="none"
-        aria-hidden="true">
-
+      <svg class="conf-chart" id="confidence-chart" viewBox="0 0 240 38" preserveAspectRatio="none" aria-hidden="true">
         <defs>
-
-          <linearGradient
-            id="chartFill"
-            x1="0"
-            x2="0"
-            y1="0"
-            y2="1">
-
-            <stop
-              offset="0"
-              stop-color="#35c76b"
-              stop-opacity=".22"/>
-
-            <stop
-              offset="1"
-              stop-color="#35c76b"
-              stop-opacity="0"/>
-
+          <linearGradient id="chartFill" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0" stop-color="#35c76b" stop-opacity=".22"/>
+            <stop offset="1" stop-color="#35c76b" stop-opacity="0"/>
           </linearGradient>
-
         </defs>
 
-        <path
-          id="chart-area"
-          d=""
-          fill="url(#chartFill)"/>
+        <path id="chart-area" d="" fill="url(#chartFill)"/>
 
-        <path
-          id="chart-line"
-          d=""
-          fill="none"
-          stroke="#35c76b"
-          stroke-width="2.2"
-          stroke-linecap="round"
-          stroke-linejoin="round"/>
+        <path id="chart-line" d="" fill="none" stroke="#35c76b" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round"/>
 
-        <circle
-          id="chart-dot"
-          cx="240"
-          cy="19"
-          r="4.2"
-          fill="#35c76b"/>
-
+        <circle id="chart-dot" cx="240" cy="19" r="4.2" fill="#35c76b"/>
       </svg>
-
     </div>
 
   </section>
-
 
   <section class="card camera-card">
 
     <div class="camera-heading">
-
-      <span class="camera-title">
-        Camera
-      </span>
-
-      <span
-        class="topic"
-        id="current-group-label">
-        Topic : --
-      </span>
-
+      <span class="camera-title">Camera</span>
+      <span class="topic" id="current-group-label">Topic : --</span>
     </div>
-
 
     <div class="video-box">
 
-      <video
-        id="video"
-        class="front-cam"
-        autoplay
-        muted
-        playsinline>
-      </video>
+      <video id="video" class="front-cam" autoplay muted playsinline></video>
 
       <div class="live-badge">
-
         <span class="live-dot"></span>
         LIVE
-
       </div>
 
-
-      <button
-        class="btn-float-switch"
-        onclick="switchCamera()"
-        title="สลับกล้อง"
-        aria-label="สลับกล้อง">
-
+      <button class="btn-float-switch" onclick="switchCamera()" title="สลับกล้อง" aria-label="สลับกล้อง">
         <svg viewBox="0 0 24 24">
-
           <path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
-
         </svg>
-
       </button>
 
     </div>
 
-
     <div class="controls-grid">
 
-      <button
-        class="control-btn"
-        id="start-btn">
-
+      <button class="control-btn" id="start-btn">
         <svg viewBox="0 0 24 24">
           <path d="M8 5v14l11-7z"/>
         </svg>
-
-        <span>
-          Running...
-        </span>
-
+        <span>Running...</span>
       </button>
 
-
-      <button
-        class="control-btn"
-        id="stop-btn">
-
+      <button class="control-btn" id="stop-btn">
         <svg viewBox="0 0 24 24">
-
-          <rect
-            x="6"
-            y="6"
-            width="12"
-            height="12"
-            rx="1.5"/>
-
+          <rect x="6" y="6" width="12" height="12" rx="1.5"/>
         </svg>
-
-        <span>
-          Stop
-        </span>
-
+        <span>Stop</span>
       </button>
 
     </div>
 
   </section>
 
-
   <section class="card settings-card">
 
-    <div class="settings-title">
-      การตั้งค่าโมเดลและการเชื่อมต่อ
-    </div>
-
+    <div class="settings-title">การตั้งค่าโมเดลและการเชื่อมต่อ</div>
 
     <div>
-
-      <div class="field-label">
-        Teachable Model ID
-      </div>
+      <div class="field-label">Teachable Model ID</div>
 
       <div class="model-wrap">
 
-        <input
-          type="text"
-          id="model-input"
-          placeholder="เช่น Voxb2VGd2">
+        <input type="text" id="model-input" placeholder="เช่น Voxb2VGd2">
 
-        <button
-          class="copy-btn"
-          onclick="copyModelId()"
-          title="คัดลอก Model ID"
-          aria-label="คัดลอก Model ID">
+        <button class="copy-btn" onclick="copyModelId()" title="คัดลอก Model ID" aria-label="คัดลอก Model ID">
 
           <svg viewBox="0 0 24 24">
-
-            <rect
-              x="8"
-              y="8"
-              width="11"
-              height="11"
-              rx="2"/>
-
-            <path
-              d="M5 16H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1"/>
-
+            <rect x="8" y="8" width="11" height="11" rx="2"/>
+            <path d="M5 16H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1"/>
           </svg>
 
         </button>
 
       </div>
-
     </div>
-
 
     <div class="two-fields">
 
       <div>
-
-        <div class="field-label">
-          School ID
-        </div>
-
-        <input
-          type="text"
-          id="school-input"
-          placeholder="PTL-School">
-
+        <div class="field-label">School ID</div>
+        <input type="text" id="school-input" placeholder="PTL-School">
       </div>
 
-
       <div>
-
-        <div class="field-label">
-          Name ID
-        </div>
-
-        <input
-          type="text"
-          id="name-input"
-          placeholder="group1">
-
+        <div class="field-label">Name ID</div>
+        <input type="text" id="name-input" placeholder="group1">
       </div>
 
     </div>
 
-
-    <button
-      class="save-btn"
-      onclick="saveSettings()">
-
+    <button class="save-btn" onclick="saveSettings()">
       <svg viewBox="0 0 24 24">
         <path d="M5 3h11l3 3v15H5z"/>
         <path d="M8 3v6h8V3M8 21v-7h8v7"/>
       </svg>
 
-      <span>
-        SAVE
-      </span>
-
+      <span>SAVE</span>
     </button>
 
   </section>
 
+  <!-- System Ready / Connected footer removed as requested -->
+
 </div>
 
-
-<div class="mini-footer">
-  Mini MicroKit PT-L V1.0 | AI Vision
-</div>
-
+<div class="mini-footer">Mini MicroKit PT-L V1.0 | AI Vision</div>
 
 <script>
 
@@ -1050,14 +774,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
   document.body.dataset.theme = savedTheme;
 
-
   let savedId =
     localStorage.getItem("saved_model_id") || "";
 
-  if (savedId) {
+  if (savedId)
     document.getElementById("model-input").value = savedId;
-  }
-
 
   let savedSchool =
     localStorage.getItem("saved_school_id") || "PTL-School";
@@ -1065,13 +786,11 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById("school-input").value =
     savedSchool;
 
-
   let savedNameId =
     localStorage.getItem("saved_name_id") || "group1";
 
   document.getElementById("name-input").value =
     savedNameId;
-
 
   updateTopicDisplay(
     savedSchool,
@@ -1084,28 +803,22 @@ window.addEventListener('DOMContentLoaded', () => {
 function saveSettings() {
 
   const modelVal =
-    document.getElementById("model-input")
-      .value.trim();
+    document.getElementById("model-input").value.trim();
 
   const schoolVal =
-    document.getElementById("school-input")
-      .value.trim() || "PTL-School";
+    document.getElementById("school-input").value.trim() ||
+    "PTL-School";
 
   const nameVal =
-    document.getElementById("name-input")
-      .value.trim() || "group1";
-
+    document.getElementById("name-input").value.trim() ||
+    "group1";
 
   if (!modelVal) {
 
-    alert(
-      "กรุณากรอก Model ID ให้ถูกต้อง"
-    );
+    alert("กรุณากรอก Model ID ให้ถูกต้อง");
 
     return;
-
   }
-
 
   localStorage.setItem(
     "saved_model_id",
@@ -1122,20 +835,16 @@ function saveSettings() {
     nameVal
   );
 
-
   updateTopicDisplay(
     schoolVal,
     nameVal
   );
 
-
   alert(
     "บันทึกค่าเรียบร้อย! กำลังเชื่อมต่อระบบใหม่..."
   );
 
-
   initMQTT();
-
 }
 
 
@@ -1145,7 +854,6 @@ function copyModelId(){
     document.getElementById("model-input");
 
   if(!input.value) return;
-
 
   navigator.clipboard?.writeText(input.value)
 
@@ -1182,12 +890,8 @@ function updateTopicDisplay(
 }
 
 
-const mqttHost =
-  "broker.emqx.io";
-
-const mqttPort =
-  8084;
-
+const mqttHost = "broker.emqx.io";
+const mqttPort = 8084;
 
 let mqttClient = null;
 let isConnecting = false;
@@ -1196,13 +900,12 @@ let isConnecting = false;
 function getDynamicTopic() {
 
   let schoolId =
-    localStorage.getItem("saved_school_id")
-    || "PTL-School";
+    localStorage.getItem("saved_school_id") ||
+    "PTL-School";
 
   let nameId =
-    localStorage.getItem("saved_name_id")
-    || "group1";
-
+    localStorage.getItem("saved_name_id") ||
+    "group1";
 
   return (
     "gelectronlab/" +
@@ -1221,17 +924,14 @@ function initMQTT() {
 
   isConnecting = true;
 
-
   if (mqttClient) {
 
     try {
 
-      mqttClient.onConnectionLost =
-        null;
+      mqttClient.onConnectionLost = null;
 
-      if (mqttClient.isConnected()) {
+      if (mqttClient.isConnected())
         mqttClient.disconnect();
-      }
 
     } catch(e) {
 
@@ -1241,15 +941,13 @@ function initMQTT() {
 
   }
 
-
   let schoolId =
-    localStorage.getItem("saved_school_id")
-    || "PTL-School";
+    localStorage.getItem("saved_school_id") ||
+    "PTL-School";
 
   let nameId =
-    localStorage.getItem("saved_name_id")
-    || "group1";
-
+    localStorage.getItem("saved_name_id") ||
+    "group1";
 
   let uniqueClientId =
     "WebClient-" +
@@ -1259,10 +957,7 @@ function initMQTT() {
     "-" +
     Date.now() +
     "-" +
-    Math.floor(
-      Math.random() * 10000
-    );
-
+    Math.floor(Math.random() * 10000);
 
   mqttClient =
     new Paho.MQTT.Client(
@@ -1271,28 +966,22 @@ function initMQTT() {
       uniqueClientId
     );
 
-
   mqttClient.onConnectionLost =
     function(responseObject) {
 
       isConnecting = false;
-
 
       document.getElementById(
         "esp-status"
       ).textContent =
         "Disconnected";
 
-
       document.getElementById(
         "esp-status"
       ).style.color =
         "#ef4444";
 
-
-      if (
-        responseObject.errorCode !== 0
-      ) {
+      if (responseObject.errorCode !== 0) {
 
         console.log(
           "MQTT Lost: " +
@@ -1308,7 +997,6 @@ function initMQTT() {
 
     };
 
-
   try {
 
     mqttClient.connect({
@@ -1317,19 +1005,16 @@ function initMQTT() {
 
         isConnecting = false;
 
-
         document.getElementById(
           "esp-status"
         ).textContent =
           "Connected " +
           nameId;
 
-
         document.getElementById(
           "esp-status"
         ).style.color =
           "var(--green-strong)";
-
 
         console.log(
           "Connected Successfully as: " +
@@ -1338,29 +1023,24 @@ function initMQTT() {
 
       },
 
-
       onFailure: function(message) {
 
         isConnecting = false;
-
 
         document.getElementById(
           "esp-status"
         ).textContent =
           "Failed";
 
-
         document.getElementById(
           "esp-status"
         ).style.color =
           "#ef4444";
 
-
         console.log(
           "Connect Failed: " +
           message.errorMessage
         );
-
 
         setTimeout(
           initMQTT,
@@ -1368,7 +1048,6 @@ function initMQTT() {
         );
 
       },
-
 
       useSSL: true,
       timeout: 5,
@@ -1395,18 +1074,15 @@ initMQTT();
 
 function toggleTheme() {
 
-  const body =
-    document.body;
+  const body = document.body;
 
   const currentTheme =
     body.dataset.theme === "dark"
       ? "light"
       : "dark";
 
-
   body.dataset.theme =
     currentTheme;
-
 
   localStorage.setItem(
     "theme",
@@ -1425,8 +1101,8 @@ let predictionBusy = false;
 
 /* =========================================================
    REAL-TIME CONFIDENCE GRAPH — PERFORMANCE MODE
-   AI predict ต่อเนื่องตามเดิม
-   กราฟ redraw ทุก 150 ms
+   AI ยัง predict ต่อเนื่องตามเดิม แต่กราฟ redraw ทุก 150 ms
+   เพื่อลดภาระ CPU/GPU บนโทรศัพท์
    ========================================================= */
 
 const confidenceHistory = [];
@@ -1434,7 +1110,6 @@ const confidenceHistory = [];
 const GRAPH_POINTS = 30;
 
 const GRAPH_UPDATE_MS = 150;
-
 
 let latestConfidence = 0;
 
@@ -1446,27 +1121,16 @@ let graphInitialized = false;
 function renderConfidenceGraph(value) {
 
   const chartLine =
-    document.getElementById(
-      "chart-line"
-    );
+    document.getElementById("chart-line");
 
   const chartArea =
-    document.getElementById(
-      "chart-area"
-    );
+    document.getElementById("chart-area");
 
   const chartDot =
-    document.getElementById(
-      "chart-dot"
-    );
+    document.getElementById("chart-dot");
 
-
-  if (
-    !chartLine ||
-    !chartArea ||
-    !chartDot
-  ) return;
-
+  if (!chartLine || !chartArea || !chartDot)
+    return;
 
   value =
     Math.max(
@@ -1477,9 +1141,7 @@ function renderConfidenceGraph(value) {
       )
     );
 
-
   confidenceHistory.push(value);
-
 
   if (
     confidenceHistory.length >
@@ -1490,10 +1152,8 @@ function renderConfidenceGraph(value) {
 
   }
 
-
   const data =
     [...confidenceHistory];
-
 
   while (
     data.length <
@@ -1508,13 +1168,9 @@ function renderConfidenceGraph(value) {
 
   }
 
-
   const width = 240;
-
   const height = 38;
-
   const topPadding = 3;
-
   const bottomPadding = 4;
 
   const graphHeight =
@@ -1526,14 +1182,12 @@ function renderConfidenceGraph(value) {
     width /
     (GRAPH_POINTS - 1);
 
-
   let linePath = "";
 
   let lastX = 0;
 
   let lastY =
     height / 2;
-
 
   for (
     let i = 0;
@@ -1552,7 +1206,6 @@ function renderConfidenceGraph(value) {
       ) *
       graphHeight;
 
-
     if (i === 0) {
 
       linePath =
@@ -1564,7 +1217,6 @@ function renderConfidenceGraph(value) {
         ` L ${x.toFixed(2)} ${y.toFixed(2)}`;
 
     }
-
 
     if (
       i ===
@@ -1579,12 +1231,10 @@ function renderConfidenceGraph(value) {
 
   }
 
-
   const areaPath =
     linePath +
     ` L ${lastX.toFixed(2)} ${height}` +
     ` L 0 ${height} Z`;
-
 
   chartLine.setAttribute(
     "d",
@@ -1606,7 +1256,6 @@ function renderConfidenceGraph(value) {
     lastY.toFixed(2)
   );
 
-
   graphInitialized = true;
 
 }
@@ -1623,10 +1272,8 @@ function updateConfidenceGraph(value) {
       )
     );
 
-
   const now =
     performance.now();
-
 
   if (
     !graphInitialized ||
@@ -1648,9 +1295,7 @@ function updateConfidenceGraph(value) {
 renderConfidenceGraph(0);
 
 
-async function sendToESP32(
-  className
-) {
+async function sendToESP32(className) {
 
   if (
     Date.now() -
@@ -1658,10 +1303,8 @@ async function sendToESP32(
     1000
   ) return;
 
-
   lastSentTime =
     Date.now();
-
 
   if (
     mqttClient &&
@@ -1671,34 +1314,28 @@ async function sendToESP32(
     let topic =
       getDynamicTopic();
 
-
     let message =
       new Paho.MQTT.Message(
         className
       );
 
-
     message.destinationName =
       topic;
-
 
     mqttClient.send(
       message
     );
-
 
     let nameId =
       localStorage.getItem(
         "saved_name_id"
       ) || "group1";
 
-
     document.getElementById(
       "esp-status"
     ).textContent =
       "Sent " +
       nameId;
-
 
     document.getElementById(
       "esp-status"
@@ -1716,7 +1353,6 @@ async function testConnection() {
     "Test_Class"
   );
 
-
   alert(
     "ส่งสัญญาณทดสอบไปยัง Mini MicroKit PT-L เรียบร้อย!"
   );
@@ -1724,9 +1360,7 @@ async function testConnection() {
 }
 
 
-async function startCamera(
-  facing
-) {
+async function startCamera(facing) {
 
   if (window.currentStream) {
 
@@ -1739,12 +1373,8 @@ async function startCamera(
 
   }
 
-
   const videoElement =
-    document.getElementById(
-      "video"
-    );
-
+    document.getElementById("video");
 
   if (facing === "user") {
 
@@ -1757,7 +1387,6 @@ async function startCamera(
       "back-cam";
 
   }
-
 
   const stream =
     await navigator.mediaDevices
@@ -1779,10 +1408,8 @@ async function startCamera(
 
       });
 
-
   window.currentStream =
     stream;
-
 
   videoElement.srcObject =
     stream;
@@ -1793,12 +1420,9 @@ async function startCamera(
 async function switchCamera() {
 
   currentFacingMode =
-    (
-      currentFacingMode === "user"
-    )
+    (currentFacingMode === "user")
       ? "environment"
       : "user";
-
 
   if (running) {
 
@@ -1842,7 +1466,6 @@ document.getElementById(
       "model-input"
     ).value.trim();
 
-
   if (!savedId) {
 
     alert(
@@ -1853,7 +1476,6 @@ document.getElementById(
 
   }
 
-
   try {
 
     document.getElementById(
@@ -1863,16 +1485,13 @@ document.getElementById(
     .textContent =
       "Loading...";
 
-
     const MODEL_URL =
       `https://teachablemachine.withgoogle.com/models/${savedId}/`;
-
 
     const u =
       MODEL_URL.endsWith("/")
         ? MODEL_URL
         : MODEL_URL + "/";
-
 
     model =
       await tmImage.load(
@@ -1880,14 +1499,11 @@ document.getElementById(
         u + "metadata.json"
       );
 
-
     await startCamera(
       currentFacingMode
     );
 
-
     running = true;
-
 
     document.getElementById(
       "start-btn"
@@ -1896,9 +1512,7 @@ document.getElementById(
     .textContent =
       "Running...";
 
-
     loop();
-
 
   } catch(e) {
 
@@ -1906,7 +1520,6 @@ document.getElementById(
       "ไม่สามารถเปิดกล้องหรือโหลดโมเดลได้: " +
       e.message
     );
-
 
     document.getElementById(
       "start-btn"
@@ -1927,20 +1540,15 @@ async function loop() {
     predictionBusy
   ) return;
 
-
   predictionBusy = true;
-
 
   try {
 
     const prediction =
       await model.predict(
-        document.getElementById(
-          "video"
-        ),
+        document.getElementById("video"),
         false
       );
-
 
     let best =
       prediction.reduce(
@@ -1951,30 +1559,23 @@ async function loop() {
             : highest
       );
 
-
     let pctVal =
       best.probability * 100;
 
-
     let pctStr =
-      pctVal.toFixed(1) +
-      "%";
-
+      pctVal.toFixed(1) + "%";
 
     let confElem =
       document.getElementById(
         "conf-text"
       );
 
-
     confElem.textContent =
       pctStr;
-
 
     updateConfidenceGraph(
       pctVal
     );
-
 
     if (pctVal > 90) {
 
@@ -1988,7 +1589,6 @@ async function loop() {
 
     }
 
-
     if (
       best.probability >
       0.90
@@ -1998,7 +1598,6 @@ async function loop() {
         "name"
       ).textContent =
         best.className;
-
 
       sendToESP32(
         best.className
@@ -2011,13 +1610,11 @@ async function loop() {
       ).textContent =
         "Uncertain...";
 
-
       sendToESP32(
         "Unknown"
       );
 
     }
-
 
   } catch(err) {
 
@@ -2029,7 +1626,6 @@ async function loop() {
       false;
 
   }
-
 
   if (running) {
 
@@ -2050,10 +1646,8 @@ document.getElementById(
 
   predictionBusy = false;
 
-
   confidenceHistory.length =
     0;
-
 
   latestConfidence = 0;
 
@@ -2061,9 +1655,7 @@ document.getElementById(
 
   graphInitialized = false;
 
-
   renderConfidenceGraph(0);
-
 
   if (window.currentStream) {
 
@@ -2074,12 +1666,10 @@ document.getElementById(
           track.stop()
       );
 
-
     window.currentStream =
       null;
 
   }
-
 
   location.reload();
 
