@@ -523,6 +523,9 @@ input:focus{
 .save-btn{height:clamp(35px,4.8vh,48px);font-size:clamp(.84rem,1.8vw,1rem);gap:0}
 .save-btn svg{display:none}
 
+  /* V9 — Footer ลอยด้านล่าง ไม่กระทบ Layout หลัก */
+  .mini-footer{position:fixed;left:50%;bottom:max(3px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:20;font-size:clamp(9px,1.6vw,12px);font-weight:500;letter-spacing:.3px;color:var(--muted);white-space:nowrap;opacity:.72;pointer-events:none;line-height:1;}
+
 /* รักษา layout เดิมไว้บนโทรศัพท์: ทุกอย่างยังอยู่หน้าเดียว */
 @media (max-height:700px){
   .app-container{gap:5px}
@@ -697,6 +700,8 @@ input:focus{
   <!-- System Ready / Connected footer removed as requested -->
 
 </div>
+
+<div class="mini-footer">Mini MicroKit PT-L V1.0 | AI Vision</div>
 
 <script>
 window.addEventListener('DOMContentLoaded', () => {
