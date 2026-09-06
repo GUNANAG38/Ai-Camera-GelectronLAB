@@ -211,11 +211,19 @@ button{
 
 .status-row{
   display:flex;
-  align-items:center;
-  gap:7px;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:2px;
   margin-top:clamp(6px,1vh,10px);
   color:var(--muted);
   font-size:clamp(.68rem,1.55vw,.92rem);
+}
+
+.status-content{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  width:100%;
 }
 
 .status-text{
@@ -507,11 +515,13 @@ input:focus{
 
       <div class="status-row">
         <span>สถานะ:</span>
-        <b class="status-text" id="esp-status">Connecting...</b>
+        <div class="status-content">
+          <b class="status-text" id="esp-status">Connecting...</b>
 
-        <svg class="sent-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M21.7 3.3a1 1 0 0 0-1.03-.24l-18 7a1 1 0 0 0 .06 1.88l7.24 2.41 2.4 7.24a1 1 0 0 0 .94.68h.03a1 1 0 0 0 .93-.73l7.7-17.1a1 1 0 0 0-.27-1.14ZM10.8 13.2 5.7 11.5l11.73-4.56-6.63 6.26Zm1.45 1.45 5.85-5.52-4.34 9.64-1.51-4.12Z"/>
-        </svg>
+          <svg class="sent-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path d="M21.7 3.3a1 1 0 0 0-1.03-.24l-18 7a1 1 0 0 0 .06 1.88l7.24 2.41 2.4 7.24a1 1 0 0 0 .94.68h.03a1 1 0 0 0 .93-.73l7.7-17.1a1 1 0 0 0-.27-1.14ZM10.8 13.2 5.7 11.5l11.73-4.56-6.63 6.26Zm1.45 1.45 5.85-5.52-4.34 9.64-1.51-4.12Z"/>
+          </svg>
+        </div>
       </div>
     </div>
 
