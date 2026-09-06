@@ -147,7 +147,15 @@ button{
   flex:0 0 auto;
 }
 
- .theme-top svg{width:55%;height:55%}
+.theme-top svg{width:55%;height:55%}
+
+/* ปุ่ม Test และ Theme แบบกะทัดรัดขึ้น */
+.theme-top{
+  width:clamp(44px,6.5vw,58px);
+  height:clamp(44px,6.5vw,58px);
+  border-radius:15px;
+}
+.theme-top svg{width:52%;height:52%}
 
 .header-actions{
   display:flex;
@@ -157,7 +165,15 @@ button{
 
 .test-top{
   color:var(--green-strong);
+  font-size:clamp(.72rem,1.7vw,.88rem);
+  font-weight:700;
+  letter-spacing:.1px;
 }
+.theme-switch{position:relative}
+.theme-switch svg{display:block}
+.theme-icon-sun{display:none !important}
+[data-theme="dark"] .theme-icon-moon{display:none !important}
+[data-theme="dark"] .theme-icon-sun{display:block !important}
 
 
 .summary{
@@ -547,14 +563,15 @@ input:focus{
 
     <div class="header-actions">
       <button class="theme-top test-top" onclick="testConnection()" title="ทดสอบการเชื่อมต่อ" aria-label="ทดสอบการเชื่อมต่อ">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path d="M9 3h6M10 3v4l-5.3 9.2A2 2 0 0 0 6.43 19h11.14a2 2 0 0 0 1.73-2.8L14 7V3"/>
-          <path d="M7.5 15h9"/>
-        </svg>
+        <span>Test</span>
       </button>
-      <button class="theme-top" onclick="toggleTheme()" title="เปลี่ยนธีม" aria-label="เปลี่ยนธีม">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+      <button class="theme-top theme-switch" onclick="toggleTheme()" title="เปลี่ยนธีม" aria-label="เปลี่ยนธีม">
+        <svg class="theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
           <path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.7 6.7 0 0 0 9.8 9.8Z"/>
+        </svg>
+        <svg class="theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.65">
+          <circle cx="12" cy="12" r="3.5"/>
+          <path d="M12 2.5v2M12 19.5v2M4.58 4.58l1.42 1.42M18 18l1.42 1.42M2.5 12h2M19.5 12h2M4.58 19.42L6 18M18 6l1.42-1.42"/>
         </svg>
       </button>
     </div>
