@@ -11,12 +11,17 @@
 
 <style>
 :root{
-  --bg:#edf2ef;
-  --bg-gradient: linear-gradient(135deg, #f5f9f6 0%, #e2ece6 100%);
-  background-size: 100% 100%;
-  background-position: 0 0;
+  --bg:#f4f6f5;
+  --bg-gradient:
+    radial-gradient(circle at 85% 12%, rgba(5, 150, 105, 0.15) 0%, transparent 45%),
+    radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.10) 0%, transparent 50%),
+    linear-gradient(90deg, rgba(15, 23, 42, 0.08) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(15, 23, 42, 0.08) 1px, transparent 1px),
+    linear-gradient(135deg, #f8fafc 0%, #e9efeB 100%);
+  background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 0 0, 0 0;
   --card:rgba(255, 255, 255, 0.95);
-  --input:rgba(242, 247, 244, 0.95);
+  --input:rgba(240, 246, 242, 0.95);
   --text:#0b1320;
   --muted:#475569;
   --green:#047857;
