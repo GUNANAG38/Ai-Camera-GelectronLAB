@@ -300,36 +300,6 @@ video{
 video.front-cam{transform:scaleX(-1)}
 video.back-cam{transform:scaleX(1)}
 
-.live-badge{
-  position:absolute;
-  top:clamp(9px,1.6vw,16px);
-  left:clamp(9px,1.6vw,16px);
-  z-index:5;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  padding:clamp(8px,1.2vw,12px) clamp(11px,1.7vw,17px);
-  border-radius:12px;
-  background:rgba(255,255,255,.93);
-  color:#111827;
-  font-size:clamp(.72rem,1.7vw,.95rem);
-  font-weight:700;
-  box-shadow:0 4px 14px rgba(0,0,0,.16);
-}
-
-[data-theme="dark"] .live-badge{
-  background:rgba(12,17,23,.88);
-  color:#fff;
-}
-
-.live-dot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:#36bd63;
-  box-shadow:0 0 0 3px rgba(54,189,99,.13);
-}
-
 .btn-float-switch{
   position:absolute;
   top:clamp(9px,1.6vw,16px);
@@ -574,11 +544,6 @@ input:focus{
 
     <div class="video-box">
       <video id="video" class="front-cam" autoplay muted playsinline></video>
-
-      <div class="live-badge">
-        <span class="live-dot"></span>
-        LIVE
-      </div>
 
       <button class="btn-float-switch" onclick="switchCamera()" title="สลับกล้อง" aria-label="สลับกล้อง">
         <svg viewBox="0 0 24 24">
