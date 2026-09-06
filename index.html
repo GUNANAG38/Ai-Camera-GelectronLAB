@@ -11,34 +11,32 @@
 
 <style>
 :root{
-  --bg:#f0f5f2;
+  --bg:#f1f5f3;
   --bg-gradient:
-    radial-gradient(circle at 92% 8%, rgba(5, 150, 105, 0.45) 0%, transparent 50%),
-    radial-gradient(circle at 98% 85%, rgba(16, 185, 129, 0.3) 0%, transparent 55%),
-    radial-gradient(circle at 82% 20%, rgba(52, 211, 153, 0.4) 0%, transparent 35%),
-    linear-gradient(90deg, rgba(4, 120, 87, 0.22) 1.5px, transparent 1.5px),
-    linear-gradient(0deg, rgba(4, 120, 87, 0.22) 1.5px, transparent 1.5px),
-    linear-gradient(135deg, #ffffff 30%, #e6f7ec 70%, #ccedd8 100%);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 24px 24px, 24px 24px, 100% 100%;
-  background-position: 0 0, 0 0, 0 0, right top, right top, 0 0;
-  --card:rgba(255, 255, 255, 0.88);
-  --input:rgba(243, 248, 245, 0.9);
-  --text:#0f172a;
-  --muted:#64748b;
-  --green:#059669;
-  --green-strong:#047857;
-  --green-soft:#ecfdf5;
+    radial-gradient(circle at 85% 12%, rgba(5, 150, 105, 0.28) 0%, transparent 45%),
+    radial-gradient(circle at 15% 85%, rgba(16, 185, 129, 0.22) 0%, transparent 50%),
+    radial-gradient(rgba(4, 120, 87, 0.32) 1.8px, transparent 1.8px),
+    linear-gradient(135deg, #f8faf9 0%, #e2efe7 100%);
+  background-size: 100% 100%, 100% 100%, 22px 22px, 100% 100%;
+  background-position: 0 0, 0 0, 0 0, 0 0;
+  --card:rgba(255, 255, 255, 0.92);
+  --input:rgba(240, 246, 242, 0.95);
+  --text:#0b1320;
+  --muted:#475569;
+  --green:#047857;
+  --green-strong:#065f46;
+  --green-soft:#e6fdf5;
   --border:#cbd5e1;
   --button:#ffffff;
   --button-border:#cbd5e1;
-  --button-text:#0f172a;
+  --button-text:#0b1320;
   --video-border:#cbd5e1;
-  --shadow:0 10px 30px -5px rgba(16, 185, 129, 0.09), 0 4px 6px -2px rgba(0, 0, 0, 0.03);
-  --save-bg:#059669;
-  --save-border:#047857;
+  --shadow:0 12px 32px -5px rgba(4, 120, 87, 0.12), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  --save-bg:#047857;
+  --save-border:#065f46;
   --save-text:#ffffff;
-  --footer-bg:rgba(255, 255, 255, 0.82);
-  --danger:#ef4444;
+  --footer-bg:rgba(255, 255, 255, 0.85);
+  --danger:#dc2626;
 }
 
 [data-theme="dark"]{
@@ -140,7 +138,7 @@ button{
   margin-top:6px;
   font-size:clamp(.76rem,1.7vw,1rem);
   color:var(--muted);
-  font-weight:500;
+  font-weight:600;
 }
 
 .theme-top{
@@ -204,7 +202,7 @@ button{
 .card-label{
   color:var(--muted);
   font-size:clamp(.70rem,1.6vw,.95rem);
-  font-weight:600;
+  font-weight:700;
   margin-bottom:clamp(5px,1vh,9px);
 }
 
@@ -226,6 +224,7 @@ button{
   margin-top:clamp(6px,1vh,10px);
   color:var(--muted);
   font-size:clamp(.68rem,1.55vw,.92rem);
+  font-weight:600;
 }
 
 .status-content{
@@ -237,7 +236,7 @@ button{
 
 .status-text{
   color:var(--green-strong);
-  font-weight:600;
+  font-weight:700;
 }
 
 .sent-icon{
@@ -289,7 +288,7 @@ button{
 .topic{
   color:var(--text);
   font-size:clamp(.68rem,1.65vw,.95rem);
-  font-weight:600;
+  font-weight:700;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
@@ -327,10 +326,10 @@ video.back-cam{transform:scaleX(1)}
   border-radius:50%;
   background:rgba(255,255,255,.94);
   color:#111827;
-  border:1px solid rgba(0,0,0,.05);
+  border:1px solid rgba(0,0,0,.08);
   display:grid;
   place-items:center;
-  box-shadow:0 4px 14px rgba(0,0,0,.15);
+  box-shadow:0 4px 14px rgba(0,0,0,.12);
 }
 
 [data-theme="dark"] .btn-float-switch{
@@ -354,12 +353,12 @@ video.back-cam{transform:scaleX(1)}
   color:var(--button-text);
   border:1px solid var(--button-border);
   font-size:clamp(.78rem, 1.8vw, .98rem);
-  font-weight:650;
+  font-weight:700;
   display:flex;
   align-items:center;
   justify-content:center;
   gap:clamp(6px, 1vw, 10px);
-  box-shadow:0 2px 7px rgba(0,0,0,.025);
+  box-shadow:0 2px 7px rgba(0,0,0,.03);
 }
 
 .control-btn svg{
@@ -378,12 +377,13 @@ video.back-cam{transform:scaleX(1)}
 .settings-title{
   color:var(--muted);
   font-size:clamp(.75rem, 1.7vw, .95rem);
-  font-weight:650;
+  font-weight:700;
 }
 
 .field-label{
   color:var(--muted);
   font-size:clamp(.65rem, 1.45vw, .82rem);
+  font-weight:700;
   margin-bottom:2px;
 }
 
@@ -397,11 +397,12 @@ input{
   color:var(--text);
   border:1px solid var(--border);
   font-size:clamp(.78rem, 1.7vw, .92rem);
+  font-weight:600;
 }
 
 input:focus{
   border-color:var(--green);
-  box-shadow:0 0 0 3px rgba(5,150,105,.15);
+  box-shadow:0 0 0 3px rgba(4,120,87,.15);
 }
 
 .model-wrap{position:relative}
@@ -420,7 +421,7 @@ input:focus{
   place-items:center;
 }
 
-.copy-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8}
+.copy-btn svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2}
 
 .two-fields{
   display:grid;
@@ -436,7 +437,7 @@ input:focus{
   color:var(--save-text);
   border:1px solid var(--save-border);
   font-size:clamp(.76rem, 1.6vw, .88rem);
-  font-weight:650;
+  font-weight:750;
   display:flex;
   align-items:center;
   justify-content:center;
@@ -450,11 +451,10 @@ input:focus{
   transform:translateX(-50%);
   z-index:20;
   font-size:clamp(9px,1.6vw,12px);
-  font-weight:500;
+  font-weight:600;
   letter-spacing:.3px;
   color:var(--muted);
   white-space:nowrap;
-  opacity:.72;
   pointer-events:none;
   line-height:1;
 }
@@ -541,14 +541,14 @@ input:focus{
       <svg class="conf-chart" id="confidence-chart" viewBox="0 0 240 38" preserveAspectRatio="none" aria-hidden="true">
         <defs>
           <linearGradient id="chartFill" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0" stop-color="#059669" stop-opacity=".22"/>
-            <stop offset="1" stop-color="#059669" stop-opacity="0"/>
+            <stop offset="0" stop-color="#047857" stop-opacity=".25"/>
+            <stop offset="1" stop-color="#047857" stop-opacity="0"/>
           </linearGradient>
         </defs>
         <path id="chart-area" d="" fill="url(#chartFill)"/>
-        <path id="chart-line" d="" fill="none" stroke="#059669" stroke-width="2.2"
+        <path id="chart-line" d="" fill="none" stroke="#047857" stroke-width="2.5"
               stroke-linecap="round" stroke-linejoin="round"/>
-        <circle id="chart-dot" cx="240" cy="19" r="4.2" fill="#059669"/>
+        <circle id="chart-dot" cx="240" cy="19" r="4.5" fill="#047857"/>
       </svg>
     </div>
 
@@ -718,7 +718,7 @@ function initMQTT() {
     isConnecting = false;
 
     document.getElementById("esp-status").textContent = "Disconnected";
-    document.getElementById("esp-status").style.color = "#ef4444";
+    document.getElementById("esp-status").style.color = "#dc2626";
 
     if (responseObject.errorCode !== 0) {
       console.log("MQTT Lost: " + responseObject.errorMessage);
@@ -738,7 +738,7 @@ function initMQTT() {
       onFailure: function(message) {
         isConnecting = false;
         document.getElementById("esp-status").textContent = "Failed";
-        document.getElementById("esp-status").style.color = "#ef4444";
+        document.getElementById("esp-status").style.color = "#dc2626";
         console.log("Connect Failed: " + message.errorMessage);
         setTimeout(initMQTT, 5000);
       },
