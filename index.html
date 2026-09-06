@@ -11,13 +11,18 @@
 <style>
 :root{
   --bg:#ffffff;
-  --bg-gradient: #ffffff; /* พื้นหลังสีขาวล้วนสะอาดตา */
+  --bg-gradient: #ffffff; 
   --card:rgba(255,255,255,.96); --text:#111827; --muted:#667085;
   --green:#21a957; --green-strong:#159447; --border:#dce7e0;
   --button:#f1f5f9; --button-border:#cbd5e1; --button-text:#0f172a;
   --shadow:0 6px 20px rgba(31,73,45,.06); --video-border:#d8e6dd;
   --status-bg:rgba(255,255,255,.9);
   --topic-color: #000000;
+  
+  /* เพิ่มตัวแปรสีปุ่ม Save สำหรับธีมสว่าง */
+  --save-bg: #159447;
+  --save-text: #ffffff;
+  --save-border: #117337;
 }
 
 [data-theme='dark'] {
@@ -36,6 +41,11 @@
   --video-border: #475569;
   --status-bg: rgba(30, 41, 59, 0.9);
   --topic-color: #ffffff;
+
+  /* เพิ่มตัวแปรสีปุ่ม Save สำหรับธีมมืด (ใช้สีเขียวเข้ม-สว่างพอดีตา) */
+  --save-bg: #16a34a;
+  --save-text: #ffffff;
+  --save-border: #15803d;
 }
 
 * { box-sizing: border-box; }
@@ -182,8 +192,7 @@ input {
                 <input type="text" id="name-input" placeholder="group1" style="width: 100%; padding: 4px 6px; border-radius: 4px; font-size: 0.75rem;">
             </div>
         </div>
-
-        <button onclick="saveSettings()" style="background: var(--button); color: var(--button-text); border-radius: 4px; padding: 5px; font-size: 0.75rem; width: 100%; border: 1px solid var(--button-border); font-weight: 600; margin-top: 2px;">SAVE</button>
+        <button onclick="saveSettings()" style="background: var(--save-bg); color: var(--save-text); border-radius: 4px; padding: 5px; font-size: 0.75rem; width: 100%; border: 1px solid var(--save-border); font-weight: 600; margin-top: 2px;">SAVE</button>
     </section>
 </div>
 
