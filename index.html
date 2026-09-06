@@ -1,2003 +1,1533 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="utf-8">
-
+<meta charset="UTF-8">
 <meta name="viewport"
-      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
 
-<title>AI Camera</title>
+<title>AI Camera - Mini MicroKit PT-L</title>
 
-<!-- =====================================================
-     AI / TEACHABLE MACHINE
-     ===================================================== -->
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
-
-<!-- =====================================================
-     MQTT
-     ===================================================== -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js"
-        type="text/javascript"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/paho-mqtt@1.0.1/paho-mqtt-min.js"></script>
 
 <style>
-
 /* =========================================================
-   THEME VARIABLES
+   V6 - GLOBAL
    ========================================================= */
 
-:root{
-
-  --bg:#f7fbf7;
-
-  --bg-gradient:
-    radial-gradient(
-      circle at 82% 0%,
-      rgba(137,221,145,.34) 0,
-      rgba(137,221,145,0) 30%
-    ),
-
-    radial-gradient(
-      circle at 100% 72%,
-      rgba(183,237,183,.24) 0,
-      rgba(183,237,183,0) 34%
-    ),
-
-    linear-gradient(
-      145deg,
-      #ffffff 0%,
-      #f5fbf5 55%,
-      #eef9ef 100%
-    );
-
-  --card:rgba(255,255,255,.92);
-
-  --input:rgba(255,255,255,.76);
-
-  --text:#111827;
-
-  --muted:#667085;
-
-  --green:#21a957;
-
-  --green-strong:#159447;
-
-  --green-soft:#eaf7ed;
-
-  --border:#dce8df;
-
-  --button:#ffffff;
-
-  --button-border:#d7e8dc;
-
-  --button-text:#111827;
-
-  --video-border:#d5e5da;
-
-  --shadow:
-    0 8px 24px rgba(35,86,49,.075);
-
-  --save-bg:#a9dc92;
-
-  --save-border:#96cc7d;
-
-  --save-text:#102019;
-
-  --danger:#ef4444;
-}
-
-
-/* =========================================================
-   DARK THEME
-   ========================================================= */
-
-[data-theme="dark"]{
-
-  --bg:#05080c;
-
-  --bg-gradient:
-    radial-gradient(
-      circle at 85% 0%,
-      rgba(35,85,53,.20) 0,
-      rgba(35,85,53,0) 28%
-    ),
-
-    radial-gradient(
-      circle at 0% 85%,
-      rgba(22,65,42,.16) 0,
-      rgba(22,65,42,0) 30%
-    ),
-
-    linear-gradient(
-      145deg,
-      #05080c 0%,
-      #080d12 52%,
-      #05080c 100%
-    );
-
-  --card:rgba(11,16,22,.90);
-
-  --input:rgba(5,9,14,.72);
-
-  --text:#f5f7fa;
-
-  --muted:#a9b4c2;
-
-  --green:#55e879;
-
-  --green-strong:#4bdc70;
-
-  --green-soft:rgba(59,130,83,.12);
-
-  --border:#202a35;
-
-  --button:#151c25;
-
-  --button-border:#26313e;
-
-  --button-text:#f5f7fa;
-
-  --video-border:#202a35;
-
-  --shadow:
-    0 10px 28px rgba(0,0,0,.30);
-
-  --save-bg:#202b32;
-
-  --save-border:#2b3943;
-
-  --save-text:#f5f7fa;
-
-  --danger:#ff6464;
-}
-
-
-/* =========================================================
-   GLOBAL
-   ========================================================= */
-
-*{
-  box-sizing:border-box;
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 html,
-body{
-
-  margin:0;
-
-  width:100%;
-
-  height:100%;
-
-  height:100dvh;
-
-  overflow:hidden;
-
-  background:var(--bg);
-
-  background-image:var(--bg-gradient);
-
-  color:var(--text);
-
-  font-family:
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    "Noto Sans Thai",
-    sans-serif;
-
-  -webkit-font-smoothing:antialiased;
-
-  overscroll-behavior:none;
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    font-family:
+        "Segoe UI",
+        "Noto Sans Thai",
+        Arial,
+        sans-serif;
 }
 
-
-body{
-
-  display:flex;
-
-  justify-content:center;
-
-  align-items:center;
+body {
+    background: #f4f6f8;
+    color: #202124;
+    transition:
+        background 0.25s ease,
+        color 0.25s ease;
 }
-
-
-button,
-input{
-
-  font:inherit;
-
-  -webkit-tap-highlight-color:transparent;
-}
-
-
-button{
-
-  border:0;
-
-  cursor:pointer;
-}
-
 
 /* =========================================================
-   MAIN APP
+   APP
    ========================================================= */
 
-.app-container{
+.app {
+    width: 100%;
+    height: 100dvh;
+    max-width: 1200px;
+    margin: 0 auto;
 
-  width:100%;
+    padding:
+        12px
+        14px
+        8px;
 
-  max-width:900px;
+    display: grid;
 
-  height:100%;
+    grid-template-rows:
+        auto
+        minmax(120px, 0.72fr)
+        minmax(0, 1.65fr)
+        minmax(135px, 0.82fr)
+        auto;
 
-  padding:
-    max(10px,env(safe-area-inset-top))
-    clamp(10px,2.8vw,28px)
-    max(8px,env(safe-area-inset-bottom));
+    gap: 8px;
 
-  display:grid;
-
-  grid-template-rows:
-    auto
-    auto
-    minmax(0,1fr)
-    auto;
-
-  gap:clamp(7px,1.2vh,14px);
+    overflow: hidden;
 }
-
 
 /* =========================================================
    HEADER
    ========================================================= */
 
-.header{
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-  display:flex;
-
-  align-items:flex-start;
-
-  justify-content:space-between;
-
-  padding:
-    0
-    clamp(4px,.8vw,8px);
-
-  min-height:0;
+    min-height: 48px;
 }
 
-
-.brand-title{
-
-  font-size:
-    clamp(
-      1.9rem,
-      5vw,
-      3.1rem
-    );
-
-  font-weight:900;
-
-  line-height:.98;
-
-  letter-spacing:-1.4px;
-
-  color:var(--green-strong);
+.brand {
+    min-width: 0;
 }
 
+.brand-title {
+    margin: 0;
 
-.brand-subtitle{
+    font-size: clamp(20px, 5vw, 28px);
+    font-weight: 800;
+    letter-spacing: -0.5px;
 
-  margin-top:6px;
-
-  font-size:
-    clamp(
-      .76rem,
-      1.7vw,
-      1rem
-    );
-
-  color:var(--muted);
-
-  font-weight:500;
+    line-height: 1.05;
 }
 
+.brand-subtitle {
+    margin-top: 3px;
 
-/* =========================================================
-   TOP THEME BUTTON
-   ========================================================= */
+    font-size: clamp(10px, 2.7vw, 13px);
 
-.theme-top{
+    color: #7b8188;
 
-  width:
-    clamp(
-      52px,
-      8vw,
-      72px
-    );
-
-  height:
-    clamp(
-      52px,
-      8vw,
-      72px
-    );
-
-  border-radius:18px;
-
-  background:var(--button);
-
-  border:1px solid var(--border);
-
-  color:var(--text);
-
-  display:grid;
-
-  place-items:center;
-
-  box-shadow:var(--shadow);
-
-  flex:0 0 auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
 
-.theme-top svg{
-
-  width:55%;
-
-  height:55%;
+    flex-shrink: 0;
 }
 
+/* Top Test + Theme */
 
-/* =========================================================
-   COMMON CARD
-   ========================================================= */
+.top-action {
+    width: 38px;
+    height: 38px;
 
-.card{
+    border: none;
+    border-radius: 12px;
 
-  background:var(--card);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  border:1px solid var(--border);
+    cursor: pointer;
 
-  border-radius:
-    clamp(
-      14px,
-      2vw,
-      22px
-    );
+    font-size: 17px;
 
-  box-shadow:var(--shadow);
+    background: #ffffff;
+    color: #30343a;
 
-  backdrop-filter:blur(14px);
+    box-shadow:
+        0 3px 12px rgba(0, 0, 0, 0.08);
 
-  -webkit-backdrop-filter:blur(14px);
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        background 0.2s ease;
 }
 
+.top-action:active {
+    transform: scale(0.94);
+}
+
+.top-action:hover {
+    box-shadow:
+        0 5px 16px rgba(0, 0, 0, 0.12);
+}
+
+.top-action.test {
+    color: #315efb;
+}
+
+.top-action.theme {
+    font-size: 18px;
+}
 
 /* =========================================================
    SUMMARY
    ========================================================= */
 
-.summary{
+.summary {
+    min-height: 0;
 
-  display:grid;
+    display: grid;
 
-  grid-template-columns:1fr 1fr;
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 1fr);
 
-  gap:
-    clamp(
-      7px,
-      1vw,
-      14px
-    );
-
-  min-height:0;
+    gap: 8px;
 }
 
+.card {
+    background: #ffffff;
 
-.summary-card{
+    border-radius: 16px;
 
-  min-height:
-    clamp(
-      84px,
-      11vh,
-      142px
-    );
+    border: 1px solid rgba(0, 0, 0, 0.045);
 
-  padding:
-    clamp(
-      12px,
-      2vw,
-      24px
-    );
+    box-shadow:
+        0 5px 18px rgba(0, 0, 0, 0.055);
 
-  display:flex;
-
-  flex-direction:column;
-
-  justify-content:center;
-
-  overflow:hidden;
+    min-width: 0;
+    min-height: 0;
 }
 
+.result-card {
+    padding: 12px;
 
-.card-label{
+    display: flex;
+    flex-direction: column;
 
-  color:var(--muted);
-
-  font-size:
-    clamp(
-      .70rem,
-      1.6vw,
-      .95rem
-    );
-
-  font-weight:600;
-
-  margin-bottom:
-    clamp(
-      5px,
-      1vh,
-      9px
-    );
+    justify-content: center;
 }
 
+.card-label {
+    font-size: 10px;
+    font-weight: 700;
 
-.result-val{
+    color: #7d838b;
 
-  color:var(--text);
-
-  font-size:
-    clamp(
-      1.25rem,
-      4.2vw,
-      2.15rem
-    );
-
-  font-weight:850;
-
-  line-height:1.08;
-
-  white-space:nowrap;
-
-  overflow:hidden;
-
-  text-overflow:ellipsis;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
+.result-value {
+    margin-top: 5px;
 
-.status-row{
+    font-size: clamp(20px, 6vw, 32px);
+    font-weight: 800;
 
-  display:flex;
+    line-height: 1.1;
 
-  align-items:center;
-
-  gap:7px;
-
-  margin-top:
-    clamp(
-      6px,
-      1vh,
-      10px
-    );
-
-  color:var(--muted);
-
-  font-size:
-    clamp(
-      .68rem,
-      1.55vw,
-      .92rem
-    );
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
+.result-sub {
+    margin-top: 5px;
 
-.status-text{
+    font-size: 10px;
 
-  color:var(--green-strong);
-
-  font-weight:600;
+    color: #8b9198;
 }
-
-
-.sent-icon{
-
-  margin-left:auto;
-
-  width:
-    clamp(
-      22px,
-      3.5vw,
-      34px
-    );
-
-  height:
-    clamp(
-      22px,
-      3.5vw,
-      34px
-    );
-
-  color:var(--green-strong);
-}
-
 
 /* =========================================================
    CONFIDENCE CARD
    ========================================================= */
 
-.conf-card{
+.confidence-card {
+    position: relative;
 
-  position:relative;
+    padding: 10px 11px 7px;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
 }
 
+.confidence-top {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
 
-.conf-value{
-
-  color:var(--green-strong);
-
-  font-size:
-    clamp(
-      1.65rem,
-      5vw,
-      2.7rem
-    );
-
-  font-weight:900;
-
-  line-height:1;
+    gap: 5px;
 }
 
+.confidence-label {
+    font-size: 10px;
+    font-weight: 700;
 
-/* =========================================================
-   LIVE GRAPH
-   ========================================================= */
-
-.conf-chart{
-
-  width:100%;
-
-  height:
-    clamp(
-      18px,
-      3.2vh,
-      32px
-    );
-
-  margin-top:auto;
-
-  overflow:visible;
+    color: #7d838b;
 }
 
+.confidence-value {
+    font-size: clamp(18px, 5vw, 27px);
+    font-weight: 800;
+
+    line-height: 1;
+}
+
+.chart-wrap {
+    position: relative;
+
+    flex: 1;
+
+    min-height: 0;
+
+    margin-top: 5px;
+}
+
+.chart {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+}
+
+.chart-grid {
+    stroke: currentColor;
+    opacity: 0.07;
+
+    stroke-width: 1;
+}
+
+.chart-area {
+    fill: currentColor;
+    opacity: 0.07;
+}
+
+.chart-line {
+    fill: none;
+
+    stroke: currentColor;
+
+    stroke-width: 2.2;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.chart-dot {
+    fill: currentColor;
+}
+
+.chart-empty {
+    stroke: currentColor;
+    opacity: 0.12;
+
+    stroke-width: 1;
+
+    stroke-dasharray: 4 4;
+}
 
 /* =========================================================
    CAMERA CARD
    ========================================================= */
 
-.camera-card{
+.camera-card {
+    min-height: 0;
 
-  min-height:0;
+    padding: 10px;
 
-  padding:
-    clamp(
-      11px,
-      1.8vw,
-      20px
-    );
+    display: grid;
 
-  display:grid;
+    grid-template-rows:
+        auto
+        minmax(0, 1fr)
+        auto;
 
-  grid-template-rows:
-    auto
-    minmax(0,1fr)
-    auto;
-
-  gap:
-    clamp(
-      8px,
-      1.2vh,
-      12px
-    );
+    gap: 8px;
 }
 
+.camera-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-.camera-heading{
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:space-between;
-
-  gap:12px;
-
-  min-height:0;
+    min-height: 26px;
 }
 
-
-.camera-title{
-
-  font-size:
-    clamp(
-      1.05rem,
-      2.8vw,
-      1.55rem
-    );
-
-  font-weight:800;
+.camera-title {
+    font-size: 13px;
+    font-weight: 800;
 }
 
+.topic {
+    max-width: 48%;
 
-.topic{
+    font-size: 9px;
 
-  color:var(--text);
+    color: #858b92;
 
-  font-size:
-    clamp(
-      .68rem,
-      1.65vw,
-      .95rem
-    );
-
-  font-weight:600;
-
-  white-space:nowrap;
-
-  overflow:hidden;
-
-  text-overflow:ellipsis;
-
-  max-width:55%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
-
 
 /* =========================================================
-   VIDEO
+   CAMERA VIEW
    ========================================================= */
 
-.video-box{
+.camera-area {
+    position: relative;
 
-  position:relative;
+    min-height: 0;
 
-  width:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  min-height:0;
+    overflow: hidden;
 
-  background:#000;
+    border-radius: 14px;
 
-  border-radius:
-    clamp(
-      12px,
-      1.8vw,
-      18px
-    );
-
-  overflow:hidden;
-
-  border:1px solid var(--video-border);
-
-  box-shadow:
-    inset
-    0
-    0
-    0
-    1px
-    rgba(255,255,255,.03);
+    background: #101216;
 }
 
+#camera {
+    width: 100%;
+    height: 100%;
 
-video{
+    display: block;
 
-  width:100%;
+    object-fit: contain;
 
-  height:100%;
-
-  object-fit:cover;
-
-  display:block;
+    background: #101216;
 }
 
+.camera-placeholder {
+    position: absolute;
 
-video.front-cam{
+    inset: 0;
 
-  transform:scaleX(-1);
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    color: rgba(255,255,255,0.72);
+
+    pointer-events: none;
 }
 
+.camera-icon {
+    font-size: 30px;
 
-video.back-cam{
+    margin-bottom: 6px;
 
-  transform:scaleX(1);
+    opacity: 0.75;
 }
 
+.camera-placeholder-text {
+    font-size: 11px;
+
+    text-align: center;
+}
+
+.live-badge {
+    position: absolute;
+
+    top: 8px;
+    left: 8px;
+
+    padding: 4px 7px;
+
+    border-radius: 8px;
+
+    font-size: 8px;
+    font-weight: 800;
+
+    letter-spacing: 0.5px;
+
+    color: #ffffff;
+
+    background: rgba(20, 24, 30, 0.72);
+
+    backdrop-filter: blur(8px);
+}
+
+.live-dot {
+    display: inline-block;
+
+    width: 5px;
+    height: 5px;
+
+    margin-right: 4px;
+
+    border-radius: 50%;
+
+    background: #36d67a;
+
+    box-shadow:
+        0 0 7px rgba(54,214,122,0.9);
+}
+
+.camera-switch {
+    position: absolute;
+
+    right: 8px;
+    top: 8px;
+
+    width: 32px;
+    height: 32px;
+
+    border: none;
+    border-radius: 9px;
+
+    background: rgba(20,24,30,0.72);
+
+    color: #ffffff;
+
+    cursor: pointer;
+
+    backdrop-filter: blur(8px);
+
+    font-size: 15px;
+}
+
+.camera-switch:active {
+    transform: scale(0.94);
+}
 
 /* =========================================================
-   LIVE BADGE
+   CAMERA CONTROLS
    ========================================================= */
 
-.live-badge{
+.controls-grid {
+    display: grid;
 
-  position:absolute;
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 1fr);
 
-  top:
-    clamp(
-      9px,
-      1.6vw,
-      16px
-    );
-
-  left:
-    clamp(
-      9px,
-      1.6vw,
-      16px
-    );
-
-  z-index:5;
-
-  display:flex;
-
-  align-items:center;
-
-  gap:8px;
-
-  padding:
-    clamp(
-      8px,
-      1.2vw,
-      12px
-    )
-    clamp(
-      11px,
-      1.7vw,
-      17px
-    );
-
-  border-radius:12px;
-
-  background:rgba(255,255,255,.93);
-
-  color:#111827;
-
-  font-size:
-    clamp(
-      .72rem,
-      1.7vw,
-      .95rem
-    );
-
-  font-weight:700;
-
-  box-shadow:
-    0
-    4px
-    14px
-    rgba(0,0,0,.16);
+    gap: 7px;
 }
 
+.btn {
+    min-width: 0;
 
-[data-theme="dark"] .live-badge{
+    height: 36px;
 
-  background:rgba(12,17,23,.88);
+    border: none;
 
-  color:#fff;
+    border-radius: 10px;
+
+    font-size: 10px;
+    font-weight: 750;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 5px;
+
+    transition:
+        transform 0.12s ease,
+        opacity 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
-
-.live-dot{
-
-  width:10px;
-
-  height:10px;
-
-  border-radius:50%;
-
-  background:#36bd63;
-
-  box-shadow:
-    0
-    0
-    0
-    3px
-    rgba(54,189,99,.13);
+.btn:active {
+    transform: scale(0.97);
 }
 
+.btn-running {
+    background: #1f9d62;
+    color: #ffffff;
 
-/* =========================================================
-   CAMERA SWITCH
-   ========================================================= */
-
-.btn-float-switch{
-
-  position:absolute;
-
-  top:
-    clamp(
-      9px,
-      1.6vw,
-      16px
-    );
-
-  right:
-    clamp(
-      9px,
-      1.6vw,
-      16px
-    );
-
-  z-index:5;
-
-  width:
-    clamp(
-      42px,
-      6.5vw,
-      58px
-    );
-
-  height:
-    clamp(
-      42px,
-      6.5vw,
-      58px
-    );
-
-  border-radius:50%;
-
-  background:rgba(255,255,255,.94);
-
-  color:#111827;
-
-  border:1px solid rgba(0,0,0,.05);
-
-  display:grid;
-
-  place-items:center;
-
-  box-shadow:
-    0
-    4px
-    14px
-    rgba(0,0,0,.15);
+    box-shadow:
+        0 4px 12px rgba(31,157,98,0.2);
 }
 
-
-[data-theme="dark"] .btn-float-switch{
-
-  background:rgba(10,15,21,.82);
-
-  color:#fff;
-
-  border-color:#27313c;
+.btn-running.running {
+    background: #168451;
 }
 
+.btn-stop {
+    background: #ef4444;
+    color: #ffffff;
 
-.btn-float-switch svg{
-
-  width:48%;
-
-  height:48%;
-
-  fill:currentColor;
+    box-shadow:
+        0 4px 12px rgba(239,68,68,0.18);
 }
-
-
-/* =========================================================
-   CONTROL BUTTONS
-   ========================================================= */
-
-.controls-grid{
-
-  display:grid;
-
-  grid-template-columns:1fr 1fr;
-
-  gap:
-    clamp(
-      7px,
-      1vw,
-      12px
-    );
-}
-
-
-.control-btn{
-
-  min-height:
-    clamp(
-      44px,
-      6.3vh,
-      68px
-    );
-
-  border-radius:
-    clamp(
-      11px,
-      1.6vw,
-      17px
-    );
-
-  background:var(--button);
-
-  color:var(--button-text);
-
-  border:1px solid var(--button-border);
-
-  font-size:
-    clamp(
-      .86rem,
-      2.1vw,
-      1.15rem
-    );
-
-  font-weight:650;
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:center;
-
-  gap:
-    clamp(
-      8px,
-      1.5vw,
-      14px
-    );
-
-  box-shadow:
-    0
-    2px
-    7px
-    rgba(0,0,0,.025);
-
-  transition:
-    transform .08s ease,
-    background .15s ease;
-}
-
-
-.control-btn:active{
-
-  transform:scale(.985);
-}
-
-
-.control-btn svg{
-
-  width:
-    clamp(
-      20px,
-      3.4vw,
-      28px
-    );
-
-  height:
-    clamp(
-      20px,
-      3.4vw,
-      28px
-    );
-
-  fill:currentColor;
-}
-
 
 /* =========================================================
    SETTINGS
    ========================================================= */
 
-.settings-card{
+.settings-card {
+    min-height: 0;
 
-  padding:
-    clamp(
-      12px,
-      1.8vw,
-      20px
-    );
+    padding: 11px;
 
-  display:flex;
+    display: grid;
 
-  flex-direction:column;
+    grid-template-rows:
+        auto
+        auto
+        auto
+        auto;
 
-  gap:
-    clamp(
-      7px,
-      1.1vh,
-      11px
-    );
+    gap: 6px;
 }
 
-
-.settings-title{
-
-  color:var(--muted);
-
-  font-size:
-    clamp(
-      .78rem,
-      1.8vw,
-      1rem
-    );
-
-  font-weight:650;
+.settings-title {
+    font-size: 12px;
+    font-weight: 800;
 }
 
+.settings-grid {
+    display: grid;
 
-.field-label{
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 1fr);
 
-  color:var(--muted);
-
-  font-size:
-    clamp(
-      .68rem,
-      1.55vw,
-      .88rem
-    );
-
-  margin-bottom:4px;
+    gap: 6px;
 }
 
+.field {
+    min-width: 0;
 
-input{
-
-  width:100%;
-
-  height:
-    clamp(
-      37px,
-      5.2vh,
-      52px
-    );
-
-  padding:
-    0
-    clamp(
-      10px,
-      1.7vw,
-      16px
-    );
-
-  border-radius:
-    clamp(
-      8px,
-      1.2vw,
-      12px
-    );
-
-  outline:none;
-
-  background:var(--input);
-
-  color:var(--text);
-
-  border:1px solid var(--border);
-
-  font-size:
-    clamp(
-      .82rem,
-      1.9vw,
-      1rem
-    );
+    position: relative;
 }
 
-
-input:focus{
-
-  border-color:var(--green);
-
-  box-shadow:
-    0
-    0
-    0
-    3px
-    rgba(33,169,87,.10);
+.field.model {
+    grid-column: 1 / -1;
 }
 
+.field-label {
+    display: block;
 
-.model-wrap{
+    margin-bottom: 3px;
 
-  position:relative;
+    font-size: 8px;
+    font-weight: 700;
+
+    color: #858b92;
 }
 
-
-.model-wrap input{
-
-  padding-right:48px;
+.input-row {
+    position: relative;
 }
 
+input {
+    width: 100%;
 
-/* =========================================================
-   COPY
-   ========================================================= */
+    height: 31px;
 
-.copy-btn{
+    border: 1px solid #e0e4e8;
 
-  position:absolute;
-
-  right:6px;
-
-  top:50%;
-
-  transform:translateY(-50%);
-
-  width:34px;
-
-  height:34px;
-
-  background:transparent;
-
-  color:var(--muted);
-
-  display:grid;
-
-  place-items:center;
-}
-
-
-.copy-btn svg{
-
-  width:21px;
-
-  height:21px;
-
-  fill:none;
-
-  stroke:currentColor;
-
-  stroke-width:1.8;
-}
-
-
-/* =========================================================
-   SCHOOL / NAME
-   ========================================================= */
-
-.two-fields{
-
-  display:grid;
-
-  grid-template-columns:1fr 1fr;
-
-  gap:
-    clamp(
-      7px,
-      1.1vw,
-      12px
-    );
-}
-
-
-/* =========================================================
-   SAVE
-   ========================================================= */
-
-.save-btn{
-
-  width:100%;
-
-  height:
-    clamp(
-      39px,
-      5.5vh,
-      54px
-    );
-
-  border-radius:
-    clamp(
-      9px,
-      1.2vw,
-      12px
-    );
-
-  background:var(--save-bg);
-
-  color:var(--save-text);
-
-  border:1px solid var(--save-border);
-
-  font-size:
-    clamp(
-      .9rem,
-      2vw,
-      1.1rem
-    );
-
-  font-weight:650;
-
-  display:flex;
-
-  align-items:center;
-
-  justify-content:center;
-
-  gap:10px;
-}
-
-
-.save-btn svg{
-
-  width:25px;
-
-  height:25px;
-
-  fill:none;
-
-  stroke:currentColor;
-
-  stroke-width:1.8;
-}
-
-
-/* =========================================================
-   SMALL FOOTER CAPTION
-   =========================================================
-   NOTE:
-   System Ready / Connected CARD ถูกลบออก
-   แต่ข้อความเล็กนี้ยังคงไว้
-   ========================================================= */
-
-.footer-caption{
-
-  text-align:center;
-
-  color:var(--muted);
-
-  font-size:
-    clamp(
-      .63rem,
-      1.45vw,
-      .82rem
-    );
-
-  line-height:1.1;
-
-  white-space:nowrap;
-
-  overflow:hidden;
-
-  text-overflow:ellipsis;
-
-  padding-bottom:1px;
-}
-
-
-/* =========================================================
-   SHORT PHONE SCREEN
-   ========================================================= */
-
-@media (max-height:700px){
-
-  .app-container{
-
-    gap:5px;
-  }
-
-
-  .brand-title{
-
-    font-size:
-      clamp(
-        1.65rem,
-        5vw,
-        2.2rem
-      );
-  }
-
-
-  .brand-subtitle{
-
-    margin-top:3px;
-  }
-
-
-  .summary-card{
-
-    min-height:68px;
+    border-radius: 8px;
 
     padding:
-      9px
-      12px;
-  }
+        0
+        8px;
 
+    outline: none;
 
-  .camera-card{
+    background: #f9fafb;
 
-    gap:5px;
+    color: #25282d;
 
-    padding:8px;
-  }
+    font-size: 10px;
 
-
-  .settings-card{
-
-    padding:
-      8px
-      10px;
-
-    gap:5px;
-  }
-
-
-  .settings-title{
-
-    display:none;
-  }
-
-
-  .control-btn{
-
-    min-height:38px;
-  }
-
-
-  input{
-
-    height:34px;
-  }
-
-
-  .save-btn{
-
-    height:35px;
-  }
-
-
-  .footer-caption{
-
-    display:block;
-
-    font-size:.60rem;
-  }
+    transition:
+        border 0.2s ease,
+        background 0.2s ease;
 }
 
+input:focus {
+    border-color: #315efb;
+
+    background: #ffffff;
+}
+
+.model input {
+    padding-right: 38px;
+}
+
+.copy-btn {
+    position: absolute;
+
+    right: 3px;
+    top: 3px;
+
+    width: 25px;
+    height: 25px;
+
+    border: none;
+    border-radius: 6px;
+
+    background: #e9edf2;
+
+    color: #555c64;
+
+    cursor: pointer;
+
+    font-size: 11px;
+}
+
+.save-row {
+    display: flex;
+    justify-content: center;
+}
+
+.save-btn {
+    width: min(170px, 45%);
+
+    height: 31px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #315efb;
+    color: #ffffff;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 4px 12px rgba(49,94,251,0.2);
+}
+
+.save-btn:active {
+    transform: scale(0.98);
+}
 
 /* =========================================================
-   VERY SMALL PHONE
+   FOOTER
    ========================================================= */
 
-@media (max-width:360px){
+.footer-caption {
+    text-align: center;
 
-  .app-container{
+    font-size: 8px;
 
-    padding-left:7px;
+    line-height: 12px;
 
-    padding-right:7px;
-  }
+    color: #969ba2;
 
-
-  .summary{
-
-    gap:5px;
-  }
-
-
-  .result-val{
-
-    font-size:1.05rem;
-  }
-
-
-  .status-row{
-
-    font-size:.62rem;
-  }
-
-
-  .control-btn{
-
-    font-size:.75rem;
-
-    gap:6px;
-  }
-
-
-  .topic{
-
-    max-width:50%;
-
-    font-size:.61rem;
-  }
+    white-space: nowrap;
 }
-
 
 /* =========================================================
-   TABLET / DESKTOP
+   DARK MODE
    ========================================================= */
 
-@media (min-width:700px){
-
-  .app-container{
-
-    padding-left:
-      clamp(
-        20px,
-        4vw,
-        48px
-      );
-
-    padding-right:
-      clamp(
-        20px,
-        4vw,
-        48px
-      );
-  }
+body.dark {
+    background: #111315;
+    color: #f2f4f6;
 }
 
+body.dark .brand-subtitle,
+body.dark .card-label,
+body.dark .confidence-label,
+body.dark .result-sub,
+body.dark .field-label,
+body.dark .topic,
+body.dark .footer-caption {
+    color: #858b94;
+}
+
+body.dark .card {
+    background: #1a1d20;
+
+    border-color: rgba(255,255,255,0.045);
+
+    box-shadow:
+        0 5px 18px rgba(0,0,0,0.25);
+}
+
+body.dark .top-action {
+    background: #1c2024;
+    color: #e7eaee;
+
+    box-shadow:
+        0 4px 15px rgba(0,0,0,0.25);
+}
+
+body.dark .top-action.test {
+    color: #7190ff;
+}
+
+body.dark input {
+    background: #15181b;
+
+    color: #f0f2f4;
+
+    border-color: #30353a;
+}
+
+body.dark input:focus {
+    background: #171a1d;
+
+    border-color: #7190ff;
+}
+
+body.dark .copy-btn {
+    background: #292e33;
+    color: #d7dce2;
+}
+
+body.dark .camera-area,
+body.dark #camera {
+    background: #08090a;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+/* Small phone */
+
+@media (max-height: 680px) {
+
+    .app {
+        padding:
+            8px
+            10px
+            5px;
+
+        gap: 5px;
+
+        grid-template-rows:
+            auto
+            minmax(90px, 0.65fr)
+            minmax(0, 1.55fr)
+            minmax(112px, 0.78fr)
+            auto;
+    }
+
+    .header {
+        min-height: 40px;
+    }
+
+    .top-action {
+        width: 34px;
+        height: 34px;
+
+        border-radius: 10px;
+    }
+
+    .camera-card {
+        padding: 7px;
+
+        gap: 6px;
+    }
+
+    .settings-card {
+        padding: 8px;
+
+        gap: 4px;
+    }
+
+    .btn {
+        height: 32px;
+    }
+
+    input {
+        height: 28px;
+    }
+
+    .copy-btn {
+        height: 22px;
+        width: 22px;
+    }
+
+    .save-btn {
+        height: 28px;
+    }
+}
+
+/* Very small height */
+
+@media (max-height: 580px) {
+
+    .app {
+        padding:
+            5px
+            8px
+            3px;
+
+        gap: 4px;
+
+        grid-template-rows:
+            auto
+            minmax(76px, 0.6fr)
+            minmax(0, 1.7fr)
+            minmax(95px, 0.72fr)
+            auto;
+    }
+
+    .brand-title {
+        font-size: 18px;
+    }
+
+    .brand-subtitle {
+        font-size: 8px;
+    }
+
+    .top-action {
+        width: 31px;
+        height: 31px;
+
+        font-size: 14px;
+    }
+
+    .camera-title {
+        font-size: 11px;
+    }
+
+    .topic {
+        font-size: 8px;
+    }
+
+    .btn {
+        height: 29px;
+
+        font-size: 9px;
+    }
+
+    .settings-title {
+        font-size: 10px;
+    }
+
+    .field-label {
+        font-size: 7px;
+    }
+
+    input {
+        height: 25px;
+    }
+
+    .save-btn {
+        height: 25px;
+    }
+}
+
+/* Tablet / larger */
+
+@media (min-width: 600px) {
+
+    .app {
+        padding:
+            16px
+            20px
+            10px;
+
+        gap: 10px;
+    }
+
+    .camera-card {
+        padding: 12px;
+    }
+
+    .settings-card {
+        padding: 13px;
+    }
+
+    .btn {
+        height: 40px;
+    }
+
+    input {
+        height: 34px;
+    }
+
+    .save-btn {
+        height: 34px;
+    }
+}
 </style>
 </head>
 
+<body>
 
-<body data-theme="light">
+<div class="app">
 
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
 
-<!-- =========================================================
-     APPLICATION
-     ========================================================= -->
+    <header class="header">
 
-<div class="app-container">
+        <div class="brand">
 
+            <h1 class="brand-title">
+                AI Camera
+            </h1>
 
-  <!-- =======================================================
-       HEADER
-       ======================================================= -->
+            <div class="brand-subtitle">
+                AI Vision with Teachable Machine
+            </div>
 
-  <header class="header">
+        </div>
 
-    <div>
+        <!-- V6:
+             TEST MOVED HERE
+             THEME REMAINS HERE
+        -->
 
-      <div class="brand-title">
-        AI Camera
-      </div>
+        <div class="header-actions">
 
-      <div class="brand-subtitle">
-        AI Vision with Teachable Machine
-      </div>
+            <button
+                class="top-action test"
+                id="topTestBtn"
+                title="Test Connection"
+                aria-label="Test Connection"
+            >
+                🧪
+            </button>
 
-    </div>
+            <button
+                class="top-action theme"
+                id="themeBtn"
+                title="Change Theme"
+                aria-label="Change Theme"
+            >
+                🌙
+            </button>
 
+        </div>
 
-    <!-- Theme button -->
-
-    <button
-      class="theme-top"
-      onclick="toggleTheme()"
-      title="เปลี่ยนธีม"
-      aria-label="เปลี่ยนธีม">
-
-      <svg
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.7">
-
-        <path
-          d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.7 6.7 0 0 0 9.8 9.8Z"/>
-
-      </svg>
-
-    </button>
-
-  </header>
-
-
-  <!-- =======================================================
-       SUMMARY
-       ======================================================= -->
-
-  <section class="summary">
-
-
-    <!-- RESULT CARD -->
-
-    <div class="card summary-card">
-
-      <div class="card-label">
-        ผลการวิเคราะห์ข้อมูล
-      </div>
-
-      <div
-        class="result-val"
-        id="name">
-        --
-      </div>
-
-
-      <div class="status-row">
-
-        <span>
-          สถานะ:
-        </span>
-
-        <b
-          class="status-text"
-          id="esp-status">
-          Connecting...
-        </b>
-
-
-        <svg
-          class="sent-icon"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          aria-hidden="true">
-
-          <path
-            d="M21.7 3.3a1 1 0 0 0-1.03-.24l-18 7a1 1 0 0 0 .06 1.88l7.24 2.41 2.4 7.24a1 1 0 0 0 .94.68h.03a1 1 0 0 0 .93-.73l7.7-17.1a1 1 0 0 0-.27-1.14ZM10.8 13.2 5.7 11.5l11.73-4.56-6.63 6.26Zm1.45 1.45 5.85-5.52-4.34 9.64-1.51-4.12Z"/>
-
-        </svg>
-
-      </div>
-
-    </div>
-
-
-    <!-- CONFIDENCE CARD -->
-
-    <div class="card summary-card conf-card">
-
-      <div class="card-label">
-        ความแม่นยำ
-      </div>
-
-
-      <div
-        class="conf-value"
-        id="conf-text">
-        0.0%
-      </div>
-
-
-      <!-- LIVE SVG GRAPH -->
-
-      <svg
-        class="conf-chart"
-        id="confidence-chart"
-        viewBox="0 0 240 38"
-        preserveAspectRatio="none"
-        aria-hidden="true">
-
-        <defs>
-
-          <linearGradient
-            id="chartFill"
-            x1="0"
-            x2="0"
-            y1="0"
-            y2="1">
-
-            <stop
-              offset="0"
-              stop-color="#35c76b"
-              stop-opacity=".22"/>
-
-            <stop
-              offset="1"
-              stop-color="#35c76b"
-              stop-opacity="0"/>
-
-          </linearGradient>
-
-        </defs>
-
-
-        <path
-          id="chart-area"
-          d=""
-          fill="url(#chartFill)"/>
-
-
-        <path
-          id="chart-line"
-          d=""
-          fill="none"
-          stroke="#35c76b"
-          stroke-width="2.2"
-          stroke-linecap="round"
-          stroke-linejoin="round"/>
-
-
-        <circle
-          id="chart-dot"
-          cx="240"
-          cy="19"
-          r="4.2"
-          fill="#35c76b"/>
-
-      </svg>
-
-    </div>
-
-  </section>
-
-
-  <!-- =======================================================
-       CAMERA
-       ======================================================= -->
-
-  <section class="card camera-card">
-
-
-    <div class="camera-heading">
-
-      <span class="camera-title">
-        AI Camera
-      </span>
-
-
-      <span
-        class="topic"
-        id="current-group-label">
-        Topic : --
-      </span>
-
-    </div>
-
-
-    <!-- VIDEO -->
-
-    <div class="video-box">
-
-
-      <video
-        id="video"
-        class="front-cam"
-        autoplay
-        muted
-        playsinline>
-      </video>
-
-
-      <!-- LIVE -->
-
-      <div class="live-badge">
-
-        <span class="live-dot"></span>
-
-        LIVE
-
-      </div>
-
-
-      <!-- SWITCH CAMERA -->
-
-      <button
-        class="btn-float-switch"
-        onclick="switchCamera()"
-        title="สลับกล้อง"
-        aria-label="สลับกล้อง">
-
-        <svg viewBox="0 0 24 24">
-
-          <path
-            d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/>
-
-        </svg>
-
-      </button>
-
-    </div>
+    </header>
 
 
     <!-- =====================================================
-         CONTROL BUTTONS
+         SUMMARY
          ===================================================== -->
 
-    <div class="controls-grid">
+    <section class="summary">
 
+        <!-- Result -->
 
-      <!-- START -->
+        <div class="card result-card">
 
-      <button
-        class="control-btn"
-        id="start-btn">
+            <div class="card-label">
+                ผลการวิเคราะห์
+            </div>
 
-        <svg viewBox="0 0 24 24">
+            <div
+                class="result-value"
+                id="resultText"
+            >
+                รอการตรวจจับ
+            </div>
 
-          <path
-            d="M8 5v14l11-7z"/>
+            <div
+                class="result-sub"
+                id="resultSub"
+            >
+                AI is waiting for camera
+            </div>
 
-        </svg>
-
-        <span>
-          Running...
-        </span>
-
-      </button>
-
-
-      <!-- STOP -->
-
-      <button
-        class="control-btn"
-        id="stop-btn">
-
-        <svg viewBox="0 0 24 24">
-
-          <rect
-            x="6"
-            y="6"
-            width="12"
-            height="12"
-            rx="1.5"/>
-
-        </svg>
-
-        <span>
-          Stop
-        </span>
-
-      </button>
-
-
-      <!-- TEST -->
-
-      <button
-        class="control-btn"
-        onclick="testConnection()">
-
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8">
-
-          <path
-            d="M9 3h6M10 3v4l-5.3 9.2A2 2 0 0 0 6.43 19h11.14a2 2 0 0 0 1.73-2.8L14 7V3"/>
-
-          <path
-            d="M7.5 15h9"/>
-
-        </svg>
-
-        <span>
-          Test
-        </span>
-
-      </button>
-
-
-      <!-- THEME -->
-
-      <button
-        class="control-btn"
-        onclick="toggleTheme()">
-
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.7">
-
-          <path
-            d="M12 3v2M12 19v2M3 12h2M19 12h2M5.64 5.64l1.42 1.42M16.94 16.94l1.42 1.42M18.36 5.64l-1.42 1.42M7.06 16.94l1.42-1.42"/>
-
-          <circle
-            cx="12"
-            cy="12"
-            r="4"/>
-
-        </svg>
-
-        <span>
-          Theme
-        </span>
-
-      </button>
-
-    </div>
-
-  </section>
-
-
-  <!-- =======================================================
-       SETTINGS
-       ======================================================= -->
-
-  <section class="card settings-card">
-
-
-    <div class="settings-title">
-      การตั้งค่าโมเดลและการเชื่อมต่อ
-    </div>
-
-
-    <!-- MODEL ID -->
-
-    <div>
-
-      <div class="field-label">
-        Teachable Model ID
-      </div>
-
-
-      <div class="model-wrap">
-
-        <input
-          type="text"
-          id="model-input"
-          placeholder="เช่น Voxb2VGd2">
-
-
-        <button
-          class="copy-btn"
-          onclick="copyModelId()"
-          title="คัดลอก Model ID"
-          aria-label="คัดลอก Model ID">
-
-          <svg viewBox="0 0 24 24">
-
-            <rect
-              x="8"
-              y="8"
-              width="11"
-              height="11"
-              rx="2"/>
-
-            <path
-              d="M5 16H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v1"/>
-
-          </svg>
-
-        </button>
-
-      </div>
-
-    </div>
-
-
-    <!-- SCHOOL / NAME -->
-
-    <div class="two-fields">
-
-
-      <div>
-
-        <div class="field-label">
-          School ID
         </div>
 
-        <input
-          type="text"
-          id="school-input"
-          placeholder="PTL-School">
 
-      </div>
+        <!-- Confidence -->
 
+        <div class="card confidence-card">
 
-      <div>
+            <div class="confidence-top">
 
-        <div class="field-label">
-          Name ID
+                <div class="confidence-label">
+                    ความแม่นยำ
+                </div>
+
+                <div
+                    class="confidence-value"
+                    id="confidenceValue"
+                >
+                    0.0%
+                </div>
+
+            </div>
+
+            <div class="chart-wrap">
+
+                <svg
+                    id="confidenceChart"
+                    class="chart"
+                    viewBox="0 0 300 100"
+                    preserveAspectRatio="none"
+                >
+
+                    <line
+                        class="chart-grid"
+                        x1="0"
+                        y1="25"
+                        x2="300"
+                        y2="25"
+                    />
+
+                    <line
+                        class="chart-grid"
+                        x1="0"
+                        y1="50"
+                        x2="300"
+                        y2="50"
+                    />
+
+                    <line
+                        class="chart-grid"
+                        x1="0"
+                        y1="75"
+                        x2="300"
+                        y2="75"
+                    />
+
+                    <path
+                        id="chartArea"
+                        class="chart-area"
+                    />
+
+                    <path
+                        id="chartLine"
+                        class="chart-line"
+                    />
+
+                    <circle
+                        id="chartDot"
+                        class="chart-dot"
+                        r="3"
+                        cx="0"
+                        cy="100"
+                    />
+
+                    <line
+                        id="chartEmpty"
+                        class="chart-empty"
+                        x1="0"
+                        y1="100"
+                        x2="300"
+                        y2="100"
+                    />
+
+                </svg>
+
+            </div>
+
         </div>
 
-        <input
-          type="text"
-          id="name-input"
-          placeholder="group1">
+    </section>
 
-      </div>
 
+    <!-- =====================================================
+         CAMERA
+         ===================================================== -->
+
+    <section class="card camera-card">
+
+        <div class="camera-header">
+
+            <div class="camera-title">
+                AI Camera
+            </div>
+
+            <div
+                class="topic"
+                id="topicText"
+            >
+                MQTT: not connected
+            </div>
+
+        </div>
+
+
+        <div class="camera-area">
+
+            <video
+                id="camera"
+                autoplay
+                muted
+                playsinline
+            ></video>
+
+
+            <div
+                class="camera-placeholder"
+                id="cameraPlaceholder"
+            >
+
+                <div class="camera-icon">
+                    📷
+                </div>
+
+                <div class="camera-placeholder-text">
+                    กด Running เพื่อเริ่มกล้อง
+                </div>
+
+            </div>
+
+
+            <div
+                class="live-badge"
+                id="liveBadge"
+                style="display:none;"
+            >
+                <span class="live-dot"></span>
+                LIVE
+            </div>
+
+
+            <button
+                class="camera-switch"
+                id="switchCameraBtn"
+                title="Switch Camera"
+                aria-label="Switch Camera"
+            >
+                🔄
+            </button>
+
+        </div>
+
+
+        <!-- V6:
+             ONLY RUNNING + STOP
+             TEST AND THEME HAVE BEEN REMOVED
+        -->
+
+        <div class="controls-grid">
+
+            <button
+                class="btn btn-running"
+                id="runBtn"
+            >
+                ▶ Running
+            </button>
+
+            <button
+                class="btn btn-stop"
+                id="stopBtn"
+            >
+                ■ Stop
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         SETTINGS
+         ===================================================== -->
+
+    <section class="card settings-card">
+
+        <div class="settings-title">
+            การตั้งค่าโมเดลและการเชื่อมต่อ
+        </div>
+
+
+        <div class="settings-grid">
+
+            <!-- Model ID -->
+
+            <div class="field model">
+
+                <label class="field-label">
+                    Model ID
+                </label>
+
+                <div class="input-row">
+
+                    <input
+                        type="text"
+                        id="modelId"
+                        placeholder="เช่น abc123"
+                        autocomplete="off"
+                    />
+
+                    <button
+                        class="copy-btn"
+                        id="copyModelBtn"
+                        title="Copy Model ID"
+                    >
+                        ⧉
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- School ID -->
+
+            <div class="field">
+
+                <label class="field-label">
+                    School ID
+                </label>
+
+                <input
+                    type="text"
+                    id="schoolId"
+                    placeholder="School ID"
+                    autocomplete="off"
+                />
+
+            </div>
+
+
+            <!-- Name ID -->
+
+            <div class="field">
+
+                <label class="field-label">
+                    Name ID
+                </label>
+
+                <input
+                    type="text"
+                    id="nameId"
+                    placeholder="Name ID"
+                    autocomplete="off"
+                />
+
+            </div>
+
+        </div>
+
+
+        <div class="save-row">
+
+            <button
+                class="save-btn"
+                id="saveBtn"
+            >
+                SAVE
+            </button>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <div class="footer-caption">
+        Mini MicroKit PT-L V1.0 | AI Vision System
     </div>
-
-
-    <!-- SAVE -->
-
-    <button
-      class="save-btn"
-      onclick="saveSettings()">
-
-      <svg viewBox="0 0 24 24">
-
-        <path
-          d="M5 3h11l3 3v15H5z"/>
-
-        <path
-          d="M8 3v6h8V3M8 21v-7h8v7"/>
-
-      </svg>
-
-      <span>
-        SAVE
-      </span>
-
-    </button>
-
-  </section>
-
-
-  <!-- =======================================================
-       SMALL FOOTER TEXT
-       System Ready / Connected CARD ถูกลบออก
-       ======================================================= -->
-
-  <div class="footer-caption">
-    Mini MicroKit PT-L V1.0
-    &nbsp; | &nbsp;
-    AI Vision System
-  </div>
-
 
 </div>
 
 
 <script>
-
 /* =========================================================
-   INITIAL PAGE SETUP
+   V6 JAVASCRIPT
    ========================================================= */
 
-window.addEventListener(
-  "DOMContentLoaded",
-  () => {
 
-    /* -----------------------------
-       THEME
-       ----------------------------- */
+/* =========================================================
+   CONFIG
+   ========================================================= */
+
+const MQTT_HOST = "broker.emqx.io";
+const MQTT_PORT = 8084;
+
+const GRAPH_POINTS = 30;
+
+/*
+ * Important performance optimization:
+ * AI prediction can continue normally,
+ * but graph drawing is limited to around 6–7 FPS.
+ */
+const GRAPH_UPDATE_MS = 150;
+
+const MQTT_SEND_INTERVAL = 1000;
+
+
+/* =========================================================
+   DOM
+   ========================================================= */
+
+const video =
+    document.getElementById("camera");
+
+const cameraPlaceholder =
+    document.getElementById("cameraPlaceholder");
+
+const liveBadge =
+    document.getElementById("liveBadge");
+
+const resultText =
+    document.getElementById("resultText");
+
+const resultSub =
+    document.getElementById("resultSub");
+
+const confidenceValue =
+    document.getElementById("confidenceValue");
+
+const chartLine =
+    document.getElementById("chartLine");
+
+const chartArea =
+    document.getElementById("chartArea");
+
+const chartDot =
+    document.getElementById("chartDot");
+
+const chartEmpty =
+    document.getElementById("chartEmpty");
+
+const topicText =
+    document.getElementById("topicText");
+
+const modelIdInput =
+    document.getElementById("modelId");
+
+const schoolIdInput =
+    document.getElementById("schoolId");
+
+const nameIdInput =
+    document.getElementById("nameId");
+
+const runBtn =
+    document.getElementById("runBtn");
+
+const stopBtn =
+    document.getElementById("stopBtn");
+
+const switchCameraBtn =
+    document.getElementById("switchCameraBtn");
+
+const saveBtn =
+    document.getElementById("saveBtn");
+
+const themeBtn =
+    document.getElementById("themeBtn");
+
+const topTestBtn =
+    document.getElementById("topTestBtn");
+
+const copyModelBtn =
+    document.getElementById("copyModelBtn");
+
+
+/* =========================================================
+   STATE
+   ========================================================= */
+
+let model = null;
+
+let modelURL = "";
+
+let webcamStream = null;
+
+let cameraRunning = false;
+
+let predictionBusy = false;
+
+let cameraFacingMode = "user";
+
+let mqttClient = null;
+
+let mqttConnected = false;
+
+let lastSentTime = 0;
+
+let lastGraphUpdate = 0;
+
+let animationFrameId = null;
+
+let predictionTimer = null;
+
+
+/* =========================================================
+   GRAPH STATE
+   ========================================================= */
+
+let confidenceHistory =
+    new Array(GRAPH_POINTS).fill(0);
+
+
+/* =========================================================
+   LOCAL STORAGE
+   ========================================================= */
+
+function loadSavedSettings() {
+
+    const savedModel =
+        localStorage.getItem("ai_model_id");
+
+    const savedSchool =
+        localStorage.getItem("ai_school_id");
+
+    const savedName =
+        localStorage.getItem("ai_name_id");
 
     const savedTheme =
-      localStorage.getItem("theme") || "light";
-
-    document.body.dataset.theme =
-      savedTheme;
+        localStorage.getItem("ai_theme");
 
 
-    /* -----------------------------
-       MODEL ID
-       ----------------------------- */
+    if (savedModel) {
+        modelIdInput.value =
+            savedModel;
+    }
 
-    const savedId =
-      localStorage.getItem("saved_model_id") || "";
+    if (savedSchool) {
+        schoolIdInput.value =
+            savedSchool;
+    }
 
-    if(savedId){
-
-      document.getElementById(
-        "model-input"
-      ).value = savedId;
-
+    if (savedName) {
+        nameIdInput.value =
+            savedName;
     }
 
 
-    /* -----------------------------
-       SCHOOL ID
-       ----------------------------- */
+    if (savedTheme === "dark") {
 
-    const savedSchool =
-      localStorage.getItem(
-        "saved_school_id"
-      ) || "PTL-School";
+        document.body.classList.add("dark");
 
-    document.getElementById(
-      "school-input"
-    ).value = savedSchool;
+        themeBtn.textContent = "☀️";
 
+    } else {
 
-    /* -----------------------------
-       NAME ID
-       ----------------------------- */
+        document.body.classList.remove("dark");
 
-    const savedNameId =
-      localStorage.getItem(
-        "saved_name_id"
-      ) || "group1";
-
-    document.getElementById(
-      "name-input"
-    ).value = savedNameId;
+        themeBtn.textContent = "🌙";
+    }
+}
 
 
-    /* -----------------------------
-       TOPIC
-       ----------------------------- */
+/* =========================================================
+   THEME
+   ========================================================= */
 
-    updateTopicDisplay(
-      savedSchool,
-      savedNameId
+function toggleTheme() {
+
+    const dark =
+        document.body.classList.toggle("dark");
+
+    localStorage.setItem(
+        "ai_theme",
+        dark ? "dark" : "light"
     );
 
-  }
+    themeBtn.textContent =
+        dark ? "☀️" : "🌙";
+}
+
+themeBtn.addEventListener(
+    "click",
+    toggleTheme
 );
 
 
@@ -2005,928 +1535,189 @@ window.addEventListener(
    SAVE SETTINGS
    ========================================================= */
 
-function saveSettings(){
+function saveSettings() {
 
-  const modelVal =
-    document
-      .getElementById("model-input")
-      .value
-      .trim();
+    const modelId =
+        modelIdInput.value.trim();
 
+    const schoolId =
+        schoolIdInput.value.trim();
 
-  const schoolVal =
-    document
-      .getElementById("school-input")
-      .value
-      .trim() ||
-    "PTL-School";
+    const nameId =
+        nameIdInput.value.trim();
 
 
-  const nameVal =
-    document
-      .getElementById("name-input")
-      .value
-      .trim() ||
-    "group1";
-
-
-  if(!modelVal){
-
-    alert(
-      "กรุณากรอก Model ID ให้ถูกต้อง"
+    localStorage.setItem(
+        "ai_model_id",
+        modelId
     );
 
-    return;
-  }
+    localStorage.setItem(
+        "ai_school_id",
+        schoolId
+    );
+
+    localStorage.setItem(
+        "ai_name_id",
+        nameId
+    );
 
 
-  localStorage.setItem(
-    "saved_model_id",
-    modelVal
-  );
+    updateTopic();
 
 
-  localStorage.setItem(
-    "saved_school_id",
-    schoolVal
-  );
+    /*
+     * Reload model if Model ID changed.
+     */
+
+    if (modelId) {
+
+        loadModel()
+            .catch(error => {
+
+                console.error(
+                    "Model loading error:",
+                    error
+                );
+
+                resultText.textContent =
+                    "โหลดโมเดลไม่สำเร็จ";
+
+                resultSub.textContent =
+                    "ตรวจสอบ Model ID";
+
+            });
+
+    }
 
 
-  localStorage.setItem(
-    "saved_name_id",
-    nameVal
-  );
+    /*
+     * Reconnect MQTT using
+     * new School / Name IDs.
+     */
+
+    connectMQTT();
 
 
-  updateTopicDisplay(
-    schoolVal,
-    nameVal
-  );
-
-
-  alert(
-    "บันทึกค่าเรียบร้อย! กำลังเชื่อมต่อระบบใหม่..."
-  );
-
-
-  initMQTT();
-
+    showMessage(
+        "บันทึกการตั้งค่าแล้ว"
+    );
 }
+
+saveBtn.addEventListener(
+    "click",
+    saveSettings
+);
 
 
 /* =========================================================
    COPY MODEL ID
    ========================================================= */
 
-function copyModelId(){
+copyModelBtn.addEventListener(
+    "click",
+    async () => {
 
-  const input =
-    document.getElementById(
-      "model-input"
-    );
+        const value =
+            modelIdInput.value.trim();
 
+        if (!value) return;
 
-  if(!input.value){
+        try {
 
-    return;
-  }
+            await navigator.clipboard.writeText(
+                value
+            );
 
+            copyModelBtn.textContent = "✓";
 
-  if(
-    navigator.clipboard &&
-    navigator.clipboard.writeText
-  ){
+            setTimeout(() => {
 
-    navigator.clipboard
-      .writeText(input.value)
-      .then(
-        () => {
+                copyModelBtn.textContent = "⧉";
 
-          alert(
-            "คัดลอก Model ID แล้ว"
-          );
+            }, 1000);
 
-        }
-      )
-      .catch(
-        () => {
+        } catch (error) {
 
-          input.select();
-
-          document.execCommand(
-            "copy"
-          );
-
-          alert(
-            "คัดลอก Model ID แล้ว"
-          );
+            console.error(
+                "Copy failed:",
+                error
+            );
 
         }
-      );
-
-  }else{
-
-    input.select();
-
-    document.execCommand(
-      "copy"
-    );
-
-    alert(
-      "คัดลอก Model ID แล้ว"
-    );
-
-  }
-
-}
+    }
+);
 
 
 /* =========================================================
-   TOPIC DISPLAY
+   MODEL URL
    ========================================================= */
 
-function updateTopicDisplay(
-  schoolId,
-  nameId
-){
+function buildModelURL() {
 
-  document.getElementById(
-    "current-group-label"
-  ).textContent =
-    "Topic : " +
-    schoolId +
-    "/" +
-    nameId;
+    const id =
+        modelIdInput.value.trim();
 
-}
-
-
-/* =========================================================
-   MQTT CONFIGURATION
-   ========================================================= */
-
-const mqttHost =
-  "broker.emqx.io";
-
-
-const mqttPort =
-  8084;
-
-
-let mqttClient =
-  null;
-
-
-let isConnecting =
-  false;
-
-
-/* =========================================================
-   DYNAMIC MQTT TOPIC
-   ========================================================= */
-
-function getDynamicTopic(){
-
-  const schoolId =
-    localStorage.getItem(
-      "saved_school_id"
-    ) ||
-    "PTL-School";
-
-
-  const nameId =
-    localStorage.getItem(
-      "saved_name_id"
-    ) ||
-    "group1";
-
-
-  return (
-    "gelectronlab/" +
-    schoolId +
-    "/" +
-    nameId +
-    "/status"
-  );
-
-}
-
-
-/* =========================================================
-   MQTT INITIALIZATION
-   ========================================================= */
-
-function initMQTT(){
-
-  if(isConnecting){
-
-    return;
-  }
-
-
-  isConnecting =
-    true;
-
-
-  /* -----------------------------
-     Disconnect previous client
-     ----------------------------- */
-
-  if(mqttClient){
-
-    try{
-
-      mqttClient.onConnectionLost =
-        null;
-
-
-      if(
-        mqttClient.isConnected()
-      ){
-
-        mqttClient.disconnect();
-
-      }
-
-    }catch(e){
-
-      console.log(e);
-
+    if (!id) {
+        return "";
     }
 
-  }
-
-
-  const schoolId =
-    localStorage.getItem(
-      "saved_school_id"
-    ) ||
-    "PTL-School";
-
-
-  const nameId =
-    localStorage.getItem(
-      "saved_name_id"
-    ) ||
-    "group1";
-
-
-  const uniqueClientId =
-    "WebClient-" +
-    schoolId +
-    "-" +
-    nameId +
-    "-" +
-    Date.now() +
-    "-" +
-    Math.floor(
-      Math.random() * 10000
-    );
-
-
-  mqttClient =
-    new Paho.MQTT.Client(
-      mqttHost,
-      Number(mqttPort),
-      uniqueClientId
-    );
-
-
-  /* -----------------------------
-     Connection Lost
-     ----------------------------- */
-
-  mqttClient.onConnectionLost =
-    function(responseObject){
-
-      isConnecting =
-        false;
-
-
-      const status =
-        document.getElementById(
-          "esp-status"
-        );
-
-
-      status.textContent =
-        "Disconnected";
-
-
-      status.style.color =
-        "var(--danger)";
-
-
-      if(
-        responseObject.errorCode !== 0
-      ){
-
-        console.log(
-          "MQTT Lost: " +
-          responseObject.errorMessage
-        );
-
-
-        setTimeout(
-          initMQTT,
-          5000
-        );
-
-      }
-
-    };
-
-
-  /* -----------------------------
-     Connect
-     ----------------------------- */
-
-  try{
-
-    mqttClient.connect({
-
-      onSuccess:function(){
-
-        isConnecting =
-          false;
-
-
-        const status =
-          document.getElementById(
-            "esp-status"
-          );
-
-
-        status.textContent =
-          "Connected " +
-          nameId;
-
-
-        status.style.color =
-          "var(--green-strong)";
-
-
-        console.log(
-          "Connected Successfully as: " +
-          uniqueClientId
-        );
-
-      },
-
-
-      onFailure:function(message){
-
-        isConnecting =
-          false;
-
-
-        const status =
-          document.getElementById(
-            "esp-status"
-          );
-
-
-        status.textContent =
-          "Failed";
-
-
-        status.style.color =
-          "var(--danger)";
-
-
-        console.log(
-          "Connect Failed: " +
-          message.errorMessage
-        );
-
-
-        setTimeout(
-          initMQTT,
-          5000
-        );
-
-      },
-
-
-      useSSL:true,
-
-      timeout:5,
-
-      keepAliveInterval:30
-
-    });
-
-  }catch(e){
-
-    isConnecting =
-      false;
-
-    console.error(
-      "MQTT Exception:",
-      e
-    );
-
-  }
-
-}
-
-
-/* Start MQTT */
-
-initMQTT();
-
-
-/* =========================================================
-   THEME
-   ========================================================= */
-
-function toggleTheme(){
-
-  const body =
-    document.body;
-
-
-  const currentTheme =
-    body.dataset.theme === "dark"
-      ? "light"
-      : "dark";
-
-
-  body.dataset.theme =
-    currentTheme;
-
-
-  localStorage.setItem(
-    "theme",
-    currentTheme
-  );
-
+    return `https://teachablemachine.withgoogle.com/models/${id}/`;
 }
 
 
 /* =========================================================
-   AI VARIABLES
+   LOAD MODEL
    ========================================================= */
 
-let model =
-  null;
+async function loadModel() {
 
+    const baseURL =
+        buildModelURL();
 
-let running =
-  false;
+    if (!baseURL) {
 
+        resultText.textContent =
+            "ยังไม่มี Model ID";
 
-let lastSentTime =
-  0;
+        resultSub.textContent =
+            "กรอก Model ID แล้วกด SAVE";
 
-
-let currentFacingMode =
-  "user";
-
-
-/*
-  ป้องกัน predict ซ้อนกัน
-*/
-let predictionBusy =
-  false;
-
-
-/* =========================================================
-   LIVE CONFIDENCE GRAPH
-   =========================================================
-
-   จุดสำคัญของ V5:
-
-   AI ยัง predict ต่อเนื่องตามเดิม
-
-   แต่ SVG Graph จะ redraw
-   ประมาณทุก 150 milliseconds
-
-   ทำให้โทรศัพท์ไม่ต้องวาด SVG
-   ทุก AI frame
-   ========================================================= */
-
-const confidenceHistory =
-  [];
-
-
-const GRAPH_POINTS =
-  30;
-
-
-/*
-  150 ms ≈ 6.67 updates/sec
-*/
-const GRAPH_UPDATE_MS =
-  150;
-
-
-let latestConfidence =
-  0;
-
-
-let lastGraphRender =
-  0;
-
-
-let graphInitialized =
-  false;
-
-
-/* =========================================================
-   RENDER GRAPH
-   ========================================================= */
-
-function renderConfidenceGraph(
-  value
-){
-
-  const chartLine =
-    document.getElementById(
-      "chart-line"
-    );
-
-
-  const chartArea =
-    document.getElementById(
-      "chart-area"
-    );
-
-
-  const chartDot =
-    document.getElementById(
-      "chart-dot"
-    );
-
-
-  if(
-    !chartLine ||
-    !chartArea ||
-    !chartDot
-  ){
-
-    return;
-  }
-
-
-  /* -----------------------------
-     Clamp 0–100
-     ----------------------------- */
-
-  value =
-    Math.max(
-      0,
-      Math.min(
-        100,
-        Number(value) || 0
-      )
-    );
-
-
-  /* -----------------------------
-     Add newest value
-     ----------------------------- */
-
-  confidenceHistory.push(
-    value
-  );
-
-
-  /* -----------------------------
-     Keep only latest 30 points
-     ----------------------------- */
-
-  if(
-    confidenceHistory.length >
-    GRAPH_POINTS
-  ){
-
-    confidenceHistory.shift();
-
-  }
-
-
-  /* -----------------------------
-     Fill graph before enough
-     samples are available
-     ----------------------------- */
-
-  const data =
-    [...confidenceHistory];
-
-
-  while(
-    data.length <
-    GRAPH_POINTS
-  ){
-
-    data.unshift(
-      data.length
-        ? data[0]
-        : value
-    );
-
-  }
-
-
-  /* -----------------------------
-     SVG dimensions
-     ----------------------------- */
-
-  const width =
-    240;
-
-
-  const height =
-    38;
-
-
-  const topPadding =
-    3;
-
-
-  const bottomPadding =
-    4;
-
-
-  const graphHeight =
-    height -
-    topPadding -
-    bottomPadding;
-
-
-  const stepX =
-    width /
-    (GRAPH_POINTS - 1);
-
-
-  /* -----------------------------
-     Build line
-     ----------------------------- */
-
-  let linePath =
-    "";
-
-
-  let lastX =
-    0;
-
-
-  let lastY =
-    height / 2;
-
-
-  for(
-    let i = 0;
-    i < GRAPH_POINTS;
-    i++
-  ){
-
-    const x =
-      i * stepX;
-
-
-    const y =
-      topPadding +
-      (
-        (100 - data[i]) /
-        100
-      ) *
-      graphHeight;
-
-
-    if(i === 0){
-
-      linePath =
-        "M " +
-        x.toFixed(2) +
-        " " +
-        y.toFixed(2);
-
-    }else{
-
-      linePath +=
-        " L " +
-        x.toFixed(2) +
-        " " +
-        y.toFixed(2);
-
+        return false;
     }
 
 
-    if(
-      i ===
-      GRAPH_POINTS - 1
-    ){
+    resultText.textContent =
+        "กำลังโหลดโมเดล...";
 
-      lastX =
-        x;
+    resultSub.textContent =
+        "Loading Teachable Machine";
 
-      lastY =
-        y;
 
-    }
+    modelURL = baseURL;
 
-  }
 
+    const modelURLJSON =
+        modelURL + "model.json";
 
-  /* -----------------------------
-     Area below graph
-     ----------------------------- */
+    const metadataURL =
+        modelURL + "metadata.json";
 
-  const areaPath =
-    linePath +
-    " L " +
-    lastX.toFixed(2) +
-    " " +
-    height +
-    " L 0 " +
-    height +
-    " Z";
 
+    model =
+        await tmImage.load(
+            modelURLJSON,
+            metadataURL
+        );
 
-  /* -----------------------------
-     Update SVG
-     ----------------------------- */
 
-  chartLine.setAttribute(
-    "d",
-    linePath
-  );
+    resultText.textContent =
+        "พร้อมใช้งาน";
 
+    resultSub.textContent =
+        `${model.getTotalClasses()} classes`;
 
-  chartArea.setAttribute(
-    "d",
-    areaPath
-  );
-
-
-  chartDot.setAttribute(
-    "cx",
-    lastX.toFixed(2)
-  );
-
-
-  chartDot.setAttribute(
-    "cy",
-    lastY.toFixed(2)
-  );
-
-
-  graphInitialized =
-    true;
-
-}
-
-
-/* =========================================================
-   GRAPH UPDATE REQUEST
-   ========================================================= */
-
-function updateConfidenceGraph(
-  value
-){
-
-  latestConfidence =
-    Math.max(
-      0,
-      Math.min(
-        100,
-        Number(value) || 0
-      )
-    );
-
-
-  const now =
-    performance.now();
-
-
-  /*
-    ไม่ redraw ทุก AI frame
-
-    จำกัดประมาณ
-    6–7 ครั้งต่อวินาที
-  */
-
-  if(
-    !graphInitialized ||
-    now - lastGraphRender >=
-    GRAPH_UPDATE_MS
-  ){
-
-    lastGraphRender =
-      now;
-
-
-    renderConfidenceGraph(
-      latestConfidence
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   INITIAL GRAPH
-   ========================================================= */
-
-renderConfidenceGraph(0);
-
-
-/* =========================================================
-   SEND TO ESP32
-   ========================================================= */
-
-function sendToESP32(
-  className
-){
-
-  /*
-    จำกัด MQTT ส่งจริง
-    ไม่เกิน 1 ครั้งต่อวินาที
-  */
-
-  if(
-    Date.now() -
-    lastSentTime <
-    1000
-  ){
-
-    return;
-
-  }
-
-
-  lastSentTime =
-    Date.now();
-
-
-  if(
-    mqttClient &&
-    mqttClient.isConnected()
-  ){
-
-    const topic =
-      getDynamicTopic();
-
-
-    const message =
-      new Paho.MQTT.Message(
-        className
-      );
-
-
-    message.destinationName =
-      topic;
-
-
-    mqttClient.send(
-      message
-    );
-
-
-    const nameId =
-      localStorage.getItem(
-        "saved_name_id"
-      ) ||
-      "group1";
-
-
-    const status =
-      document.getElementById(
-        "esp-status"
-      );
-
-
-    status.textContent =
-      "Sent " +
-      nameId;
-
-
-    status.style.color =
-      "var(--green-strong)";
-
-  }
-
-}
-
-
-/* =========================================================
-   TEST MQTT
-   ========================================================= */
-
-async function testConnection(){
-
-  sendToESP32(
-    "Test_Class"
-  );
-
-
-  alert(
-    "ส่งสัญญาณทดสอบไปยัง Mini MicroKit PT-L เรียบร้อย!"
-  );
-
+    return true;
 }
 
 
@@ -2934,541 +1725,1184 @@ async function testConnection(){
    CAMERA
    ========================================================= */
 
-async function startCamera(
-  facing
-){
+async function startCamera() {
 
-  /* -----------------------------
-     Stop old camera
-     ----------------------------- */
-
-  if(
-    window.currentStream
-  ){
-
-    window.currentStream
-      .getTracks()
-      .forEach(
-        track =>
-          track.stop()
-      );
-
-  }
+    if (cameraRunning) {
+        return;
+    }
 
 
-  const videoElement =
-    document.getElementById(
-      "video"
+    try {
+
+        webcamStream =
+            await navigator.mediaDevices.getUserMedia({
+
+                video: {
+                    facingMode:
+                        cameraFacingMode,
+
+                    width: {
+                        ideal: 224
+                    },
+
+                    height: {
+                        ideal: 224
+                    }
+                },
+
+                audio: false
+
+            });
+
+
+        video.srcObject =
+            webcamStream;
+
+
+        await video.play();
+
+
+        cameraRunning = true;
+
+        cameraPlaceholder.style.display =
+            "none";
+
+        liveBadge.style.display =
+            "block";
+
+
+        runBtn.classList.add(
+            "running"
+        );
+
+        runBtn.innerHTML =
+            "● Running";
+
+
+        resultSub.textContent =
+            "AI is analyzing camera";
+
+
+        /*
+         * Start prediction loop.
+         */
+
+        startPredictionLoop();
+
+    } catch (error) {
+
+        console.error(
+            "Camera error:",
+            error
+        );
+
+
+        cameraRunning = false;
+
+        cameraPlaceholder.style.display =
+            "flex";
+
+        liveBadge.style.display =
+            "none";
+
+
+        resultText.textContent =
+            "เปิดกล้องไม่ได้";
+
+        resultSub.textContent =
+            "อนุญาต Camera และใช้ HTTPS/localhost";
+
+    }
+}
+
+
+/* =========================================================
+   STOP CAMERA
+   ========================================================= */
+
+function stopCamera() {
+
+    cameraRunning = false;
+
+    predictionBusy = false;
+
+
+    if (predictionTimer) {
+
+        clearTimeout(
+            predictionTimer
+        );
+
+        predictionTimer = null;
+    }
+
+
+    if (animationFrameId) {
+
+        cancelAnimationFrame(
+            animationFrameId
+        );
+
+        animationFrameId = null;
+    }
+
+
+    if (webcamStream) {
+
+        webcamStream
+            .getTracks()
+            .forEach(track => {
+                track.stop();
+            });
+
+        webcamStream = null;
+    }
+
+
+    video.srcObject = null;
+
+
+    cameraPlaceholder.style.display =
+        "flex";
+
+    liveBadge.style.display =
+        "none";
+
+
+    runBtn.classList.remove(
+        "running"
     );
 
-
-  /* -----------------------------
-     Mirror front camera
-     ----------------------------- */
-
-  if(
-    facing === "user"
-  ){
-
-    videoElement.className =
-      "front-cam";
-
-  }else{
-
-    videoElement.className =
-      "back-cam";
-
-  }
+    runBtn.innerHTML =
+        "▶ Running";
 
 
-  /* -----------------------------
-     Request camera
-     ----------------------------- */
+    resetGraph();
 
-  const stream =
-    await navigator.mediaDevices
-      .getUserMedia({
 
-        video:{
+    resultText.textContent =
+        "หยุดการทำงาน";
 
-          facingMode:facing,
+    resultSub.textContent =
+        "Camera stopped";
 
-          width:{
-            ideal:224
-          },
 
-          height:{
-            ideal:224
-          }
+    /*
+     * Preserve V5 behavior:
+     * reload page after stopping.
+     */
 
+    setTimeout(() => {
+
+        location.reload();
+
+    }, 250);
+}
+
+
+runBtn.addEventListener(
+    "click",
+    async () => {
+
+        /*
+         * Load model automatically
+         * if it has not been loaded.
+         */
+
+        if (!model) {
+
+            const loaded =
+                await loadModel();
+
+            if (!loaded) {
+                return;
+            }
         }
 
-      });
+
+        await startCamera();
+
+    }
+);
 
 
-  window.currentStream =
-    stream;
-
-
-  videoElement.srcObject =
-    stream;
-
-}
+stopBtn.addEventListener(
+    "click",
+    stopCamera
+);
 
 
 /* =========================================================
    SWITCH CAMERA
    ========================================================= */
 
-async function switchCamera(){
+switchCameraBtn.addEventListener(
+    "click",
+    async () => {
 
-  currentFacingMode =
-    currentFacingMode === "user"
-      ? "environment"
-      : "user";
+        if (!cameraRunning) {
 
+            cameraFacingMode =
+                cameraFacingMode === "user"
+                    ? "environment"
+                    : "user";
 
-  if(running){
+            return;
+        }
 
-    try{
 
-      await startCamera(
-        currentFacingMode
-      );
+        cameraFacingMode =
+            cameraFacingMode === "user"
+                ? "environment"
+                : "user";
 
-    }catch(e){
 
-      alert(
-        "ไม่สามารถสลับกล้องได้: " +
-        e.message
-      );
+        if (webcamStream) {
 
-    }
+            webcamStream
+                .getTracks()
+                .forEach(track => {
+                    track.stop();
+                });
 
-  }else{
+            webcamStream = null;
+        }
 
-    alert(
 
-      currentFacingMode === "user"
+        try {
 
-        ? "ตั้งค่าเป็น: กล้องหน้า"
+            webcamStream =
+                await navigator.mediaDevices.getUserMedia({
 
-        : "ตั้งค่าเป็น: กล้องหลัง"
+                    video: {
+                        facingMode:
+                            cameraFacingMode,
 
-    );
+                        width: {
+                            ideal: 224
+                        },
 
-  }
+                        height: {
+                            ideal: 224
+                        }
+                    },
 
-}
+                    audio: false
 
+                });
 
-/* =========================================================
-   START AI
-   ========================================================= */
 
-document
-  .getElementById("start-btn")
-  .onclick = async function(){
+            video.srcObject =
+                webcamStream;
 
-    /* -----------------------------
-       Model ID
-       ----------------------------- */
+            await video.play();
 
-    const savedId =
-      localStorage.getItem(
-        "saved_model_id"
-      ) ||
-      document
-        .getElementById(
-          "model-input"
-        )
-        .value
-        .trim();
+        } catch (error) {
 
-
-    if(!savedId){
-
-      alert(
-        "กรุณากรอกและกดบันทึก Model ID ก่อนกด Start AI"
-      );
-
-      return;
-
-    }
-
-
-    try{
-
-      /* -----------------------------
-         Loading
-         ----------------------------- */
-
-      document
-        .getElementById(
-          "start-btn"
-        )
-        .querySelector(
-          "span"
-        )
-        .textContent =
-          "Loading...";
-
-
-      /* -----------------------------
-         Model URL
-         ----------------------------- */
-
-      const MODEL_URL =
-        "https://teachablemachine.withgoogle.com/models/" +
-        savedId +
-        "/";
-
-
-      const u =
-        MODEL_URL.endsWith("/")
-          ? MODEL_URL
-          : MODEL_URL + "/";
-
-
-      /* -----------------------------
-         Load Teachable Machine
-         ----------------------------- */
-
-      model =
-        await tmImage.load(
-
-          u + "model.json",
-
-          u + "metadata.json"
-
-        );
-
-
-      /* -----------------------------
-         Start camera
-         ----------------------------- */
-
-      await startCamera(
-        currentFacingMode
-      );
-
-
-      /* -----------------------------
-         Start AI
-         ----------------------------- */
-
-      running =
-        true;
-
-
-      predictionBusy =
-        false;
-
-
-      document
-        .getElementById(
-          "start-btn"
-        )
-        .querySelector(
-          "span"
-        )
-        .textContent =
-          "Running...";
-
-
-      /* -----------------------------
-         Start loop
-         ----------------------------- */
-
-      loop();
-
-
-    }catch(e){
-
-      alert(
-        "ไม่สามารถเปิดกล้องหรือโหลดโมเดลได้: " +
-        e.message
-      );
-
-
-      document
-        .getElementById(
-          "start-btn"
-        )
-        .querySelector(
-          "span"
-        )
-        .textContent =
-          "Start AI";
-
-    }
-
-  };
-
-
-/* =========================================================
-   AI LOOP
-   =========================================================
-
-   จุดสำคัญ:
-
-   1. predict ทำงานต่อเนื่อง
-   2. predictionBusy ป้องกันงานซ้อน
-   3. Graph redraw จำกัดที่ 150 ms
-   ========================================================= */
-
-async function loop(){
-
-  if(
-    !running ||
-    predictionBusy
-  ){
-
-    return;
-
-  }
-
-
-  predictionBusy =
-    true;
-
-
-  try{
-
-    /* -----------------------------
-       AI Prediction
-       ----------------------------- */
-
-    const prediction =
-      await model.predict(
-        document.getElementById(
-          "video"
-        ),
-        false
-      );
-
-
-    /* -----------------------------
-       Find highest probability
-       โดยไม่ใช้ sort()
-       ----------------------------- */
-
-    const best =
-      prediction.reduce(
-        (
-          highest,
-          item
-        ) => {
-
-          return item.probability >
-                 highest.probability
-
-            ? item
-
-            : highest;
+            console.error(
+                "Camera switch error:",
+                error
+            );
 
         }
-      );
+    }
+);
 
 
-    /* -----------------------------
-       Confidence
-       ----------------------------- */
+/* =========================================================
+   PREDICTION LOOP
+   ========================================================= */
 
-    const pctVal =
-      best.probability *
-      100;
+function startPredictionLoop() {
 
+    if (predictionTimer) {
 
-    const pctStr =
-      pctVal.toFixed(1) +
-      "%";
-
-
-    const confElem =
-      document.getElementById(
-        "conf-text"
-      );
-
-
-    confElem.textContent =
-      pctStr;
-
-
-    /* -----------------------------
-       LIVE GRAPH
-
-       ส่งค่าจริงให้ Graph
-       แต่ Graph จะ redraw
-       ตามรอบ 150 ms
-       ----------------------------- */
-
-    updateConfidenceGraph(
-      pctVal
-    );
-
-
-    /* -----------------------------
-       Confidence color
-       ----------------------------- */
-
-    if(
-      pctVal > 90
-    ){
-
-      confElem.style.color =
-        "var(--green-strong)";
-
-    }else{
-
-      confElem.style.color =
-        "var(--danger)";
-
+        clearTimeout(
+            predictionTimer
+        );
     }
 
 
-    /* -----------------------------
-       Result
-       ----------------------------- */
+    async function loop() {
 
-    const nameElement =
-      document.getElementById(
-        "name"
-      );
+        if (!cameraRunning) {
+            return;
+        }
 
 
-    if(
-      best.probability >
-      0.90
-    ){
+        /*
+         * Prevent overlapping
+         * model.predict() calls.
+         */
 
-      nameElement.textContent =
-        best.className;
+        if (!predictionBusy) {
+
+            predictionBusy = true;
+
+            try {
+
+                await predict();
+
+            } catch (error) {
+
+                console.error(
+                    "Prediction error:",
+                    error
+                );
+
+            } finally {
+
+                predictionBusy = false;
+
+            }
+        }
 
 
-      sendToESP32(
-        best.className
-      );
+        /*
+         * Schedule next prediction
+         * without stacking promises.
+         */
 
-    }else{
-
-      nameElement.textContent =
-        "Uncertain...";
-
-
-      sendToESP32(
-        "Unknown"
-      );
-
+        predictionTimer =
+            setTimeout(
+                loop,
+                30
+            );
     }
 
 
-  }catch(err){
-
-    console.error(
-      "AI Prediction Error:",
-      err
-    );
-
-
-  }finally{
-
-    predictionBusy =
-      false;
-
-  }
-
-
-  /* -----------------------------
-     Next frame
-     ----------------------------- */
-
-  if(running){
-
-    requestAnimationFrame(
-      loop
-    );
-
-  }
-
+    loop();
 }
 
 
 /* =========================================================
-   STOP
+   PREDICTION
    ========================================================= */
 
-document
-  .getElementById("stop-btn")
-  .onclick = function(){
+async function predict() {
 
-    /* -----------------------------
-       Stop AI
-       ----------------------------- */
+    if (!model) {
+        return;
+    }
 
-    running =
-      false;
-
-
-    predictionBusy =
-      false;
+    if (!cameraRunning) {
+        return;
+    }
 
 
-    /* -----------------------------
-       Clear graph
-       ----------------------------- */
-
-    confidenceHistory.length =
-      0;
-
-
-    latestConfidence =
-      0;
+    if (
+        video.readyState <
+        HTMLMediaElement.HAVE_CURRENT_DATA
+    ) {
+        return;
+    }
 
 
-    lastGraphRender =
-      0;
-
-
-    graphInitialized =
-      false;
-
-
-    renderConfidenceGraph(
-      0
-    );
-
-
-    /* -----------------------------
-       Stop camera
-       ----------------------------- */
-
-    if(
-      window.currentStream
-    ){
-
-      window.currentStream
-        .getTracks()
-        .forEach(
-          track =>
-            track.stop()
+    const predictions =
+        await model.predict(
+            video,
+            false
         );
 
 
-      window.currentStream =
-        null;
+    if (
+        !predictions ||
+        predictions.length === 0
+    ) {
+        return;
+    }
+
+
+    let bestPrediction =
+        predictions[0];
+
+
+    for (
+        let i = 1;
+        i < predictions.length;
+        i++
+    ) {
+
+        if (
+            predictions[i].probability >
+            bestPrediction.probability
+        ) {
+
+            bestPrediction =
+                predictions[i];
+
+        }
+    }
+
+
+    const label =
+        bestPrediction.className;
+
+    const confidence =
+        bestPrediction.probability;
+
+
+    /*
+     * Update result text.
+     */
+
+    resultText.textContent =
+        label;
+
+
+    confidenceValue.textContent =
+        `${(confidence * 100).toFixed(1)}%`;
+
+
+    resultSub.textContent =
+        "AI Vision Detection";
+
+
+    /*
+     * Graph history.
+     */
+
+    confidenceHistory.push(
+        confidence
+    );
+
+
+    if (
+        confidenceHistory.length >
+        GRAPH_POINTS
+    ) {
+
+        confidenceHistory.shift();
 
     }
 
 
     /*
-      Reload เดิมของ V4
-      เพื่อ reset state ทั้งระบบ
-    */
+     * Graph rendering is intentionally
+     * throttled to reduce lag.
+     */
 
-    location.reload();
+    const now =
+        performance.now();
 
-  };
+
+    if (
+        now - lastGraphUpdate >=
+        GRAPH_UPDATE_MS
+    ) {
+
+        lastGraphUpdate = now;
+
+        drawGraph();
+
+    }
+
+
+    /*
+     * MQTT is throttled independently.
+     */
+
+    if (
+        mqttConnected &&
+        Date.now() - lastSentTime >=
+        MQTT_SEND_INTERVAL
+    ) {
+
+        sendToESP32(
+            label,
+            confidence
+        );
+
+        lastSentTime =
+            Date.now();
+    }
+}
+
+
+/* =========================================================
+   GRAPH
+   ========================================================= */
+
+function drawGraph() {
+
+    const width = 300;
+    const height = 100;
+
+
+    const values =
+        confidenceHistory;
+
+
+    if (
+        !values ||
+        values.length === 0
+    ) {
+        return;
+    }
+
+
+    let linePath = "";
+
+    let areaPath = "";
+
+
+    for (
+        let i = 0;
+        i < values.length;
+        i++
+    ) {
+
+        const x =
+            values.length === 1
+                ? 0
+                : (
+                    i /
+                    (values.length - 1)
+                ) * width;
+
+
+        const value =
+            Math.max(
+                0,
+                Math.min(
+                    1,
+                    values[i]
+                )
+            );
+
+
+        const y =
+            height -
+            (value * height);
+
+
+        if (i === 0) {
+
+            linePath +=
+                `M ${x} ${y}`;
+
+        } else {
+
+            linePath +=
+                ` L ${x} ${y}`;
+
+        }
+    }
+
+
+    /*
+     * Area path.
+     */
+
+    areaPath =
+        `M 0 ${height} `;
+
+
+    for (
+        let i = 0;
+        i < values.length;
+        i++
+    ) {
+
+        const x =
+            values.length === 1
+                ? 0
+                : (
+                    i /
+                    (values.length - 1)
+                ) * width;
+
+
+        const value =
+            Math.max(
+                0,
+                Math.min(
+                    1,
+                    values[i]
+                )
+            );
+
+
+        const y =
+            height -
+            (value * height);
+
+
+        areaPath +=
+            `L ${x} ${y} `;
+    }
+
+
+    areaPath +=
+        `L ${width} ${height} Z`;
+
+
+    chartLine.setAttribute(
+        "d",
+        linePath
+    );
+
+
+    chartArea.setAttribute(
+        "d",
+        areaPath
+    );
+
+
+    /*
+     * Dot on current confidence.
+     */
+
+    const lastIndex =
+        values.length - 1;
+
+
+    const lastX =
+        values.length === 1
+            ? 0
+            : (
+                lastIndex /
+                (values.length - 1)
+            ) * width;
+
+
+    const lastValue =
+        Math.max(
+            0,
+            Math.min(
+                1,
+                values[lastIndex]
+            )
+        );
+
+
+    const lastY =
+        height -
+        (lastValue * height);
+
+
+    chartDot.setAttribute(
+        "cx",
+        lastX
+    );
+
+
+    chartDot.setAttribute(
+        "cy",
+        lastY
+    );
+
+
+    chartEmpty.style.display =
+        lastValue <= 0
+            ? "block"
+            : "none";
+}
+
+
+/* =========================================================
+   RESET GRAPH
+   ========================================================= */
+
+function resetGraph() {
+
+    confidenceHistory =
+        new Array(
+            GRAPH_POINTS
+        ).fill(0);
+
+    lastGraphUpdate = 0;
+
+    chartLine.setAttribute(
+        "d",
+        ""
+    );
+
+    chartArea.setAttribute(
+        "d",
+        ""
+    );
+
+    chartDot.setAttribute(
+        "cx",
+        "0"
+    );
+
+    chartDot.setAttribute(
+        "cy",
+        "100"
+    );
+
+    chartEmpty.style.display =
+        "block";
+
+    confidenceValue.textContent =
+        "0.0%";
+}
+
+
+/* =========================================================
+   MQTT TOPIC
+   ========================================================= */
+
+function getMQTTTopic() {
+
+    const schoolId =
+        schoolIdInput.value.trim();
+
+    const nameId =
+        nameIdInput.value.trim();
+
+
+    if (!schoolId || !nameId) {
+
+        return "";
+
+    }
+
+
+    return `gelectronlab/${schoolId}/${nameId}/status`;
+}
+
+
+/* =========================================================
+   UPDATE TOPIC UI
+   ========================================================= */
+
+function updateTopic() {
+
+    const topic =
+        getMQTTTopic();
+
+
+    if (topic) {
+
+        topicText.textContent =
+            `MQTT: ${topic}`;
+
+    } else {
+
+        topicText.textContent =
+            "MQTT: not configured";
+
+    }
+}
+
+
+/* =========================================================
+   MQTT CONNECT
+   ========================================================= */
+
+function connectMQTT() {
+
+    const topic =
+        getMQTTTopic();
+
+
+    if (!topic) {
+
+        mqttConnected = false;
+
+        topicText.textContent =
+            "MQTT: not configured";
+
+        return;
+
+    }
+
+
+    try {
+
+        /*
+         * Disconnect previous client.
+         */
+
+        if (
+            mqttClient &&
+            mqttClient.isConnected()
+        ) {
+
+            mqttClient.disconnect();
+
+        }
+
+
+        const clientId =
+            "AI_CAMERA_" +
+            Math.random()
+                .toString(16)
+                .substring(2, 10);
+
+
+        mqttClient =
+            new Paho.MQTT.Client(
+                MQTT_HOST,
+                MQTT_PORT,
+                "/mqtt",
+                clientId
+            );
+
+
+        mqttClient.onConnectionLost =
+            function(responseObject) {
+
+                mqttConnected = false;
+
+                topicText.textContent =
+                    "MQTT: disconnected";
+
+
+                if (
+                    responseObject &&
+                    responseObject.errorMessage
+                ) {
+
+                    console.warn(
+                        "MQTT lost:",
+                        responseObject.errorMessage
+                    );
+
+                }
+
+            };
+
+
+        mqttClient.onMessageArrived =
+            function(message) {
+
+                console.log(
+                    "MQTT message:",
+                    message.payloadString
+                );
+
+            };
+
+
+        mqttClient.connect({
+
+            useSSL: true,
+
+            timeout: 5,
+
+            keepAliveInterval: 30,
+
+            onSuccess: function() {
+
+                mqttConnected = true;
+
+                topicText.textContent =
+                    `MQTT: connected`;
+
+                console.log(
+                    "MQTT connected"
+                );
+
+            },
+
+            onFailure: function(error) {
+
+                mqttConnected = false;
+
+                topicText.textContent =
+                    "MQTT: connection failed";
+
+                console.error(
+                    "MQTT connection failed:",
+                    error
+                );
+
+            }
+
+        });
+
+    } catch (error) {
+
+        mqttConnected = false;
+
+        topicText.textContent =
+            "MQTT: connection error";
+
+        console.error(
+            "MQTT error:",
+            error
+        );
+
+    }
+}
+
+
+/* =========================================================
+   SEND TO ESP32
+   ========================================================= */
+
+function sendToESP32(
+    label,
+    confidence
+) {
+
+    if (
+        !mqttClient ||
+        !mqttConnected
+    ) {
+        return;
+    }
+
+
+    const topic =
+        getMQTTTopic();
+
+
+    if (!topic) {
+        return;
+    }
+
+
+    const payload = {
+
+        label: label,
+
+        confidence:
+            Number(
+                confidence.toFixed(4)
+            ),
+
+        percent:
+            Number(
+                (
+                    confidence * 100
+                ).toFixed(1)
+            ),
+
+        timestamp:
+            Date.now()
+
+    };
+
+
+    try {
+
+        const message =
+            new Paho.MQTT.Message(
+                JSON.stringify(payload)
+            );
+
+
+        message.destinationName =
+            topic;
+
+
+        mqttClient.send(
+            message
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "MQTT send error:",
+            error
+        );
+
+    }
+}
+
+
+/* =========================================================
+   TEST CONNECTION
+   ========================================================= */
+
+async function testConnection() {
+
+    const oldText =
+        topTestBtn.textContent;
+
+
+    topTestBtn.textContent =
+        "⏳";
+
+
+    try {
+
+        /*
+         * Check model first.
+         */
+
+        if (!model) {
+
+            await loadModel();
+
+        }
+
+
+        /*
+         * MQTT connection.
+         */
+
+        connectMQTT();
+
+
+        showMessage(
+            "กำลังทดสอบระบบ..."
+        );
+
+
+        setTimeout(() => {
+
+            if (mqttConnected) {
+
+                showMessage(
+                    "ระบบเชื่อมต่อพร้อมใช้งาน"
+                );
+
+            } else {
+
+                showMessage(
+                    "ตรวจสอบ MQTT / การตั้งค่า"
+                );
+
+            }
+
+        }, 1200);
+
+
+    } catch (error) {
+
+        console.error(
+            "Test error:",
+            error
+        );
+
+        showMessage(
+            "Test ไม่สำเร็จ"
+        );
+
+    } finally {
+
+        setTimeout(() => {
+
+            topTestBtn.textContent =
+                oldText;
+
+        }, 1200);
+
+    }
+}
+
+
+/*
+ * V6:
+ * Test button is now in HEADER.
+ */
+
+topTestBtn.addEventListener(
+    "click",
+    testConnection
+);
+
+
+/* =========================================================
+   MESSAGE
+   ========================================================= */
+
+function showMessage(message) {
+
+    resultSub.textContent =
+        message;
+
+}
+
+
+/* =========================================================
+   INITIALIZATION
+   ========================================================= */
+
+function initialize() {
+
+    loadSavedSettings();
+
+    updateTopic();
+
+    resetGraph();
+
+
+    /*
+     * Do not automatically start
+     * the camera.
+     */
+
+    resultText.textContent =
+        "รอการตรวจจับ";
+
+    resultSub.textContent =
+        "กด Running เพื่อเริ่มกล้อง";
+
+
+    /*
+     * Attempt MQTT connection
+     * if School ID + Name ID exist.
+     */
+
+    if (
+        schoolIdInput.value.trim() &&
+        nameIdInput.value.trim()
+    ) {
+
+        connectMQTT();
+
+    }
+
+}
+
+
+/* =========================================================
+   PAGE LOAD
+   ========================================================= */
+
+window.addEventListener(
+    "load",
+    initialize
+);
+
+
+/* =========================================================
+   PAGE VISIBILITY
+   ========================================================= */
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+
+        /*
+         * Do not perform unnecessary
+         * graph rendering while page
+         * is hidden.
+         */
+
+        if (
+            document.hidden
+        ) {
+
+            lastGraphUpdate =
+                performance.now();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   PREVENT DOUBLE TOUCH / ZOOM
+   ========================================================= */
+
+document.addEventListener(
+    "gesturestart",
+    event => {
+
+        event.preventDefault();
+
+    }
+);
 
 </script>
 
