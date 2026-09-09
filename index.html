@@ -445,6 +445,24 @@ input:focus{
   line-height:1;
 }
 
+/* เอฟเฟกต์วงแหวนโฟกัส */
+.focus-ring {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  border: 2px solid var(--green-strong);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(1.5);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  z-index: 10;
+}
+.focus-ring.active {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
 @media (max-height:700px){
   .app-container{gap:5px}
   .brand-title{font-size:clamp(1.65rem,5vw,2.2rem)}
@@ -546,8 +564,9 @@ input:focus{
       <span class="topic" id="current-group-label">Topic : --</span>
     </div>
 
-    <div class="video-box">
+    <div class="video-box" id="video-container">
       <video id="video" class="front-cam" autoplay muted playsinline></video>
+      <div class="focus-ring" id="focusRing"></div>
 
       <button class="btn-float-switch" onclick="switchCamera()" title="สลับกล้อง" aria-label="สลับกล้อง">
         <svg viewBox="0 0 24 24">
@@ -618,6 +637,7 @@ window.addEventListener('DOMContentLoaded', () => {
   document.getElementById("name-input").value = savedNameId;
 
   updateTopicDisplay(savedSchool, savedNameId);
+  setupTouchToFocus();
 });
 
 function saveSettings() {
@@ -898,6 +918,48 @@ async function switchCamera() {
         : "ตั้งค่าเป็น: กล้องหลัง"
     );
   }
+}
+
+// ฟังก์ชันรองรับ Touch-to-Focus
+function setupTouchToFocus() {
+  const videoContainer = document.getElementById("video-container");
+  const focusRing = document.getElementById("focusRing");
+
+  if (!videoContainer || !focusRing) return;
+
+  videoContainer.addEventListener("click", async (e) => {
+    if (!window.currentStream) return;
+
+    const rect = videoContainer.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    // แสดงวงแหวนอนิเมชันจุดที่แตะ
+    focusRing.style.left = `${x}px`;
+    focusRing.style.top = `${y}px`;
+    focusRing.classList.remove("active");
+    void focusRing.offsetWidth; // Trigger reflow
+    focusRing.classList.add("active");
+
+    setTimeout(() => {
+      focusRing.classList.remove("active");
+    }, 600);
+
+    // สั่งปรับโฟกัสฮาร์ดแวร์กล้องโทรศัพท์ (ถ้าตัวเครื่องและเบราว์เซอร์รองรับ)
+    try {
+      const track = window.currentStream.getVideoTracks()[0];
+      if (track) {
+        const capabilities = track.getCapabilities();
+        if (capabilities.focusMode && capabilities.focusMode.includes("continuous")) {
+          await track.applyConstraints({
+            advanced: [{ focusMode: "continuous" }]
+          });
+        }
+      }
+    } catch (err) {
+      console.log("Device focus constraint not supported:", err);
+    }
+  });
 }
 
 document.getElementById("start-btn").onclick = async () => {
