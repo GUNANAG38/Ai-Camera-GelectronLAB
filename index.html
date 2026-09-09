@@ -445,7 +445,6 @@ input:focus{
   line-height:1;
 }
 
-/* เอฟเฟกต์วงแหวนโฟกัส */
 .focus-ring {
   position: absolute;
   width: 60px;
@@ -578,7 +577,7 @@ input:focus{
     <div class="controls-grid">
       <button class="control-btn" id="start-btn">
         <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-        <span>Running...</span>
+        <span>Start AI</span>
       </button>
 
       <button class="control-btn" id="stop-btn">
@@ -655,7 +654,7 @@ function saveSettings() {
   localStorage.setItem("saved_name_id", nameVal);
 
   updateTopicDisplay(schoolVal, nameVal);
-  alert("บันทึกค่าเรียบร้อย! กำลังเชื่อมต่อระบบใหม่...");
+  alert("บันทึกค่าเรียบร้อย!");
 
   initMQTT();
 }
@@ -698,9 +697,7 @@ function initMQTT() {
     try {
       mqttClient.onConnectionLost = null;
       if (mqttClient.isConnected()) mqttClient.disconnect();
-    } catch(e) {
-      console.log(e);
-    }
+    } catch(e) { console.log(e); }
   }
 
   let schoolId = localStorage.getItem("saved_school_id") || "PTL-School";
@@ -709,21 +706,15 @@ function initMQTT() {
     "WebClient-" + schoolId + "-" + nameId + "-" +
     Date.now() + "-" + Math.floor(Math.random() * 10000);
 
-  mqttClient = new Paho.MQTT.Client(
-    mqttHost,
-    Number(mqttPort),
-    uniqueClientId
-  );
+  mqttClient = new Paho.MQTT.Client(mqttHost, Number(mqttPort), uniqueClientId);
 
   mqttClient.onConnectionLost = function(responseObject) {
     isConnecting = false;
-
     document.getElementById("esp-status").textContent = "Disconnected";
     document.getElementById("esp-status").style.color = "var(--danger)";
     document.getElementById("status-arrow-icon").style.color = "var(--danger)";
 
     if (responseObject.errorCode !== 0) {
-      console.log("MQTT Lost: " + responseObject.errorMessage);
       setTimeout(initMQTT, 5000);
     }
   };
@@ -735,25 +726,20 @@ function initMQTT() {
         document.getElementById("esp-status").textContent = "Connected " + nameId;
         document.getElementById("esp-status").style.color = "var(--green-strong)";
         document.getElementById("status-arrow-icon").style.color = "var(--green-strong)";
-        console.log("Connected Successfully as: " + uniqueClientId);
       },
-
       onFailure: function(message) {
         isConnecting = false;
         document.getElementById("esp-status").textContent = "Failed";
         document.getElementById("esp-status").style.color = "var(--danger)";
         document.getElementById("status-arrow-icon").style.color = "var(--danger)";
-        console.log("Connect Failed: " + message.errorMessage);
         setTimeout(initMQTT, 5000);
       },
-
       useSSL: true,
       timeout: 5,
       keepAliveInterval: 30
     });
   } catch(e) {
     isConnecting = false;
-    console.error("MQTT Exception: ", e);
   }
 }
 
@@ -788,7 +774,6 @@ function renderConfidenceGraph(value) {
   if (!chartLine || !chartArea || !chartDot) return;
 
   value = Math.max(0, Math.min(100, Number(value) || 0));
-
   confidenceHistory.push(value);
 
   if (confidenceHistory.length > GRAPH_POINTS) {
@@ -796,7 +781,6 @@ function renderConfidenceGraph(value) {
   }
 
   const data = [...confidenceHistory];
-
   while (data.length < GRAPH_POINTS) {
     data.unshift(data.length ? data[0] : value);
   }
@@ -828,10 +812,7 @@ function renderConfidenceGraph(value) {
     }
   }
 
-  const areaPath =
-    linePath +
-    ` L ${lastX.toFixed(2)} ${height}` +
-    ` L 0 ${height} Z`;
+  const areaPath = linePath + ` L ${lastX.toFixed(2)} ${height} L 0 ${height} Z`;
 
   chartLine.setAttribute("d", linePath);
   chartArea.setAttribute("d", areaPath);
@@ -843,7 +824,6 @@ function renderConfidenceGraph(value) {
 
 function updateConfidenceGraph(value) {
   latestConfidence = Math.max(0, Math.min(100, Number(value) || 0));
-
   const now = performance.now();
 
   if (!graphInitialized || now - lastGraphRender >= GRAPH_UPDATE_MS) {
@@ -876,6 +856,7 @@ async function testConnection() {
   alert("ส่งสัญญาณทดสอบไปยัง Mini MicroKit PT-L เรียบร้อย!");
 }
 
+// ระบบขอเปิดกล้องแบบมี Fallback ยืดหยุ่นสูงสุดเพื่อป้องกันการบล็อก
 async function startCamera(facing) {
   if (window.currentStream) {
     window.currentStream.getTracks().forEach(track => track.stop());
@@ -884,25 +865,29 @@ async function startCamera(facing) {
   const videoElement = document.getElementById("video");
   videoElement.className = (facing === "user") ? "front-cam" : "back-cam";
 
-  // ปรับการขอสตรีมภาพ ตัด Constraints ออโต้โฟกัสที่เบราว์เซอร์ไม่รองรับออก 
-  // และใช้ความละเอียดมาตรฐานที่สมดุลเพื่อให้เซนเซอร์กล้องมือถือไม่เกิดอาการเพี้ยน
-  const constraints = {
-    video: {
-      facingMode: facing,
-      width: { ideal: 1280 },
-      height: { ideal: 720 }
-    }
-  };
+  let stream = null;
 
-  const stream = await navigator.mediaDevices.getUserMedia(constraints);
+  // ลองเปิดด้วยเงื่อนไข facingMode
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: facing ? { ideal: facing } : "user" },
+      audio: false
+    });
+  } catch (e1) {
+    console.warn("ไม่สามารถเปิดกล้องแบบโหมดเจาะจงได้ กำลังลองเปิดโหมดธรรมดา...", e1);
+    // Fallback: หากเปิดไม่ได้ ให้เปิดกล้องอะไรก็ได้ในเครื่อง
+    stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+  }
 
   window.currentStream = stream;
   videoElement.srcObject = stream;
+  
+  // บังคับเล่นวิดีโอ
+  await videoElement.play().catch(err => console.log("Video play warning:", err));
 }
 
 async function switchCamera() {
-  currentFacingMode =
-    (currentFacingMode === "user") ? "environment" : "user";
+  currentFacingMode = (currentFacingMode === "user") ? "environment" : "user";
 
   if (running) {
     try {
@@ -911,15 +896,10 @@ async function switchCamera() {
       alert("ไม่สามารถสลับกล้องได้: " + e.message);
     }
   } else {
-    alert(
-      currentFacingMode === "user"
-        ? "ตั้งค่าเป็น: กล้องหน้า"
-        : "ตั้งค่าเป็น: กล้องหลัง"
-    );
+    alert(currentFacingMode === "user" ? "ตั้งค่าเป็น: กล้องหน้า" : "ตั้งค่าเป็น: กล้องหลัง");
   }
 }
 
-// ระบบ Touch-to-Focus ทางเลือก: ให้ผู้ใช้แตะเพื่อบังคับสลับโหมดกล้องระยะใกล้-ไกล (เผื่อมือถือบางรุ่นรองรับ) หรือใช้แตะรีเซ็ตเฟรมสตรีม
 function setupTouchToFocus() {
   const videoContainer = document.getElementById("video-container");
   const focusRing = document.getElementById("focusRing");
@@ -933,65 +913,59 @@ function setupTouchToFocus() {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    // แสดงวงแหวนอนิเมชันจุดที่แตะ
     focusRing.style.left = `${x}px`;
     focusRing.style.top = `${y}px`;
     focusRing.classList.remove("active");
     void focusRing.offsetWidth;
     focusRing.classList.add("active");
 
-    setTimeout(() => {
-      focusRing.classList.remove("active");
-    }, 600);
-
-    // เทคนิคเสริม: สั่งรีเซ็ตแทร็กกล้องชั่วขณะเมื่อผู้ใช้กดแตะ เพื่อบังคับให้เซนเซอร์มือถือสร้างจุดรวมแสงใหม่ทันที
-    try {
-      const track = window.currentStream.getVideoTracks()[0];
-      if (track) {
-        // ปิดชั่วคราวแล้วเปิดใหม่เสี้ยววินาทีเพื่อให้ฮาร์ดแวร์ปรับโฟกัส
-        track.enabled = false;
-        setTimeout(() => {
-          if (track) track.enabled = true;
-        }, 200);
-      }
-    } catch (err) {
-      console.log("Stream reset error:", err);
-    }
+    setTimeout(() => { focusRing.classList.remove("active"); }, 600);
   });
 }
 
 document.getElementById("start-btn").onclick = async () => {
-  let savedId =
-    localStorage.getItem("saved_model_id") ||
-    document.getElementById("model-input").value.trim();
+  // ตรวจสอบเบราว์เซอร์ว่ารองรับ MediaDevices หรือไม่
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    alert("เบราว์เซอร์นี้ปฏิเสธการเปิดกล้อง!\nโปรดตรวจสอบว่าเปิดใช้งานหน้าเว็บผ่าน HTTPS หรือไม่");
+    return;
+  }
+
+  let savedId = localStorage.getItem("saved_model_id") || document.getElementById("model-input").value.trim();
 
   if (!savedId) {
     alert("กรุณากรอกและกดบันทึก Model ID ก่อนกด Start AI");
     return;
   }
 
+  const btnSpan = document.getElementById("start-btn").querySelector("span");
+
   try {
-    document.getElementById("start-btn").querySelector("span").textContent = "Loading...";
+    btnSpan.textContent = "Cam Opening...";
 
-    const MODEL_URL =
-      `https://teachablemachine.withgoogle.com/models/${savedId}/`;
-    const u =
-      MODEL_URL.endsWith("/") ? MODEL_URL : MODEL_URL + "/";
-
-    model = await tmImage.load(
-      u + "model.json",
-      u + "metadata.json"
-    );
-
+    // 1. สั่งเปิดกล้องทันทีจากการกดปุ่มของผู้ใช้ (แก้ปัญหา User Gesture หมดอายุ)
     await startCamera(currentFacingMode);
 
+    btnSpan.textContent = "Loading AI...";
+
+    // 2. โหลดโมเดล Teachable Machine
+    const MODEL_URL = `https://teachablemachine.withgoogle.com/models/${savedId}/`;
+    const u = MODEL_URL.endsWith("/") ? MODEL_URL : MODEL_URL + "/";
+
+    model = await tmImage.load(u + "model.json", u + "metadata.json");
+
     running = true;
-    document.getElementById("start-btn").querySelector("span").textContent = "Running...";
+    btnSpan.textContent = "Running...";
     loop();
 
   } catch(e) {
-    alert("ไม่สามารถเปิดกล้องหรือโหลดโมเดลได้: " + e.message);
-    document.getElementById("start-btn").querySelector("span").textContent = "Running...";
+    console.error(e);
+    alert("เกิดข้อผิดพลาดในการเปิดกล้องหรือโหลดโมเดล:\n" + e.message);
+    btnSpan.textContent = "Start AI";
+    
+    if (window.currentStream) {
+      window.currentStream.getTracks().forEach(track => track.stop());
+      window.currentStream = null;
+    }
   }
 };
 
@@ -1001,36 +975,36 @@ async function loop() {
   predictionBusy = true;
 
   try {
-    const prediction =
-      await model.predict(document.getElementById("video"), false);
+    const videoElem = document.getElementById("video");
+    if (videoElem.readyState === 4) { // ตรวจสอบว่าวิดีโอพร้อมแสดงผลแล้ว
+      const prediction = await model.predict(videoElem, false);
 
-    let best =
-      prediction.reduce((highest, item) =>
+      let best = prediction.reduce((highest, item) =>
         item.probability > highest.probability ? item : highest
       );
 
-    let pctVal = best.probability * 100;
-    let pctStr = pctVal.toFixed(1) + "%";
+      let pctVal = best.probability * 100;
+      let pctStr = pctVal.toFixed(1) + "%";
 
-    let confElem = document.getElementById("conf-text");
-    confElem.textContent = pctStr;
+      let confElem = document.getElementById("conf-text");
+      confElem.textContent = pctStr;
 
-    updateConfidenceGraph(pctVal);
+      updateConfidenceGraph(pctVal);
 
-    if (pctVal > 90) {
-      confElem.style.color = "var(--green-strong)";
-    } else {
-      confElem.style.color = "var(--danger)";
+      if (pctVal > 90) {
+        confElem.style.color = "var(--green-strong)";
+      } else {
+        confElem.style.color = "var(--danger)";
+      }
+
+      if (best.probability > 0.90) {
+        document.getElementById("name").textContent = best.className;
+        sendToESP32(best.className);
+      } else {
+        document.getElementById("name").textContent = "Uncertain...";
+        sendToESP32("Unknown");
+      }
     }
-
-    if (best.probability > 0.90) {
-      document.getElementById("name").textContent = best.className;
-      sendToESP32(best.className);
-    } else {
-      document.getElementById("name").textContent = "Uncertain...";
-      sendToESP32("Unknown");
-    }
-
   } catch(err) {
     console.error(err);
   } finally {
