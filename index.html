@@ -869,37 +869,16 @@ async function startCamera(facing) {
     videoElement.className = "back-cam";
   }
 
-  try {
-    // ขอใช้การตั้งค่าขั้นสูงเพื่อให้กล้องเปิด Autofocus ต่อเนื่อง
-    const constraints = {
-      video: {
-        facingMode: facing,
-        width: { ideal: 224 },
-        height: { ideal: 224 },
-        focusMode: { ideal: "continuous" },
-        advanced: [{ focusMode: "continuous" }]
-      }
-    };
+  const stream = await navigator.mediaDevices.getUserMedia({
+    video: {
+      facingMode: facing,
+      width: { ideal: 224 },
+      height: { ideal: 224 }
+    }
+  });
 
-    const stream = await navigator.mediaDevices.getUserMedia(constraints);
-    window.currentStream = stream;
-    videoElement.srcObject = stream;
-
-  } catch (err) {
-    console.warn("ไม่สามารถใช้ Advanced Autofocus ได้ กำลังใช้ค่าปกติแทน...", err);
-    
-    // Fallback: ถ้าอุปกรณ์ไม่รองรับ advanced constraints ให้ใช้ค่าพื้นฐาน
-    const fallbackStream = await navigator.mediaDevices.getUserMedia({
-      video: {
-        facingMode: facing,
-        width: { ideal: 224 },
-        height: { ideal: 224 }
-      }
-    });
-
-    window.currentStream = fallbackStream;
-    videoElement.srcObject = fallbackStream;
-  }
+  window.currentStream = stream;
+  videoElement.srcObject = stream;
 }
 
 async function switchCamera() {
