@@ -884,30 +884,20 @@ async function startCamera(facing) {
   const videoElement = document.getElementById("video");
   videoElement.className = (facing === "user") ? "front-cam" : "back-cam";
 
-  const stream = await navigator.mediaDevices.getUserMedia({
+  // ปรับการขอสตรีมภาพ ตัด Constraints ออโต้โฟกัสที่เบราว์เซอร์ไม่รองรับออก 
+  // และใช้ความละเอียดมาตรฐานที่สมดุลเพื่อให้เซนเซอร์กล้องมือถือไม่เกิดอาการเพี้ยน
+  const constraints = {
     video: {
       facingMode: facing,
-      width: { ideal: 640 },
-      height: { ideal: 480 },
-      focusMode: "continuous"
+      width: { ideal: 1280 },
+      height: { ideal: 720 }
     }
-  });
+  };
+
+  const stream = await navigator.mediaDevices.getUserMedia(constraints);
 
   window.currentStream = stream;
   videoElement.srcObject = stream;
-
-  setTimeout(async () => {
-    try {
-      const track = stream.getVideoTracks()[0];
-      if (track && track.applyConstraints) {
-        await track.applyConstraints({
-          advanced: [{ focusMode: "continuous" }]
-        });
-      }
-    } catch (err) {
-      console.log("Constraint adjustment skipped:", err);
-    }
-  }, 500);
 }
 
 async function switchCamera() {
@@ -929,7 +919,7 @@ async function switchCamera() {
   }
 }
 
-// ฟังก์ชัน Touch-to-Focus พร้อมพักการประมวลผล AI ชั่วขณะเพื่อให้กล้องมือถือเคลียร์ระยะโฟกัส
+// ระบบ Touch-to-Focus ทางเลือก: ให้ผู้ใช้แตะเพื่อบังคับสลับโหมดกล้องระยะใกล้-ไกล (เผื่อมือถือบางรุ่นรองรับ) หรือใช้แตะรีเซ็ตเฟรมสตรีม
 function setupTouchToFocus() {
   const videoContainer = document.getElementById("video-container");
   const focusRing = document.getElementById("focusRing");
@@ -954,33 +944,19 @@ function setupTouchToFocus() {
       focusRing.classList.remove("active");
     }, 600);
 
-    // พักการรัน AI ชั่วคราว 1 วินาที ให้ฮาร์ดแวร์มือถือดึงโฟกัสได้เต็มที่
-    let wasRunning = running;
-    if (wasRunning) {
-      predictionBusy = true;
-    }
-
+    // เทคนิคเสริม: สั่งรีเซ็ตแทร็กกล้องชั่วขณะเมื่อผู้ใช้กดแตะ เพื่อบังคับให้เซนเซอร์มือถือสร้างจุดรวมแสงใหม่ทันที
     try {
       const track = window.currentStream.getVideoTracks()[0];
-      if (track && track.getCapabilities) {
-        const capabilities = track.getCapabilities();
-        let constraints = { advanced: [] };
-        if (capabilities.focusMode && capabilities.focusMode.includes("continuous")) {
-          constraints.advanced.push({ focusMode: "continuous" });
-        }
-        if (constraints.advanced.length > 0) {
-          await track.applyConstraints(constraints);
-        }
+      if (track) {
+        // ปิดชั่วคราวแล้วเปิดใหม่เสี้ยววินาทีเพื่อให้ฮาร์ดแวร์ปรับโฟกัส
+        track.enabled = false;
+        setTimeout(() => {
+          if (track) track.enabled = true;
+        }, 200);
       }
     } catch (err) {
-      console.log("Focus apply error:", err);
+      console.log("Stream reset error:", err);
     }
-
-    setTimeout(() => {
-      if (wasRunning) {
-        predictionBusy = false;
-      }
-    }, 1000);
   });
 }
 
