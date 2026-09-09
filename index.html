@@ -882,23 +882,32 @@ async function startCamera(facing) {
   }
 
   const videoElement = document.getElementById("video");
-
-  if (facing === "user") {
-    videoElement.className = "front-cam";
-  } else {
-    videoElement.className = "back-cam";
-  }
+  videoElement.className = (facing === "user") ? "front-cam" : "back-cam";
 
   const stream = await navigator.mediaDevices.getUserMedia({
     video: {
       facingMode: facing,
-      width: { ideal: 224 },
-      height: { ideal: 224 }
+      width: { ideal: 640 },
+      height: { ideal: 480 },
+      focusMode: "continuous"
     }
   });
 
   window.currentStream = stream;
   videoElement.srcObject = stream;
+
+  setTimeout(async () => {
+    try {
+      const track = stream.getVideoTracks()[0];
+      if (track && track.applyConstraints) {
+        await track.applyConstraints({
+          advanced: [{ focusMode: "continuous" }]
+        });
+      }
+    } catch (err) {
+      console.log("Constraint adjustment skipped:", err);
+    }
+  }, 500);
 }
 
 async function switchCamera() {
@@ -920,7 +929,7 @@ async function switchCamera() {
   }
 }
 
-// ฟังก์ชันรองรับ Touch-to-Focus
+// ฟังก์ชัน Touch-to-Focus พร้อมพักการประมวลผล AI ชั่วขณะเพื่อให้กล้องมือถือเคลียร์ระยะโฟกัส
 function setupTouchToFocus() {
   const videoContainer = document.getElementById("video-container");
   const focusRing = document.getElementById("focusRing");
@@ -938,27 +947,40 @@ function setupTouchToFocus() {
     focusRing.style.left = `${x}px`;
     focusRing.style.top = `${y}px`;
     focusRing.classList.remove("active");
-    void focusRing.offsetWidth; // Trigger reflow
+    void focusRing.offsetWidth;
     focusRing.classList.add("active");
 
     setTimeout(() => {
       focusRing.classList.remove("active");
     }, 600);
 
-    // สั่งปรับโฟกัสฮาร์ดแวร์กล้องโทรศัพท์ (ถ้าตัวเครื่องและเบราว์เซอร์รองรับ)
+    // พักการรัน AI ชั่วคราว 1 วินาที ให้ฮาร์ดแวร์มือถือดึงโฟกัสได้เต็มที่
+    let wasRunning = running;
+    if (wasRunning) {
+      predictionBusy = true;
+    }
+
     try {
       const track = window.currentStream.getVideoTracks()[0];
-      if (track) {
+      if (track && track.getCapabilities) {
         const capabilities = track.getCapabilities();
+        let constraints = { advanced: [] };
         if (capabilities.focusMode && capabilities.focusMode.includes("continuous")) {
-          await track.applyConstraints({
-            advanced: [{ focusMode: "continuous" }]
-          });
+          constraints.advanced.push({ focusMode: "continuous" });
+        }
+        if (constraints.advanced.length > 0) {
+          await track.applyConstraints(constraints);
         }
       }
     } catch (err) {
-      console.log("Device focus constraint not supported:", err);
+      console.log("Focus apply error:", err);
     }
+
+    setTimeout(() => {
+      if (wasRunning) {
+        predictionBusy = false;
+      }
+    }, 1000);
   });
 }
 
